@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Câmera Vue.js</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            background-color: #f0f2f5;
+        }
+        #app {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 90%;
+            max-width: 600px;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-bottom: 20px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        video {
+            width: 100%;
+            max-width: 400px;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            margin-top: 15px;
+            background-color: black; /* Para visualizar a área do vídeo antes da stream */
+        }
+        canvas {
+            display: none; /* O canvas é usado para capturar a imagem, não para exibição direta */
+        }
+        .photos-container {
+            margin-top: 30px;
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+            width: 100%;
+        }
+        .photos-container h2 {
+            color: #555;
+            margin-bottom: 15px;
+        }
+        .photo-item {
+            margin-bottom: 15px;
+            padding: 10px;
+            background-color: #fafafa;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        .photo-item img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+        .error {
+            color: red;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <h1>Capturar Fotos com Vue.js</h1>
+
+        <button @click="startCamera" v-if="!cameraActive && photos.length === 0">
+            Ativar Câmera
+        </button>
+        <button @click="takePhoto" v-if="cameraActive">
+            Tirar Foto
+        </button>
+
+        <video ref="video" autoplay v-show="cameraActive"></video>
+        <canvas ref="canvas" style="display:none;"></canvas>
+
+        <p class="error" v-if="error">{{ error }}</p>
+
+        <div class="photos-container" v-if="photos.length > 0">
+            <h2>Suas Fotos</h2>
+            <div v-for="(photo, index) in photos" :key="index" class="photo-item">
+                <img :src="photo" :alt="'Foto ' + (index + 1)">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                cameraActive: false,
+                stream: null,
+                photos: [],
+                error: null
+            },
+            methods: {
+                async startCamera() {
+                    this.error = null;
+                    try {
+                        // Solicita acesso à câmera do usuário
+                        this.stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                        const video = this.$refs.video;
+                        video.srcObject = this.stream;
+                        video.onloadedmetadata = () => {
+                            video.play();
+                            this.cameraActive = true;
+                        };
+                    } catch (err) {
+                        console.error("Erro ao acessar a câmera: ", err);
+                        this.error = "Não foi possível acessar a câmera. Verifique as permissões.";
+                        this.cameraActive = false;
+                    }
+                },
+                takePhoto() {
+                    if (!this.stream) {
+                        this.error = "Câmera não está ativa.";
+                        return;
+                    }
+
+                    const video = this.$refs.video;
+                    const canvas = this.$refs.canvas;
+                    const context = canvas.getContext('2d');
+
+                    // Define o tamanho do canvas com base no tamanho do vídeo
+                    canvas.width = video.videoWidth;
+                    canvas.height = video.videoHeight;
+
+                    // Desenha o frame atual do vídeo no canvas
+                    context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+                    // Converte o conteúdo do canvas para uma imagem Data URL
+                    const photoDataUrl = canvas.toDataURL('image/png');
+
+                    // Adiciona a nova foto ao início do array para que ela apareça abaixo das anteriores
+                    this.photos.unshift(photoDataUrl);
+                },
+                stopCamera() {
+                    if (this.stream) {
+                        this.stream.getTracks().forEach(track => track.stop());
+                        this.stream = null;
+                        this.cameraActive = false;
+                    }
+                }
+            },
+            // Hook do ciclo de vida para parar a câmera quando o componente for destruído (ou a página fechada)
+            beforeDestroy() {
+                this.stopCamera();
+            }
+        });
+    </script>
+</body>
+</html>
