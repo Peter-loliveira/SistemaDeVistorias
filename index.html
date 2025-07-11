@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Câmera Vue.js</title>
+    <title>Câmera Vue.js com PDF</title>
     <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -37,6 +38,7 @@
             cursor: pointer;
             transition: background-color 0.3s ease;
             margin-bottom: 20px;
+            margin-top: 10px;
         }
         button:hover {
             background-color: #0056b3;
@@ -47,10 +49,10 @@
             border: 2px solid #ccc;
             border-radius: 8px;
             margin-top: 15px;
-            background-color: black; /* Para visualizar a área do vídeo antes da stream */
+            background-color: black;
         }
         canvas {
-            display: none; /* O canvas é usado para capturar a imagem, não para exibição direta */
+            display: none;
         }
         .photos-container {
             margin-top: 30px;
@@ -103,6 +105,11 @@
                 <img :src="photo" :alt="'Foto ' + (index + 1)">
             </div>
         </div>
+
+        <button @click="gerarPdf" v-if="photos.length > 0">
+            GERAR PDF
+        </button>
+
     </div>
 
     <script>
@@ -118,7 +125,6 @@
                 async startCamera() {
                     this.error = null;
                     try {
-                        // Solicita acesso à câmera do usuário
                         this.stream = await navigator.mediaDevices.getUserMedia({ video: true });
                         const video = this.$refs.video;
                         video.srcObject = this.stream;
@@ -142,14 +148,11 @@
                     const canvas = this.$refs.canvas;
                     const context = canvas.getContext('2d');
 
-                    // Define o tamanho do canvas com base no tamanho do vídeo
                     canvas.width = video.videoWidth;
                     canvas.height = video.videoHeight;
 
-                    // Desenha o frame atual do vídeo no canvas
                     context.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-                    // Converte o conteúdo do canvas para uma imagem Data URL
                     const photoDataUrl = canvas.toDataURL('image/png');
 
                     // Adiciona a nova foto ao início do array para que ela apareça abaixo das anteriores
@@ -161,9 +164,66 @@
                         this.stream = null;
                         this.cameraActive = false;
                     }
+                },
+                async gerarPdf() {
+                    if (this.photos.length === 0) {
+                        alert("Não há fotos para gerar o PDF!");
+                        return;
+                    }
+
+                    // Acessa a classe jsPDF do objeto global window
+                    const { jsPDF } = window.jspdf;
+                    const doc = new jsPDF(); // Cria um novo documento PDF
+
+                    const margin = 10; // Margem em mm
+                    let yPos = margin; // Posição Y inicial para a imagem
+                    const pageWidth = doc.internal.pageSize.getWidth();
+                    const pageHeight = doc.internal.pageSize.getHeight();
+
+                    // Itera sobre as fotos no array
+                    for (let i = 0; i < this.photos.length; i++) {
+                        const photo = this.photos[i];
+
+                        // Cria uma imagem temporária para obter suas dimensões
+                        const img = new Image();
+                        img.src = photo;
+
+                        await new Promise(resolve => {
+                            img.onload = () => {
+                                const imgWidth = img.width;
+                                const imgHeight = img.height;
+
+                                // Calcula a proporção para ajustar a imagem à largura da página
+                                const ratio = (pageWidth - 2 * margin) / imgWidth;
+                                const newImgWidth = pageWidth - 2 * margin;
+                                const newImgHeight = imgHeight * ratio;
+
+                                // Se a imagem não couber na página atual, adiciona uma nova página
+                                if (yPos + newImgHeight > pageHeight - margin && i > 0) {
+                                    doc.addPage();
+                                    yPos = margin; // Reinicia a posição Y na nova página
+                                }
+
+                                // Adiciona a imagem ao PDF
+                                // Parâmetros: imagem (Data URL), formato, x, y, largura, altura
+                                doc.addImage(photo, 'PNG', margin, yPos, newImgWidth, newImgHeight);
+
+                                // Atualiza a posição Y para a próxima imagem (com um pequeno espaçamento)
+                                yPos += newImgHeight + margin;
+                                resolve();
+                            };
+                            img.onerror = (err) => {
+                                console.error("Erro ao carregar imagem para PDF:", err);
+                                resolve(); // Resolve mesmo com erro para não travar o loop
+                            };
+                        });
+                    }
+
+                    // Salva o documento PDF com um nome de arquivo
+                    doc.save("minhas_fotos.pdf");
+                    alert("PDF gerado com sucesso!");
                 }
             },
-            // Hook do ciclo de vida para parar a câmera quando o componente for destruído (ou a página fechada)
             beforeDestroy() {
                 this.stopCamera();
             }
