@@ -1,231 +1,360 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Câmera Vue.js com PDF</title>
-    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <title>Gerador de Laudo de Vistoria</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
+        /* Optional custom styles for better aesthetics */
         body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 20px;
+            font-family: 'Arial', sans-serif;
             background-color: #f0f2f5;
         }
-        #app {
+        .container {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 2rem;
             background-color: #ffffff;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            width: 90%;
-            max-width: 600px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
         }
-        h1 {
-            color: #333;
-            margin-bottom: 20px;
-        }
-        button {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 5px;
-            font-size: 1.1em;
+        input[type="date"]::-webkit-calendar-picker-indicator {
             cursor: pointer;
-            transition: background-color 0.3s ease;
-            margin-bottom: 20px;
-            margin-top: 10px;
         }
-        button:hover {
-            background-color: #0056b3;
+        .camera-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .camera-controls {
+            position: absolute;
+            bottom: 20px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
         }
         video {
-            width: 100%;
-            max-width: 400px;
-            border: 2px solid #ccc;
-            border-radius: 8px;
-            margin-top: 15px;
-            background-color: black;
+            max-width: 90%;
+            max-height: 80%;
+            border: 2px solid white;
         }
         canvas {
-            display: none;
-        }
-        .photos-container {
-            margin-top: 30px;
-            border-top: 1px solid #eee;
-            padding-top: 20px;
-            width: 100%;
-        }
-        .photos-container h2 {
-            color: #555;
-            margin-bottom: 15px;
-        }
-        .photo-item {
-            margin-bottom: 15px;
-            padding: 10px;
-            background-color: #fafafa;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-        }
-        .photo-item img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 5px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-        }
-        .error {
-            color: red;
-            margin-top: 10px;
+            display: none; /* Hidden, used for capturing image */
         }
     </style>
 </head>
 <body>
-    <div id="app">
-        <h1>Capturar Fotos com Vue.js</h1>
+    <div id="app" class="container">
+        <h1 class="text-3xl font-bold text-center mb-6 uppercase text-gray-800">GERADOR DE LAUDO DE VISTORIA</h1>
 
-        <button @click="startCamera" v-if="!cameraActive && photos.length === 0">
-            Ativar Câmera
-        </button>
-        <button @click="takePhoto" v-if="cameraActive">
-            Tirar Foto
-        </button>
-
-        <video ref="video" autoplay v-show="cameraActive"></video>
-        <canvas ref="canvas" style="display:none;"></canvas>
-
-        <p class="error" v-if="error">{{ error }}</p>
-
-        <div class="photos-container" v-if="photos.length > 0">
-            <h2>Suas Fotos</h2>
-            <div v-for="(photo, index) in photos" :key="index" class="photo-item">
-                <img :src="photo" :alt="'Foto ' + (index + 1)">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <div class="flex flex-col">
+                <label for="DataLaudo" class="text-sm font-medium text-gray-700 mb-1">Data do Laudo:</label>
+                <input type="date" id="DataLaudo" v-model="dataLaudo" class="p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+            </div>
+            <div class="flex flex-col">
+                <label for="TipoImovel" class="text-sm font-medium text-gray-700 mb-1">Tipo de Imóvel:</label>
+                <select id="TipoImovel" v-model="tipoImovel" class="p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                    <option value="CASA">CASA</option>
+                    <option value="APARTAMENTO">APARTAMENTO</option>
+                </select>
+            </div>
+            <div class="flex flex-col">
+                <label for="Destinacao" class="text-sm font-medium text-gray-700 mb-1">Destinação:</label>
+                <select id="Destinacao" v-model="destinacao" class="p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                    <option value="residencial">Residencial</option>
+                    <option value="comercial">Comercial</option>
+                </select>
             </div>
         </div>
 
-        <button @click="gerarPdf" v-if="photos.length > 0">
-            GERAR PDF
-        </button>
+        <div class="mb-6">
+            <label for="DataContrato" class="text-sm font-medium text-gray-700 mb-1">Data do Contrato:</label>
+            <input type="date" id="DataContrato" v-model="dataContrato" class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+        </div>
 
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <div class="flex flex-col">
+                <input type="text" id="Corretor" v-model="corretor" placeholder="Corretor(a)" class="p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+            </div>
+            <div class="flex flex-col">
+                <input type="text" id="Creci" v-model="creci" placeholder="CRECI" class="p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+            </div>
+            <div class="flex flex-col">
+                <input type="text" id="Cpf" v-model="cpf" placeholder="CPF" class="p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            <div class="flex flex-col">
+                <input type="text" id="NomeLocador" v-model="nomeLocador" placeholder="Locador" class="p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+            </div>
+            <div class="flex flex-col">
+                <input type="text" id="NomeLocatario" v-model="nomeLocatario" placeholder="Locatário" class="p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+            </div>
+        </div>
+
+        <div class="mb-6">
+            <textarea id="Endereço" v-model="endereco" placeholder="Endereço" rows="3" class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 resize-y"></textarea>
+        </div>
+
+        <hr class="my-8 border-t-2 border-gray-200">
+
+        <div class="flex flex-col md:flex-row gap-4 mb-6 items-end">
+            <div class="flex-grow">
+                <label for="ItemVistoria" class="text-sm font-medium text-gray-700 mb-1">Item da Vistoria:</label>
+                <input type="text" id="ItemVistoria" v-model="itemVistoria" placeholder="Descreva o Item" class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+            </div>
+            <button id="Foto" @click="openCamera" class="flex items-center justify-center bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                <i class="fas fa-camera mr-2"></i> Foto
+            </button>
+        </div>
+
+        <div v-if="showCamera" class="camera-overlay">
+            <video id="video" autoplay></video>
+            <canvas id="canvas"></canvas>
+            <div class="camera-controls">
+                <button @click="capturePhoto" class="bg-green-500 text-white px-6 py-3 rounded-full text-lg shadow-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
+                    <i class="fas fa-camera"></i> Tirar Foto
+                </button>
+                <button @click="closeCamera" class="bg-red-500 text-white px-6 py-3 rounded-full text-lg shadow-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
+                    <i class="fas fa-times"></i> Fechar
+                </button>
+            </div>
+        </div>
+
+        <div class="overflow-x-auto mb-8">
+            <table class="min-w-full bg-white border border-gray-200">
+                <thead>
+                    <tr>
+                        <th class="py-3 px-4 border-b border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">ITEM</th>
+                        <th class="py-3 px-4 border-b border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">FOTO</th>
+                        <th class="py-3 px-4 border-b border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">EXCLUIR</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(item, index) in vistoriaItems" :key="index" class="hover:bg-gray-50">
+                        <td class="py-3 px-4 border-b border-gray-200 text-sm text-gray-800">{{ item.description }}</td>
+                        <td class="py-3 px-4 border-b border-gray-200">
+                            <img v-if="item.photo" :src="item.photo" alt="Foto do Item" class="w-24 h-24 object-cover rounded-md shadow-sm cursor-pointer" @click="viewImage(item.photo)">
+                            <span v-else class="text-gray-500 text-sm">Sem foto</span>
+                        </td>
+                        <td class="py-3 px-4 border-b border-gray-200">
+                            <button @click="removeItem(index)" class="text-red-500 hover:text-red-700">
+                                <i class="fas fa-trash-alt text-lg"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    <tr v-if="vistoriaItems.length === 0">
+                        <td colspan="3" class="py-6 px-4 text-center text-gray-500">Nenhum item adicionado ainda.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="flex justify-center">
+            <button @click="generatePdf" class="flex items-center bg-purple-600 text-white px-6 py-3 rounded-md text-lg hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:ring-offset-2">
+                <i class="fas fa-file-pdf mr-3"></i> Gerar PDF
+            </button>
+        </div>
+
+        <div v-if="imageView" class="camera-overlay" @click="hideImage">
+            <img :src="imageView" alt="Visualização da imagem" class="max-w-full max-h-full object-contain">
+        </div>
     </div>
 
     <script>
         new Vue({
             el: '#app',
             data: {
-                cameraActive: false,
-                stream: null,
-                photos: [],
-                error: null
+                dataLaudo: '',
+                tipoImovel: 'CASA',
+                destinacao: 'residencial',
+                dataContrato: '',
+                corretor: 'Corretor(a) Remax Litorânea',
+                creci: '',
+                cpf: '',
+                nomeLocador: '',
+                nomeLocatario: '',
+                endereco: '',
+                itemVistoria: '',
+                vistoriaItems: [],
+                showCamera: false,
+                currentStream: null,
+                imageView: null,
+            },
+            mounted() {
+                this.setCurrentDate();
             },
             methods: {
-                async startCamera() {
-                    this.error = null;
-                    try {
-                        this.stream = await navigator.mediaDevices.getUserMedia({ video: true });
-                        const video = this.$refs.video;
-                        video.srcObject = this.stream;
-                        video.onloadedmetadata = () => {
-                            video.play();
-                            this.cameraActive = true;
-                        };
-                    } catch (err) {
-                        console.error("Erro ao acessar a câmera: ", err);
-                        this.error = "Não foi possível acessar a câmera. Verifique as permissões.";
-                        this.cameraActive = false;
-                    }
+                setCurrentDate() {
+                    const today = new Date();
+                    const year = today.getFullYear();
+                    const month = String(today.getMonth() + 1).padStart(2, '0');
+                    const day = String(today.getDate()).padStart(2, '0');
+                    this.dataLaudo = `${year}-${month}-${day}`;
                 },
-                takePhoto() {
-                    if (!this.stream) {
-                        this.error = "Câmera não está ativa.";
+                async openCamera() {
+                    if (!this.itemVistoria) {
+                        alert('Por favor, descreva o item antes de tirar a foto.');
                         return;
                     }
-
-                    const video = this.$refs.video;
-                    const canvas = this.$refs.canvas;
+                    this.showCamera = true;
+                    try {
+                        const video = document.getElementById('video');
+                        this.currentStream = await navigator.mediaDevices.getUserMedia({ video: true });
+                        video.srcObject = this.currentStream;
+                        video.play();
+                    } catch (err) {
+                        console.error("Erro ao acessar a câmera: ", err);
+                        alert("Não foi possível acessar a câmera. Verifique as permissões.");
+                        this.showCamera = false;
+                    }
+                },
+                capturePhoto() {
+                    const video = document.getElementById('video');
+                    const canvas = document.getElementById('canvas');
                     const context = canvas.getContext('2d');
 
                     canvas.width = video.videoWidth;
                     canvas.height = video.videoHeight;
-
                     context.drawImage(video, 0, 0, canvas.width, canvas.height);
 
                     const photoDataUrl = canvas.toDataURL('image/png');
 
-                    // Adiciona a nova foto ao início do array para que ela apareça abaixo das anteriores
-                    this.photos.unshift(photoDataUrl);
+                    this.vistoriaItems.unshift({
+                        description: this.itemVistoria,
+                        photo: photoDataUrl
+                    });
+                    this.itemVistoria = ''; // Clear the input field
+                    this.closeCamera();
                 },
-                stopCamera() {
-                    if (this.stream) {
-                        this.stream.getTracks().forEach(track => track.stop());
-                        this.stream = null;
-                        this.cameraActive = false;
+                closeCamera() {
+                    this.showCamera = false;
+                    if (this.currentStream) {
+                        this.currentStream.getTracks().forEach(track => track.stop());
+                        this.currentStream = null;
                     }
                 },
-                async gerarPdf() {
-                    if (this.photos.length === 0) {
-                        alert("Não há fotos para gerar o PDF!");
-                        return;
-                    }
-
-                    // Acessa a classe jsPDF do objeto global window
+                removeItem(index) {
+                    this.vistoriaItems.splice(index, 1);
+                },
+                viewImage(photoUrl) {
+                    this.imageView = photoUrl;
+                },
+                hideImage() {
+                    this.imageView = null;
+                },
+                async generatePdf() {
                     const { jsPDF } = window.jspdf;
-                    const doc = new jsPDF(); // Cria um novo documento PDF
+                    const doc = new jsPDF();
 
-                    const margin = 10; // Margem em mm
-                    let yPos = margin; // Posição Y inicial para a imagem
-                    const pageWidth = doc.internal.pageSize.getWidth();
-                    const pageHeight = doc.internal.pageSize.getHeight();
+                    // Title
+                    doc.setFontSize(24);
+                    doc.text('LAUDO DE VISTORIA', 105, 20, null, null, 'center');
+                    doc.setFontSize(10);
+                    doc.text(`Corretor(a): ${this.corretor} - CRECI: ${this.creci} - CPF: ${this.cpf}`, 105, 28, null, null, 'center');
 
-                    // Itera sobre as fotos no array
-                    for (let i = 0; i < this.photos.length; i++) {
-                        const photo = this.photos[i];
+                    // General Information
+                    doc.setFontSize(12);
+                    doc.text(`Data do Laudo: ${this.dataLaudo}`, 10, 40);
+                    doc.text(`Tipo de Imóvel: ${this.tipoImovel}`, 10, 47);
+                    doc.text(`Destinação: ${this.destinacao}`, 10, 54);
+                    doc.text(`Data do Contrato: ${this.dataContrato}`, 10, 61);
+                    doc.text(`Locador: ${this.nomeLocador}`, 10, 68);
+                    doc.text(`Locatário: ${this.nomeLocatario}`, 10, 75);
 
-                        // Cria uma imagem temporária para obter suas dimensões
-                        const img = new Image();
-                        img.src = photo;
+                    // Split long address into multiple lines
+                    const addressLines = doc.splitTextToSize(`Endereço: ${this.endereco}`, 180);
+                    doc.text(addressLines, 10, 82);
+                    let currentY = 82 + (addressLines.length * 7); // Adjust Y based on address lines
 
-                        await new Promise(resolve => {
-                            img.onload = () => {
-                                const imgWidth = img.width;
-                                const imgHeight = img.height;
+                    doc.line(10, currentY + 5, 200, currentY + 5); // Divider line
 
-                                // Calcula a proporção para ajustar a imagem à largura da página
-                                const ratio = (pageWidth - 2 * margin) / imgWidth;
-                                const newImgWidth = pageWidth - 2 * margin;
-                                const newImgHeight = imgHeight * ratio;
+                    currentY += 15; // Space after info and divider
 
-                                // Se a imagem não couber na página atual, adiciona uma nova página
-                                if (yPos + newImgHeight > pageHeight - margin && i > 0) {
-                                    doc.addPage();
-                                    yPos = margin; // Reinicia a posição Y na nova página
-                                }
+                    // Table Header
+                    doc.setFontSize(12);
+                    doc.text('ITEM', 15, currentY);
+                    doc.text('FOTO', 100, currentY); // Adjusted for column spacing
+                    doc.line(10, currentY + 2, 200, currentY + 2); // Underline header
+                    currentY += 10;
 
-                                // Adiciona a imagem ao PDF
-                                // Parâmetros: imagem (Data URL), formato, x, y, largura, altura
-                                doc.addImage(photo, 'PNG', margin, yPos, newImgWidth, newImgHeight);
+                    // Table Content
+                    doc.setFontSize(10);
+                    for (let i = 0; i < this.vistoriaItems.length; i++) {
+                        const item = this.vistoriaItems[i];
+                        const descriptionLines = doc.splitTextToSize(item.description, 80); // Max width for description
+                        doc.text(descriptionLines, 15, currentY);
 
-                                // Atualiza a posição Y para a próxima imagem (com um pequeno espaçamento)
-                                yPos += newImgHeight + margin;
-                                resolve();
-                            };
-                            img.onerror = (err) => {
-                                console.error("Erro ao carregar imagem para PDF:", err);
-                                resolve(); // Resolve mesmo com erro para não travar o loop
-                            };
-                        });
+                        if (item.photo) {
+                            try {
+                                const img = new Image();
+                                img.src = item.photo;
+                                // Wait for image to load to get its dimensions
+                                await new Promise((resolve) => {
+                                    img.onload = () => {
+                                        // Calculate aspect ratio to fit within 50x50 box
+                                        const maxWidth = 50;
+                                        const maxHeight = 50;
+                                        let imgWidth = img.width;
+                                        let imgHeight = img.height;
+
+                                        if (imgWidth > maxWidth || imgHeight > maxHeight) {
+                                            if (imgWidth / maxWidth > imgHeight / maxHeight) {
+                                                imgHeight = (imgHeight / imgWidth) * maxWidth;
+                                                imgWidth = maxWidth;
+                                            } else {
+                                                imgWidth = (imgWidth / imgHeight) * maxHeight;
+                                                imgHeight = maxHeight;
+                                            }
+                                        }
+                                        doc.addImage(item.photo, 'PNG', 100, currentY - 8, imgWidth, imgHeight); // Adjust Y for photo
+                                        resolve();
+                                    };
+                                    img.onerror = () => {
+                                        console.error("Failed to load image for PDF:", item.photo);
+                                        resolve(); // Still resolve to continue PDF generation
+                                    };
+                                });
+                            } catch (e) {
+                                console.error("Error adding image to PDF:", e);
+                            }
+                        }
+
+                        // Determine the height needed for this row
+                        const textHeight = descriptionLines.length * 7; // Approx height per line
+                        const photoHeight = 50; // Max height of the photo
+                        const rowHeight = Math.max(textHeight, photoHeight) + 5; // Add some padding
+
+                        currentY += rowHeight;
+
+                        if (currentY > doc.internal.pageSize.height - 30) { // Check if new page is needed
+                            doc.addPage();
+                            currentY = 20; // Reset Y for new page
+                            doc.setFontSize(12);
+                            doc.text('ITEM', 15, currentY);
+                            doc.text('FOTO', 100, currentY);
+                            doc.line(10, currentY + 2, 200, currentY + 2);
+                            currentY += 10;
+                            doc.setFontSize(10);
+                        }
                     }
 
-                    // Salva o documento PDF com um nome de arquivo
-                    doc.save("minhas_fotos.pdf");
-                    alert("PDF gerado com sucesso!");
+                    doc.save('laudo_de_vistoria.pdf');
                 }
-            },
-            beforeDestroy() {
-                this.stopCamera();
             }
         });
     </script>
