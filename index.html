@@ -209,7 +209,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>LAUDO DE VISTORIA - FLUTTER FUNCIONANDO</h1>
+        <h1>LAUDO DE VISTORIA - FLUTTER</h1>
 
         <div class="form-row">
             <div>
@@ -219,15 +219,15 @@
             <div>
                 <label for="TipoImovel">Tipo de Imóvel:</label>
                 <select id="TipoImovel">
-                    <option value="CASA">CASA</option>
-                    <option value="APARTAMENTO">APARTAMENTO</option>
+                    <option value="Casa">Casa</option>
+                    <option value="Apartamento">Apartamento</option>
                 </select>
             </div>
             <div>
                 <label for="Destinacao">Destinação:</label>
                 <select id="Destinacao">
-                    <option value="residencial">Residencial</option>
-                    <option value="comercial">Comercial</option>
+                    <option value="Residencial">Residencial</option>
+                    <option value="Comercial">Comercial</option>
                 </select>
             </div>
         </div>
@@ -264,7 +264,7 @@
         </div>
 
         <div class="form-group">
-            <label for="Endereco">Endereço:</label>
+            <label for="Endereco">Endereço do Imovel:</label>
             <textarea id="Endereco" placeholder="Endereço"></textarea>
         </div>
 
@@ -520,7 +520,7 @@
             doc.text(`Locador: ${nomeLocador}`, 10, yOffset);
             doc.text(`Locatário: ${nomeLocatario}`, 100, yOffset);
             yOffset += 7;
-            doc.text(`Endereço: ${endereco}`, 10, yOffset);
+            doc.text(`Endereço do Ímovel: ${endereco}`, 10, yOffset);
             yOffset += 7;
             doc.text(`Estado do Imóvel: ${estadoImovel}`, 10, yOffset);
             yOffset += 15; // Space before next section
