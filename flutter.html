@@ -1,629 +1,1252 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laudo de Vistoria - Remax Litorânea</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            background-color: #f4f4f4;
-            color: #333;
-        }
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #fff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-        }
-        h1, h2 {
-            text-align: center;
-            color: #0056b3;
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        .form-row {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            margin-bottom: 15px;
-        }
-        .form-row > div {
-            flex: 1;
-            min-width: 200px; /* Garante que os divs tenham um mínimo de largura */
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-        input[type="text"],
-        input[type="date"],
-        textarea,
-        select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-        textarea {
-            resize: vertical;
-            min-height: 80px;
-        }
-        .radio-group {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            margin-top: 10px;
-        }
-        .radio-group label {
-            display: flex;
-            align-items: center;
-            font-weight: normal;
-        }
-        .radio-group input[type="radio"] {
-            margin-right: 5px;
-            width: auto; /* Sobrescreve o 100% de largura para radio buttons */
-        }
-        
-        /* Ajustes para os campos de item e botão */
-        .item-input-group {
-            display: flex;
-            align-items: flex-end; /* Alinha o botão com a base do input */
-            gap: 10px; /* Espaço entre o input e o botão */
-            flex-grow: 1; /* Permite que este grupo ocupe o espaço disponível */
-            flex-wrap: wrap; /* Permite que o botão quebre a linha em telas pequenas */
-        }
-
-        .item-input-group > div {
-            flex: 1; /* O div do input vai crescer */
-            min-width: 150px; /* Um mínimo para o input */
-        }
-
-        .item-input-group input[type="text"] {
-            width: 100%; /* Garante que o input preencha seu contêiner */
-        }
-
-        button {
-            padding: 10px 15px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            white-space: nowrap; /* Evita que o texto do botão quebre */
-        }
-        button:hover {
-            background-color: #0056b3;
-        }
-        .icon {
-            font-family: 'Material Icons';
-            font-size: 18px;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        table, th, td {
-            border: 1px solid #ddd;
-        }
-        th, td {
-            padding: 8px;
-            text-align: center;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-        .delete-button {
-            background-color: #dc3545;
-        }
-        .delete-button:hover {
-            background-color: #c82333;
-        }
-        .pdf-button {
-            background-color: #28a745;
-            margin-top: 20px;
-            width: fit-content;
-            margin-left: auto;
-            margin-right: auto;
-            display: block;
-        }
-        .pdf-button:hover {
-            background-color: #218838;
-        }
-        .divider {
-            border-top: 1px solid #eee;
-            margin: 30px 0;
-        }
-        img {
-            max-width: 100%;
-            height: 3cm; /* Altura fixa para exibição na tabela */
-            object-fit: contain; /* Garante que a imagem se ajuste sem distorção */
-        }
-
-        /* Estilos para o Modal da Câmera */
-        .modal {
-            display: none; /* Escondido por padrão */
-            position: fixed; /* Fica por cima de tudo */
-            z-index: 1000; /* Alto z-index */
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto; /* Habilita scroll se necessário */
-            background-color: rgba(0,0,0,0.8); /* Fundo escuro semi-transparente */
-            justify-content: center;
-            align-items: center;
-        }
-        .modal-content {
-            background-color: #fefefe;
-            margin: auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%;
-            max-width: 600px;
-            border-radius: 8px;
-            text-align: center;
-            position: relative;
-        }
-        .modal-content video {
-            width: 100%;
-            max-width: 560px;
-            height: auto;
-            border: 1px solid #ccc;
-            background-color: #000; /* Fundo preto para a pré-visualização */
-        }
-        .modal-buttons {
-            margin-top: 15px;
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-        }
-        .close-button {
-            color: #aaa;
-            font-size: 28px;
-            font-weight: bold;
-            position: absolute;
-            top: 10px;
-            right: 20px;
-            cursor: pointer;
-        }
-        .close-button:hover,
-        .close-button:focus {
-            color: black;
-            text-decoration: none;
-            cursor: pointer;
-        }
-    </style>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-</head>
-<body>
-    <div class="container">
-        <h1>LAUDO DE VISTORIA</h1>
-
-        <div class="form-row">
-            <div>
-                <label for="DataLaudo">Data do Laudo:</label>
-                <input type="date" id="DataLaudo">
-            </div>
-            <div>
-                <label for="TipoImovel">Tipo de Imóvel:</label>
-                <select id="TipoImovel">
-                    <option value="CASA">CASA</option>
-                    <option value="APARTAMENTO">APARTAMENTO</option>
-                </select>
-            </div>
-            <div>
-                <label for="Destinacao">Destinação:</label>
-                <select id="Destinacao">
-                    <option value="residencial">Residencial</option>
-                    <option value="comercial">Comercial</option>
-                </select>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label for="DataContrato">Data do Contrato:</label>
-            <input type="date" id="DataContrato">
-        </div>
-
-        <div class="form-row">
-            <div>
-                <label for="Corretor">Corretor(a):</label>
-                <input type="text" id="Corretor" placeholder="Corretor(a)">
-            </div>
-            <div>
-                <label for="Creci">CRECI:</label>
-                <input type="text" id="Creci" placeholder="CRECI">
-            </div>
-            <div>
-                <label for="Cpf">CPF:</label>
-                <input type="text" id="Cpf" placeholder="CPF">
-            </div>
-        </div>
-
-        <div class="form-row">
-            <div>
-                <label for="NomeLocador">Locador:</label>
-                <input type="text" id="NomeLocador" placeholder="Locador">
-            </div>
-            <div>
-                <label for="NomeLocatario">Locatário:</label>
-                <input type="text" id="NomeLocatario" placeholder="Locatário">
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label for="Endereco">Endereço:</label>
-            <textarea id="Endereco" placeholder="Endereço"></textarea>
-        </div>
-
-        <div class="form-group">
-            <label>Estado do Imóvel:</label>
-            <div class="radio-group">
-                <label><input type="radio" name="estadoImovel" value="Novo"> Novo</label>
-                <label><input type="radio" name="estadoImovel" value="Excelente"> Excelente</label>
-                <label><input type="radio" name="estadoImovel" value="Bom"> Bom</label>
-                <label><input type="radio" name="estadoImovel" value="Regular"> Regular</label>
-                <label><input type="radio" name="estadoImovel" value="Ruim"> Ruim</label>
-            </div>
-        </div>
-
-        <div class="divider"></div>
-
-        <h2>Itens da Vistoria.</h2>
-        <div class="item-input-group">
-            <div>
-                <label for="ItemVistoria">Descreva o Item:</label>
-                <input type="text" id="ItemVistoria" placeholder="Descreva o Item">
-            </div>
-            <button id="FotoItem">
-                <span class="material-icons">camera_alt</span> Foto
-            </button>
-        </div>
-
-        <table id="ItensVistoria">
-            <thead>
-                <tr>
-                    <th>ITEM</th>
-                    <th>FOTO</th>
-                    <th>Excluir</th>
-                </tr>
-            </thead>
-            <tbody>
-                </tbody>
-        </table>
-
-        <div class="divider"></div>
-
-        <h2 style="text-align: center;">Danos Encontrados.</h2>
-
-        <table id="ItensDanificados">
-            <thead>
-                <tr>
-                    <th>Item Danificado</th>
-                    <th>Foto</th>
-                    <th>Excluir</th>
-                </tr>
-            </thead>
-            <tbody>
-                </tbody>
-        </table>
-
-        <div class="item-input-group">
-            <div>
-                <label for="ItemDanificado">Descreva o dano encontrado:</label>
-                <input type="text" id="ItemDanificado" placeholder="Descreva o dano encontrado">
-            </div>
-            <button id="FotoDano">
-                <span class="material-icons">camera_alt</span> Danos
-            </button>
-        </div>
-
-        <button id="GerarPDF" class="pdf-button">
-            <span class="material-icons">picture_as_pdf</span> Gerar PDF
-        </button>
-    </div>
-
-    <div id="cameraModal" class="modal">
-        <div class="modal-content">
-            <span class="close-button" id="closeModal">&times;</span>
-            <h2>Pré-visualização da Câmera</h2>
-            <video id="cameraPreview" autoplay playsinline></video>
-            <div class="modal-buttons">
-                <button id="takePhotoBtn" class="pdf-button">Tirar Foto</button>
-                <button id="cancelPhotoBtn" class="delete-button">Cancelar</button>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        // Preenche a data atual no campo "DataLaudo"
-        document.addEventListener('DOMContentLoaded', () => {
-            const today = new Date();
-            const yyyy = today.getFullYear();
-            const mm = String(today.getMonth() + 1).padStart(2, '0'); // Months start at 0!
-            const dd = String(today.getDate()).padStart(2, '0');
-            document.getElementById('DataLaudo').value = `${yyyy}-${mm}-${dd}`;
-        });
-
-        const itensVistoria = []; // Stores { text: string, photo: string (base64) }
-        const itensDanificados = []; // Stores { text: string, photo: string (base64) }
-
-        let currentStream; // Para armazenar o stream da câmera
-        let currentTargetTableId; // Qual tabela vai receber o item
-        let currentTargetInputId; // Qual input de texto foi usado
-
-        // Referências do Modal
-        const cameraModal = document.getElementById('cameraModal');
-        const cameraPreview = document.getElementById('cameraPreview');
-        const takePhotoBtn = document.getElementById('takePhotoBtn');
-        const cancelPhotoBtn = document.getElementById('cancelPhotoBtn');
-        const closeModalBtn = document.getElementById('closeModal');
-
-        // Helper function to add a row to a table
-        function addRowToTable(tableId, itemText, photoBase64, dataArray) {
-            const tableBody = document.querySelector(`#${tableId} tbody`);
-            const newRow = tableBody.insertRow();
-
-            const itemCell = newRow.insertCell(0);
-            itemCell.textContent = itemText;
-
-            const photoCell = newRow.insertCell(1);
-            if (photoBase64) {
-                const img = document.createElement('img');
-                img.src = photoBase64;
-                img.alt = 'Foto do item';
-                photoCell.appendChild(img);
-            } else {
-                photoCell.textContent = 'N/A';
+    <html lang="pt-BR">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Laudo de Vistoria</title>
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <style>
+            /* Variáveis de Cor RE/MAX */
+            :root {
+                --remax-blue: #003da5;
+                --remax-red: #e60e16;
+                --remax-light-gray: #cccccc;
+                --remax-medium-gray: #bbbbbb;
+                --remax-dark-gray: #aaaaaa;
             }
 
-            const deleteCell = newRow.insertCell(2);
-            const deleteButton = document.createElement('button');
-            deleteButton.className = 'delete-button';
-            deleteButton.innerHTML = '<span class="material-icons">delete</span>';
-            deleteButton.onclick = function() {
-                const rowIndex = Array.from(tableBody.children).indexOf(newRow);
-                dataArray.splice(rowIndex, 1); // Remove item from array
-                tableBody.removeChild(newRow); // Remove row from DOM
-            };
-            deleteCell.appendChild(deleteButton);
-
-            // Add to the respective data array
-            dataArray.push({ text: itemText, photo: photoBase64 });
-        }
-
-        // Função para iniciar a pré-visualização da câmera no modal
-        async function startCameraPreview(tableId, inputId) {
-            const itemText = document.getElementById(inputId).value;
-            if (!itemText) {
-                alert('Por favor, descreva o item antes de tirar a foto.');
-                return;
+            /* Estilos Gerais */
+            body {
+                font-family: 'Roboto', sans-serif;
+                margin: 0;
+                padding: 20px;
+                background-color: var(--remax-light-gray);
+                color: #333;
+                line-height: 1.6;
+                display: flex;
+                flex-direction: column;
+                min-height: 100vh;
             }
 
-            currentTargetTableId = tableId;
-            currentTargetInputId = inputId;
-            cameraModal.style.display = 'flex'; // Exibe o modal
-
-            try {
-                currentStream = await navigator.mediaDevices.getUserMedia({ video: true });
-                cameraPreview.srcObject = currentStream;
-            } catch (err) {
-                console.error('Erro ao acessar a câmera:', err);
-                alert('Não foi possível acessar a câmera. Verifique as permissões do navegador.');
-                cameraModal.style.display = 'none'; // Esconde o modal
-                stopCameraStream();
+            .container {
+                max-width: 1200px;
+                margin: 20px auto;
+                background-color: #fff;
+                padding: 30px;
+                border-radius: 8px;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+                flex-grow: 1;
             }
-        }
 
-        // Função para parar o stream da câmera
-        function stopCameraStream() {
-            if (currentStream) {
-                currentStream.getTracks().forEach(track => track.stop());
-                currentStream = null;
+            h1 {
+                color: var(--remax-blue);
+                text-align: center;
+                margin-bottom: 25px;
+                padding: 15px 0; /* Adicionado padding */
+                border-bottom: 3px solid var(--remax-blue); /* Semelhante ao footer */
+                background-color: #f9f9f9; /* Semelhante ao footer */
+                border-radius: 8px 8px 0 0; /* Arredondar apenas os cantos superiores */
+                margin-top: -30px; /* Ajusta para remover espaço extra do container */
+                margin-left: -30px; /* Ajusta para preencher a largura do container */
+                margin-right: -30px; /* Ajusta para preencher a largura do container */
+                margin-bottom: 30px; /* Espaço abaixo do título */
             }
-            cameraPreview.srcObject = null;
-        }
 
-        // Evento para Tirar Foto
-        takePhotoBtn.addEventListener('click', () => {
-            const itemText = document.getElementById(currentTargetInputId).value;
-            const canvas = document.createElement('canvas');
-            const context = canvas.getContext('2d');
+            h2 {
+                color: var(--remax-blue);
+                margin-top: 35px;
+                border-bottom: 1px solid var(--remax-medium-gray);
+                padding-bottom: 10px;
+                text-align: center;
+            }
 
-            canvas.width = cameraPreview.videoWidth;
-            canvas.height = cameraPreview.videoHeight;
-            context.drawImage(cameraPreview, 0, 0, canvas.width, canvas.height);
+            .form-section {
+                margin-bottom: 30px;
+            }
 
-            const photoBase64 = canvas.toDataURL('image/jpeg');
+            .form-group {
+                margin-bottom: 18px;
+                display: flex;
+                flex-direction: column;
+            }
 
-            const dataArray = (currentTargetTableId === 'ItensVistoria') ? itensVistoria : itensDanificados;
-            addRowToTable(currentTargetTableId, itemText, photoBase64, dataArray);
+            .form-group label {
+                margin-bottom: 8px;
+                font-weight: bold;
+                color: #555;
+            }
 
-            // Limpar o campo de texto
-            document.getElementById(currentTargetInputId).value = '';
-            
-            cameraModal.style.display = 'none'; // Esconde o modal
-            stopCameraStream(); // Para o stream da câmera
-        });
+            input[type="text"],
+            input[type="date"],
+            textarea,
+            select {
+                width: 100%;
+                padding: 12px;
+                border: 1px solid var(--remax-medium-gray);
+                border-radius: 5px;
+                box-sizing: border-box;
+                font-size: 1rem;
+                transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            }
 
-        // Evento para Cancelar Foto
-        cancelPhotoBtn.addEventListener('click', () => {
-            cameraModal.style.display = 'none'; // Esconde o modal
-            stopCameraStream(); // Para o stream da câmera
-        });
+            input::placeholder,
+            textarea::placeholder {
+                color: #777;
+            }
 
-        // Evento para fechar o modal pelo botão "x"
-        closeModalBtn.addEventListener('click', () => {
-            cameraModal.style.display = 'none'; // Esconde o modal
-            stopCameraStream(); // Para o stream da câmera
-        });
+            input[type="text"]:focus,
+            input[type="date"]:focus,
+            textarea:focus,
+            select:focus {
+                border-color: var(--remax-blue);
+                box-shadow: 0 0 5px rgba(0, 61, 165, 0.5);
+                outline: none;
+            }
+
+            textarea {
+                resize: vertical;
+                min-height: 80px;
+            }
+
+            /* Layout Específico: Estado do Imóvel */
+            .form-group.estado-imovel {
+                flex-direction: row;
+                align-items: center;
+                gap: 20px;
+                flex-wrap: wrap; /* Permite quebrar linha em telas menores */
+            }
+
+            .form-group.estado-imovel label {
+                margin-bottom: 0;
+                flex-shrink: 0; /* Impede que o label encolha */
+            }
+
+            .radio-group {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 15px;
+                margin-top: 0; /* Conforme requisito */
+            }
+
+            .radio-group label {
+                display: flex;
+                align-items: center;
+                cursor: pointer;
+                font-weight: normal;
+                color: #555; /* Cor padrão não selecionado */
+                transition: color 0.3s ease;
+            }
+
+            .radio-group input[type="radio"] {
+                margin-right: 8px;
+                width: auto;
+            }
+
+            .radio-group input[type="radio"]:checked + span {
+                color: var(--remax-blue);
+                font-weight: bold;
+            }
+
+            /* Botões */
+            .button {
+                padding: 10px 15px;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                font-size: 1rem;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+                transition: background-color 0.3s ease;
+                height: 40px;
+                min-height: 40px;
+                font-weight: bold;
+                white-space: nowrap; /* Previne quebra de linha em botões com ícone e texto */
+            }
+            .button.icon-only { /* Novo estilo para botões apenas com ícone */
+                padding: 0; /* Ajustado para remover padding */
+                width: 40px; /* Garante um tamanho fixo e quadrado */
+                height: 40px; /* Garante um tamanho fixo e quadrado */
+                gap: 0; /* Remove o espaçamento se não houver texto */
+            }
+
+            .button .material-icons {
+                font-size: 1.5rem; /* Aumentado o tamanho do ícone */
+            }
+
+            .primary-button {
+                background-color: var(--remax-blue);
+                color: #fff;
+            }
+
+            .primary-button:hover {
+                background-color: #3366bb;
+            }
+
+            .delete-button {
+                background-color: var(--remax-red);
+                color: #fff;
+            }
+
+            .delete-button:hover {
+                background-color: #ff4d4d;
+            }
+
+            .pdf-button {
+                background-color: var(--remax-red);
+                color: #fff;
+                margin-top: 30px;
+                width: 100%;
+            }
+
+            .pdf-button:hover {
+                background-color: #ff4d4d;
+            }
+
+            .action-buttons {
+                display: flex;
+                gap: 10px;
+                margin-top: 15px;
+                flex-wrap: wrap;
+                justify-content: flex-end; /* Alinha os botões à direita */
+            }
+            /* Override general .action-buttons .button styles for this specific context */
+            .input-with-buttons .action-buttons .button {
+                flex-grow: 0; /* Do not grow */
+                max-width: none; /* Remove max-width restriction */
+            }
+
+            .action-buttons .button {
+                flex-grow: 1;
+                max-width: 200px;
+            }
+
+            /* Tabelas */
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 20px;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            }
+
+            th, td {
+                border: 1px solid var(--remax-medium-gray);
+                padding: 12px;
+                text-align: left;
+                vertical-align: middle;
+            }
+
+            th {
+                background-color: #f0f0f0;
+                font-weight: bold;
+                color: #444;
+            }
+
+            td img {
+                max-width: 100px;
+                max-height: 100px;
+                height: auto;
+                display: block;
+                margin: 0 auto;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+            }
+
+            .no-records {
+                text-align: center;
+                color: #777;
+                padding: 20px;
+                font-style: italic;
+            }
+
+            /* Modal da Câmera */
+            .camera-modal {
+                display: none;
+                position: fixed;
+                z-index: 1000;
+                left: 0;
+                top: 0;
+                width: 100%; /* Full width */
+                height: 100%;
+                overflow: auto;
+                background-color: rgba(0,0,0,0.7);
+                justify-content: center;
+                align-items: center;
+                flex-direction: column;
+                padding: 20px;
+                box-sizing: border-box;
+            }
+
+            .camera-modal-content {
+                background-color: #fff;
+                padding: 25px;
+                border-radius: 8px;
+                width: 90%;
+                max-width: 600px;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+                position: relative;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .camera-modal-content video {
+                width: 100%;
+                max-height: 400px;
+                background-color: #000;
+                border-radius: 5px;
+                margin-bottom: 20px;
+                object-fit: contain;
+            }
+
+            .camera-modal-content canvas {
+                display: none;
+            }
+
+            .camera-modal-buttons {
+                display: flex;
+                gap: 15px;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+
+            .camera-modal-close {
+                position: absolute;
+                top: 15px;
+                right: 20px;
+                color: #aaa;
+                font-size: 28px;
+                font-weight: bold;
+                cursor: pointer;
+                transition: color 0.3s ease;
+            }
+
+            .camera-modal-close:hover,
+            .camera-modal-close:focus {
+                color: var(--remax-red);
+            }
+
+            .camera-error-message {
+                color: var(--remax-red);
+                margin-top: 15px;
+                font-weight: bold;
+                text-align: center;
+            }
+
+            /* Novo estilo para blocos de informação */
+            .info-block {
+                border: 1px solid var(--remax-medium-gray);
+                border-radius: 8px;
+                padding: 0px 20px 20px 20px;
+                margin-top: 20px;
+                margin-bottom: 20px;
+                background-color: #fcfcfc;
+            }
+
+            .info-block h3 {
+                text-align: center;
+                color: var(--remax-blue);
+                margin-top: 20px;
+                margin-bottom: 20px;
+            }
+
+            .info-block .form-group {
+                margin-bottom: 15px;
+            }
+
+            .info-block .form-group:last-child {
+                margin-bottom: 0;
+            }
+
+            /* Estilos para agrupar campos lado a lado */
+            .form-group-row {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 20px; /* Espaçamento entre os campos */
+                margin-bottom: 18px; /* Mantém o espaçamento entre as linhas */
+            }
+
+            .form-group-row .form-group {
+                flex: 1; /* Permite que cada item ocupe o espaço disponível */
+                min-width: 250px; /* Garante que os campos não fiquem muito pequenos */
+                margin-bottom: 0; /* Remove a margem inferior padrão para flex item */
+            }
+            .form-group-row .form-group label { /* Centraliza os títulos dos campos dentro de form-group-row */
+                text-align: center;
+                width: 100%; /* Garante que o label ocupe toda a largura para centralizar o texto */
+            }
+
+            /* Divisor */
+            .divider {
+                height: 1px;
+                background-color: var(--remax-medium-gray);
+                margin: 40px 0;
+            }
+
+            /* Rodapé */
+            .site-footer {
+                margin-top: 40px;
+                padding: 20px;
+                text-align: center;
+                color: #777;
+                font-size: 0.9rem;
+                border-top: 3px solid var(--remax-blue);
+                background-color: #f9f9f9;
+                border-radius: 0 0 8px 8px;
+            }
+
+            /* Novo estilo para agrupar input e botões */
+            .input-with-buttons {
+                display: flex;
+                align-items: flex-end; /* Alinha os botões com a parte inferior do input */
+                gap: 10px; /* Espaço entre o campo de texto e os botões */
+                margin-bottom: 18px; /* Mantém o espaçamento vertical */
+            }
+
+            .input-with-buttons .form-group {
+                flex-grow: 1; /* Permite que o campo de texto ocupe o espaço restante */
+                margin-bottom: 0; /* Remove a margem inferior padrão para alinhamento em flex */
+            }
+
+            .input-with-buttons .action-buttons {
+                display: flex;
+                gap: 5px; /* Espaço menor entre os botões de câmera e galeria */
+                margin-top: 0; /* Remove a margem superior desnecessária */
+                justify-content: flex-start;
+                align-items: flex-end; /* Alinha os botões com a parte inferior */
+                margin-bottom: 0; /* Remove a margem inferior desnecessária */
+            }
+
+            /* Responsividade */
+            @media (max-width: 768px) {
+                body {
+                    padding: 10px;
+                }
+
+                .container {
+                    margin: 10px auto;
+                    padding: 20px;
+                }
+
+                h1 {
+                    font-size: 1.8rem;
+                    margin-left: -20px;
+                    margin-right: -20px;
+                    border-radius: 8px 8px 0 0;
+                }
+
+                h2 {
+                    font-size: 1.4rem;
+                }
+
+                .form-group.estado-imovel,
+                .form-group-row { /* Quebra em coluna em telas menores */
+                    flex-direction: column;
+                    align-items: flex-start;
+                    gap: 10px;
+                }
+                .form-group-row .form-group {
+                    min-width: 100%; /* Ocupa largura total em telas menores */
+                }
+
+                .radio-group {
+                    flex-direction: column;
+                    gap: 10px;
+                }
+
+                .action-buttons {
+                    flex-direction: column;
+                    align-items: stretch;
+                }
+
+                .action-buttons .button {
+                    max-width: 100%;
+                }
+                .action-buttons .button.icon-only { /* Ajuste para botões apenas com ícone em telas pequenas */
+                    max-width: 40px; /* Mantém o tamanho fixo para ícones */
+                }
+
+                .input-with-buttons {
+                    flex-direction: column; /* Quebra em coluna em telas menores */
+                    align-items: stretch;
+                }
+                .input-with-buttons .action-buttons {
+                    justify-content: center; /* Centraliza os botões quando em coluna */
+                    margin-top: 10px;
+                }
+
+                th, td {
+                    padding: 8px;
+                    font-size: 0.9rem;
+                }
+
+                td img {
+                    max-width: 80px;
+                    max-height: 80px;
+                }
+
+                .info-block {
+                    padding: 15px;
+                }
+            }
+
+            @media (max-width: 480px) {
+                .container {
+                    padding: 15px;
+                }
+
+                h1 {
+                    font-size: 1.5rem;
+                    margin-left: -15px;
+                    margin-right: -15px;
+                    border-radius: 8px 8px 0 0;
+                }
+                h2 {
+                    font-size: 1.2rem;
+                }
+                .camera-modal-content {
+                    padding: 15px;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>LAUDO DE VISTORIA</h1>
+
+            <form id="inspectionForm">
+                <div class="form-section">
+                    <div class="form-group-row"> <div class="form-group">
+                            <label for="reportDate">Data do Laudo:</label>
+                            <input type="date" id="reportDate" name="reportDate" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="contractDate">Data do Contrato:</label>
+                            <input type="date" id="contractDate" name="contractDate" required>
+                        </div>
+                    </div>
+
+                    <div class="info-block">
+                        <h3>Informações do Corretor</h3>
+                        <div class="form-group">
+                            <label for="brokerName">Corretor(a):</label>
+                            <input type="text" id="brokerName" name="brokerName" required>
+                        </div>
+                        <div class="form-group-row">
+                            <div class="form-group">
+                                <label for="creci">CRECI:</label>
+                                <input type="text" id="creci" name="creci" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="cpf">CPF:</label>
+                                <input type="text" id="cpf" name="cpf" maxlength="14" placeholder="XXX.XXX.XXX-XX" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="info-block">
+                        <h3>Informações do Imóvel</h3>
+                        <div class="form-group-row">
+                            <div class="form-group">
+                                <label for="landlord">Locador:</label>
+                                <input type="text" id="landlord" name="landlord" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="tenant">Locatário:</label>
+                                <input type="text" id="tenant" name="tenant" required>
+                            </div>
+                        </div>
+                        <div class="form-group-row">
+                            <div class="form-group">
+                                <label for="propertyType">Tipo de Imóvel:</label>
+                                <select id="propertyType" name="propertyType" required>
+                                    <option value="">Selecione</option>
+                                    <option value="Casa">Casa</option>
+                                    <option value="Apartamento">Apartamento</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="destination">Destinação:</label>
+                                <select id="destination" name="destination" required>
+                                    <option value="">Selecione</option>
+                                    <option value="Residencial">Residencial</option>
+                                    <option value="Comercial">Comercial</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="propertyAddress">Endereço do Imóvel:</label>
+                            <textarea id="propertyAddress" name="propertyAddress" required></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-group estado-imovel">
+                        <label>Estado do Imóvel:</label>
+                        <div class="radio-group">
+                            <label><input type="radio" name="propertyState" value="Novo" required> <span>Novo</span></label>
+                            <label><input type="radio" name="propertyState" value="Excelente"> <span>Excelente</span></label>
+                            <label><input type="radio" name="propertyState" value="Bom"> <span>Bom</span></label>
+                            <label><input type="radio" name="propertyState" value="Regular"> <span>Regular</span></label>
+                            <label><input type="radio" name="propertyState" value="Ruim"> <span>Ruim</span></label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-block">
+                    <h3>Itens da Vistoria e Danos Encontrados</h3>
+                    <div class="form-section">
+                        <h2>Itens da Vistoria.</h2>
+                        <div class="input-with-buttons">
+                            <div class="form-group">
+                                <label for="inspectionItemDescription">Descrição do Item:</label>
+                                <input type="text" id="inspectionItemDescription" placeholder="Ex: Porta da sala, parede da cozinha, etc.">
+                            </div>
+                            <div class="action-buttons">
+                                <button type="button" class="button primary-button icon-only" id="openCameraInspection">
+                                    <span class="material-icons">camera_alt</span>
+                                </button>
+                                <input type="file" id="selectPhotoInspection" accept="image/*" style="display: none;">
+                                <button type="button" class="button primary-button icon-only" id="triggerSelectPhotoInspection">
+                                    <span class="material-icons">collections</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <table id="inspectionItemsTable">
+                            <thead>
+                                <tr>
+                                    <th>ITEM</th>
+                                    <th>FOTO</th>
+                                    <th>AÇÕES</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr id="noInspectionItems" class="no-records">
+                                    <td colspan="3">Nenhum item de vistoria adicionado.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="divider"></div>
+
+                    <div class="form-section">
+                        <h2>Danos Encontrados.</h2>
+                        <div class="input-with-buttons">
+                            <div class="form-group">
+                                <label for="damageItemDescription">Descrição do Dano:</label>
+                                <input type="text" id="damageItemDescription" placeholder="Ex: Vidro quebrado, pintura descascada, etc.">
+                            </div>
+                            <div class="action-buttons">
+                                <button type="button" class="button primary-button icon-only" id="openCameraDamage">
+                                    <span class="material-icons">camera_alt</span>
+                                </button>
+                                <input type="file" id="selectPhotoDamage" accept="image/*" style="display: none;">
+                                <button type="button" class="button primary-button icon-only" id="triggerSelectPhotoDamage">
+                                    <span class="material-icons">collections</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <table id="damageItemsTable">
+                            <thead>
+                                <tr>
+                                    <th>Item Danificado</th>
+                                    <th>Foto</th>
+                                    <th>AÇÕES</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr id="noDamageItems" class="no-records">
+                                    <td colspan="3">Nenhum dano adicionado.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <button type="button" class="button pdf-button" id="generatePdf">
+                    <span class="material-icons">picture_as_pdf</span> Gerar PDF
+                </button>
+
+                <footer class="site-footer">
+                    <p>Desenvolvido por Peter Lange</p>
+                    <p>Corretor de Imóveis - CRECI 31687</p>
+                </footer>
+            </form>
+        </div>
+
+        <div id="cameraModal" class="camera-modal">
+            <div class="camera-modal-content">
+                <span class="camera-modal-close">&times;</span>
+                <h2>Pré-visualização da Câmera</h2>
+                <video id="cameraFeed" autoplay playsinline></video>
+                <canvas id="cameraCanvas" style="display:none;"></canvas>
+                <p id="cameraErrorMessage" class="camera-error-message" style="display:none;"></p>
+                <div class="camera-modal-buttons">
+                    <button type="button" class="button primary-button icon-only" id="takePhoto">
+                        <span class="material-icons">camera</span>
+                    </button>
+                    <button type="button" class="button delete-button" id="cancelCamera">
+                        <span class="material-icons">cancel</span> Cancelar
+                    </button>
+                </div>
+            </div>
+        </div>
 
 
-        // Event Listeners para Abrir o Modal da Câmera
-        document.getElementById('FotoItem').addEventListener('click', () => {
-            startCameraPreview('ItensVistoria', 'ItemVistoria');
-        });
-
-        document.getElementById('FotoDano').addEventListener('click', () => {
-            startCameraPreview('ItensDanificados', 'ItemDanificado');
-        });
-
-        // PDF Generation
-        document.getElementById('GerarPDF').addEventListener('click', () => {
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+        <script src="https://unpkg.com/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.js"></script>
+        <script>
             const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
+            // Arrays para armazenar itens e danos
+            let inspectionItems = [];
+            let damageItems = [];
 
-            // Collect form data
-            const dataLaudo = document.getElementById('DataLaudo').value;
-            const tipoImovel = document.getElementById('TipoImovel').value;
-            const destinacao = document.getElementById('Destinacao').value;
-            const dataContrato = document.getElementById('DataContrato').value;
-            const corretor = document.getElementById('Corretor').value;
-            const creci = document.getElementById('Creci').value;
-            const cpf = document.getElementById('Cpf').value;
-            const nomeLocador = document.getElementById('NomeLocador').value;
-            const nomeLocatario = document.getElementById('NomeLocatario').value;
-            const endereco = document.getElementById('Endereco').value;
-            const estadoImovel = document.querySelector('input[name="estadoImovel"]:checked')?.value || 'Não informado';
+            // Elementos do DOM
+            const reportDateInput = document.getElementById('reportDate');
+            const cpfInput = document.getElementById('cpf');
 
-            // Add Title
-            doc.setFontSize(22);
-            doc.text("LAUDO DE VISTORIA", doc.internal.pageSize.getWidth() / 2, 20, { align: "center" });
+            const inspectionItemDescriptionInput = document.getElementById('inspectionItemDescription');
+            const openCameraInspectionButton = document.getElementById('openCameraInspection');
+            const selectPhotoInspectionInput = document.getElementById('selectPhotoInspection');
+            const triggerSelectPhotoInspectionButton = document.getElementById('triggerSelectPhotoInspection');
+            const inspectionItemsTableBody = document.getElementById('inspectionItemsTable').querySelector('tbody');
+            const noInspectionItemsRow = document.getElementById('noInspectionItems');
 
-            let yOffset = 30;
+            const damageItemDescriptionInput = document.getElementById('damageItemDescription');
+            const openCameraDamageButton = document.getElementById('openCameraDamage');
+            const selectPhotoDamageInput = document.getElementById('selectPhotoDamage');
+            const triggerSelectPhotoDamageButton = document.getElementById('triggerSelectPhotoDamage');
+            const damageItemsTableBody = document.getElementById('damageItemsTable').querySelector('tbody');
+            const noDamageItemsRow = document.getElementById('noDamageItems');
 
-            // Add form data
-            doc.setFontSize(10);
-            doc.text(`Data do Laudo: ${dataLaudo}`, 10, yOffset);
-            doc.text(`Tipo de Imóvel: ${tipoImovel}`, 100, yOffset);
-            yOffset += 7;
-            doc.text(`Destinação: ${destinacao}`, 10, yOffset);
-            doc.text(`Data do Contrato: ${dataContrato}`, 100, yOffset);
-            yOffset += 7;
-            doc.text(`Corretor(a): ${corretor}`, 10, yOffset);
-            doc.text(`CRECI: ${creci}`, 100, yOffset);
-            yOffset += 7;
-            doc.text(`CPF: ${cpf}`, 10, yOffset);
-            yOffset += 7;
-            doc.text(`Locador: ${nomeLocador}`, 10, yOffset);
-            doc.text(`Locatário: ${nomeLocatario}`, 100, yOffset);
-            yOffset += 7;
-            doc.text(`Endereço: ${endereco}`, 10, yOffset);
-            yOffset += 7;
-            doc.text(`Estado do Imóvel: ${estadoImovel}`, 10, yOffset);
-            yOffset += 15; // Space before next section
+            const generatePdfButton = document.getElementById('generatePdf');
+            // Elementos do Modal da Câmera
+            const cameraModal = document.getElementById('cameraModal');
+            const cameraFeed = document.getElementById('cameraFeed');
+            const cameraCanvas = document.getElementById('cameraCanvas');
+            const takePhotoButton = document.getElementById('takePhoto');
+            const cancelCameraButton = document.getElementById('cancelCamera');
+            const cameraModalCloseButton = document.querySelector('.camera-modal-close');
+            const cameraErrorMessage = document.getElementById('cameraErrorMessage');
 
-            // Table for Itens de Vistoria
-            doc.setFontSize(14);
-            doc.text("Itens da Vistoria", doc.internal.pageSize.getWidth() / 2, yOffset, { align: "center" });
-            yOffset += 10;
+            let currentStream; // Para controlar o stream da câmera
+            let currentItemType = '';
+            // 'inspection' ou 'damage' para saber qual tabela atualizar
 
-            // Define cell height for headers for calculation
-            const headerCellHeight = 7;
-            // Calculate vertical center for text in header cells
-            const headerTextYOffset = yOffset + (headerCellHeight / 2) + (doc.internal.getFontSize() / (2 * doc.internal.scaleFactor));
-
-            // Table headers
-            doc.setFontSize(10);
-            doc.rect(10, yOffset, 90, headerCellHeight); 
-            doc.text("ITEM", 55, headerTextYOffset, { align: "center" }); // Vertically centered
-            doc.rect(100, yOffset, 100, headerCellHeight); 
-            doc.text("FOTO", 150, headerTextYOffset, { align: "center" }); // Vertically centered
-            yOffset += headerCellHeight;
-
-            itensVistoria.forEach(item => {
-                const contentCellHeight = 35; // Height for row to accommodate 3cm image (approx)
-                if (yOffset + contentCellHeight > doc.internal.pageSize.getHeight() - 10) { // Check for page break
-                    doc.addPage();
-                    yOffset = 20; // Reset yOffset for new page
-                    // Re-draw headers on new page
-                    doc.setFontSize(10);
-                    const newPageHeaderTextYOffset = yOffset + (headerCellHeight / 2) + (doc.internal.getFontSize() / (2 * doc.internal.scaleFactor));
-                    doc.rect(10, yOffset, 90, headerCellHeight); 
-                    doc.text("ITEM", 55, newPageHeaderTextYOffset, { align: "center" });
-                    doc.rect(100, yOffset, 100, headerCellHeight); 
-                    doc.text("FOTO", 150, newPageHeaderTextYOffset, { align: "center" });
-                    yOffset += headerCellHeight;
-                }
-
-                doc.rect(10, yOffset, 90, contentCellHeight);
-                doc.text(item.text, 15, yOffset + 5, { maxWidth: 80 }); // Item text, currently top-aligned with padding
-                doc.rect(100, yOffset, 100, contentCellHeight);
-                if (item.photo) {
-                    // Calculate image dimensions to fit 3cm height (approx 113.38 pixels at 96 DPI)
-                    // jsPDF works with mm, so 3cm = 30mm
-                    const imgWidth = 30 * (doc.getImageProperties(item.photo).width / doc.getImageProperties(item.photo).height);
-                    doc.addImage(item.photo, 'JPEG', 105, yOffset + 2.5, imgWidth, 30); // x, y, width, height
-                }
-                yOffset += contentCellHeight;
-            });
-
-            yOffset += 15; // Space before next section
-
-            // Title for Danos Encontrados
-            doc.setFontSize(14);
-            doc.text("Danos Encontrados.", doc.internal.pageSize.getWidth() / 2, yOffset, { align: "center" });
-            yOffset += 10;
-
-
-            // Table headers
-            doc.setFontSize(10);
-            const danoHeaderTextYOffset = yOffset + (headerCellHeight / 2) + (doc.internal.getFontSize() / (2 * doc.internal.scaleFactor));
-
-            doc.rect(10, yOffset, 90, headerCellHeight); 
-            doc.text("Item Danificado", 55, danoHeaderTextYOffset, { align: "center" }); // Vertically centered
-            doc.rect(100, yOffset, 100, headerCellHeight); 
-            doc.text("Foto", 150, danoHeaderTextYOffset, { align: "center" }); // Vertically centered
-            yOffset += headerCellHeight;
-
-            itensDanificados.forEach(item => {
-                const contentCellHeight = 35; // Height for row to accommodate 3cm image (approx)
-                if (yOffset + contentCellHeight > doc.internal.pageSize.getHeight() - 10) { // Check for page break
-                    doc.addPage();
-                    yOffset = 20; // Reset yOffset for new page
-                    // Re-draw headers on new page
-                    doc.setFontSize(10);
-                    const newPageDanoHeaderTextYOffset = yOffset + (headerCellHeight / 2) + (doc.internal.getFontSize() / (2 * doc.internal.scaleFactor));
-                    doc.rect(10, yOffset, 90, headerCellHeight); 
-                    doc.text("Item Danificado", 55, newPageDanoHeaderTextYOffset, { align: "center" });
-                    doc.rect(100, yOffset, 100, headerCellHeight); 
-                    doc.text("Foto", 150, newPageDanoHeaderTextYOffset, { align: "center" });
-                    yOffset += headerCellHeight;
-                }
-
-                doc.rect(10, yOffset, 90, contentCellHeight);
-                doc.text(item.text, 15, yOffset + 5, { maxWidth: 80 }); // Item text
-                doc.rect(100, yOffset, 100, contentCellHeight);
-                if (item.photo) {
-                    const imgWidth = 30 * (doc.getImageProperties(item.photo).width / doc.getImageProperties(item.photo).height);
-                    doc.addImage(item.photo, 'JPEG', 105, yOffset + 2.5, imgWidth, 30); // x, y, width, height
-                }
-                yOffset += contentCellHeight;
-            });
-
-            // --- Adiciona a numeração de página ---
-            const totalPages = doc.internal.getNumberOfPages();
-            for (let i = 1; i <= totalPages; i++) {
-                doc.setPage(i);
-                doc.setFontSize(10);
-                doc.text(`Página ${i} de ${totalPages}`, doc.internal.pageSize.getWidth() - 30, doc.internal.pageSize.getHeight() - 10, { align: "right" });
+            /**
+             * Preenche a data do laudo com a data atual.
+             */
+            function setReportDate() {
+                const today = new Date();
+                const year = today.getFullYear();
+                const month = String(today.getMonth() + 1).padStart(2, '0');
+                const day = String(today.getDate()).padStart(2, '0');
+                reportDateInput.value = `${year}-${month}-${day}`;
             }
-            // --- Fim da adição da numeração de página ---
 
-            doc.save("laudo_de_vistoria.pdf");
-        });
-    </script>
-</body>
-</html>
+            /**
+             * Formata o CPF enquanto o usuário digita.
+             * @param {Event} event - O evento de input.
+             */
+            function formatCPF(event) {
+                let value = event.target.value.replace(/\D/g, '');
+                if (value.length > 9) {
+                    value = value.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+                } else if (value.length > 6) {
+                    value = value.replace(/(\d{3})(\d{3})(\d{3})/, '$1.$2.$3');
+                } else if (value.length > 3) {
+                    value = value.replace(/(\d{3})(\d{3})/, '$1.$2');
+                }
+                event.target.value = value;
+            }
+
+            /**
+             * Adiciona um item (vistoria ou dano) à tabela correspondente.
+             * @param {string} type - 'inspection' ou 'damage'.
+             * @param {string} description - A descrição do item.
+             * @param {string} imageData - A imagem em Base64, se houver.
+             */
+            function addItemToTable(type, description, imageData) {
+                const item = {
+                    id: Date.now(), // ID único para remoção
+                    description: description,
+                    image: imageData || null
+                };
+                let tableBody, noRecordsRow, dataArray;
+
+                if (type === 'inspection') {
+                    inspectionItems.push(item);
+                    dataArray = inspectionItems;
+                    tableBody = inspectionItemsTableBody;
+                    noRecordsRow = noInspectionItemsRow;
+                } else {
+                    damageItems.push(item);
+                    dataArray = damageItems;
+                    tableBody = damageItemsTableBody;
+                    noRecordsRow = noDamageItemsRow;
+                }
+
+                // Remove a linha "Nenhum registro" se houver itens
+                if (noRecordsRow && dataArray.length > 0) {
+                    noRecordsRow.style.display = 'none';
+                }
+
+                const row = tableBody.insertRow();
+                row.setAttribute('data-id', item.id); // Adiciona o ID para fácil remoção
+
+                const descriptionCell = row.insertCell();
+                descriptionCell.textContent = item.description;
+
+                const imageCell = row.insertCell();
+                if (item.image) {
+                    const img = document.createElement('img');
+                    img.src = item.image;
+                    img.alt = 'Foto do item';
+                    imageCell.appendChild(img);
+                } else {
+                    imageCell.textContent = 'N/A';
+                }
+
+                const actionsCell = row.insertCell();
+                const deleteButton = document.createElement('button');
+                deleteButton.classList.add('button', 'delete-button');
+                deleteButton.innerHTML = '<span class="material-icons">delete</span>'; // Removed text here
+                deleteButton.onclick = () => removeItem(type, item.id);
+                actionsCell.appendChild(deleteButton);
+                // Limpa o campo de texto
+                if (type === 'inspection') {
+                    inspectionItemDescriptionInput.value = '';
+                } else {
+                    damageItemDescriptionInput.value = '';
+                }
+            }
+
+            /**
+             * Remove um item da tabela e do array de dados.
+             * @param {string} type - 'inspection' ou 'damage'.
+             * @param {number} id - O ID do item a ser removido.
+             */
+            function removeItem(type, id) {
+                let dataArray, tableBody, noRecordsRow;
+                if (type === 'inspection') {
+                    dataArray = inspectionItems;
+                    tableBody = inspectionItemsTableBody;
+                    noRecordsRow = noInspectionItemsRow;
+                } else {
+                    dataArray = damageItems;
+                    tableBody = damageItemsTableBody;
+                    noRecordsRow = noDamageItemsRow;
+                }
+
+                const index = dataArray.findIndex(item => item.id === id);
+                if (index > -1) {
+                    dataArray.splice(index, 1);
+                    // Remove a linha da tabela
+                    const rowToRemove = tableBody.querySelector(`tr[data-id="${id}"]`);
+                    if (rowToRemove) {
+                        tableBody.removeChild(rowToRemove);
+                    }
+                }
+
+                // Mostra a linha "Nenhum registro" se não houver mais itens
+                if (dataArray.length === 0) {
+                    if (noRecordsRow) {
+                        noRecordsRow.style.display = 'table-row';
+                    }
+                }
+            }
+
+            /**
+             * Abre o modal da câmera e inicia a transmissão.
+             * @param {string} itemType - 'inspection' ou 'damage'.
+             */
+            async function openCamera(itemType) {
+                currentItemType = itemType;
+                cameraErrorMessage.style.display = 'none'; // Esconde mensagens de erro anteriores
+                cameraModal.style.display = 'flex';
+                try {
+                    // Tenta acessar a câmera traseira primeiro, se disponível
+                    const stream = await navigator.mediaDevices.getUserMedia({
+                        video: {
+                            facingMode: { ideal: 'environment' } // Preferência pela câmera traseira
+                        },
+                        audio: false
+                    });
+                    cameraFeed.srcObject = stream;
+                    currentStream = stream;
+                } catch (err) {
+                    console.error("Erro ao acessar a câmera: ", err);
+                    cameraErrorMessage.textContent = 'Não foi possível acessar a câmera. Por favor, verifique as permissões.';
+                    cameraErrorMessage.style.display = 'block';
+                    // Tenta com a câmera frontal se a traseira falhar ou não existir
+                    try {
+                        const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+                        cameraFeed.srcObject = stream;
+                        currentStream = stream;
+                    } catch (err2) {
+                        console.error("Erro ao acessar a câmera frontal: ", err2);
+                        cameraErrorMessage.textContent = 'Não foi possível acessar nenhuma câmera. Por favor, verifique as permissões.';
+                        cameraErrorMessage.style.display = 'block';
+                    }
+                }
+            }
+
+            /**
+             * Fecha o modal da câmera e para a transmissão.
+             */
+            function closeCameraModal() {
+                if (currentStream) {
+                    currentStream.getTracks().forEach(track => track.stop());
+                    cameraFeed.srcObject = null;
+                }
+                cameraModal.style.display = 'none';
+            }
+
+            /**
+             * Tira uma foto da transmissão da câmera e a adiciona à tabela.
+             */
+            function takePhoto() {
+                const context = cameraCanvas.getContext('2d');
+                cameraCanvas.width = cameraFeed.videoWidth;
+                cameraCanvas.height = cameraFeed.videoHeight;
+                context.drawImage(cameraFeed, 0, 0, cameraCanvas.width, cameraCanvas.height);
+                const imageData = cameraCanvas.toDataURL('image/png');
+
+                const descriptionInput = currentItemType === 'inspection' ?
+                    inspectionItemDescriptionInput : damageItemDescriptionInput;
+                const description = descriptionInput.value.trim();
+
+                if (description) {
+                    addItemToTable(currentItemType, description, imageData);
+                    closeCameraModal();
+                } else {
+                    alert('Por favor, adicione uma descrição antes de tirar a foto.');
+                }
+            }
+
+            /**
+             * Lida com a seleção de arquivo de imagem.
+             * @param {Event} event - O evento de mudança do input file.
+             * @param {string} itemType - 'inspection' ou 'damage'.
+             */
+            function handleFileSelect(event, itemType) {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        const imageData = e.target.result;
+                        const descriptionInput = itemType === 'inspection' ?
+                            inspectionItemDescriptionInput : damageItemDescriptionInput;
+                        const description = descriptionInput.value.trim();
+
+                        if (description) {
+                            addItemToTable(itemType, description, imageData);
+                        } else {
+                            alert('Por favor, adicione uma descrição antes de selecionar a foto.');
+                        }
+                    };
+                    reader.readAsDataURL(file);
+                }
+            }
+
+            /**
+             * Gera o documento PDF com base nos dados do formulário e tabelas.
+             */
+            async function generatePDF() {
+                const doc = new jsPDF();
+                const margin = 20;
+                let y = margin;
+                const lineHeight = 10;
+                const imageMaxHeight = 30;
+
+                // Adiciona a fonte Helvetica para caracteres especiais
+                doc.setFont('Helvetica');
+                // Título do Laudo
+                doc.setFontSize(22);
+                doc.setTextColor(0, 61, 165); // Azul RE/MAX
+                doc.text("LAUDO DE VISTORIA - REMAX Litorânea", doc.internal.pageSize.width / 2, y, { align: 'center' });
+                y += 20;
+
+                doc.setFontSize(12);
+                doc.setTextColor(51, 51, 51); // Cor principal do texto
+
+                // Dados do Formulário
+                const formData = {
+                    'Data do Laudo': document.getElementById('reportDate').value,
+                    'Data do Contrato': document.getElementById('contractDate').value,
+                    'Corretor(a)': document.getElementById('brokerName').value,
+                    'CRECI': document.getElementById('creci').value,
+                    'CPF': document.getElementById('cpf').value,
+                    'Locador': document.getElementById('landlord').value,
+                    'Locatário': document.getElementById('tenant').value,
+                    'Tipo de Imóvel': document.getElementById('propertyType').value,
+                    'Destinação': document.getElementById('destination').value,
+                    'Endereço do Imóvel': document.getElementById('propertyAddress').value,
+                    'Estado do Imóvel': document.querySelector('input[name="propertyState"]:checked')?.value || 'Não informado'
+                };
+                for (const key in formData) {
+                    if (key === 'Endereço do Imóvel') {
+                        doc.text(`${key}:`, margin, y);
+                        const splitText = doc.splitTextToSize(formData[key], doc.internal.pageSize.width - 2 * margin);
+                        y += lineHeight;
+                        doc.text(splitText, margin, y);
+                        y += (splitText.length - 1) * lineHeight + 10;
+                    } else {
+                        doc.text(`${key}: ${formData[key]}`, margin, y);
+                        y += lineHeight;
+                    }
+                }
+                y += 15;
+
+                // Seção Itens da Vistoria
+                if (y + 10 > doc.internal.pageSize.height - margin) {
+                    doc.addPage();
+                    y = margin;
+                }
+                doc.setFontSize(16);
+                doc.setTextColor(0, 61, 165); // Azul RE/MAX
+                doc.text("Itens da Vistoria.", margin, y);
+                y += 10;
+                doc.setFontSize(12);
+                doc.setTextColor(51, 51, 51); // Cor principal do texto
+
+                if (inspectionItems.length === 0) {
+                    doc.text("Nenhum item de vistoria adicionado.", margin, y);
+                    y += lineHeight;
+                } else {
+                    const tableColumn = ["ITEM", "FOTO"];
+                    const tableRows = [];
+
+                    for (const item of inspectionItems) {
+                        const row = [item.description, ''];
+                        tableRows.push(row);
+                    }
+
+                    doc.autoTable({
+                        head: [tableColumn],
+                        body: tableRows,
+                        startY: y,
+                        margin: { left: margin, right: margin },
+                        styles: {
+                            lineColor: [187, 187, 187],
+                            lineWidth: 0.5,
+                            textColor: 51,
+                            fontSize: 10
+                        },
+                        headStyles: {
+                            fillColor: [240, 240, 240],
+                            textColor: 68,
+                            fontStyle: 'bold'
+                        },
+                        columnStyles: {
+                            1: { cellWidth: 40 }
+                        },
+                        didDrawCell: function (data) {
+                            if (data.column.index === 1 && data.cell.section === 'body') {
+                                const item = inspectionItems[data.row.index];
+                                if (item && item.image) {
+                                    try {
+                                        let img = new Image();
+                                        img.src = item.image;
+                                        let imgWidth = img.width;
+                                        let imgHeight = img.height;
+                                        const ratio = imgHeight / imageMaxHeight;
+                                        imgWidth = imgWidth / ratio;
+                                        imgHeight = imageMaxHeight;
+
+                                        const imgX = data.cell.x + (data.cell.width / 2) - (imgWidth / 2);
+                                        const imgY = data.cell.y + (data.cell.height / 2) - (imgHeight / 2);
+
+                                        doc.addImage(item.image, 'PNG', imgX, imgY, imgWidth, imgHeight);
+                                    } catch (e) {
+                                        console.error("Erro ao adicionar imagem de vistoria ao PDF:", e);
+                                        doc.text("Erro na Imagem", data.cell.x + 2, data.cell.y + (data.cell.height / 2));
+                                    }
+                                }
+                            }
+                        },
+                        didParseCell: function (data) {
+                            if (data.column.index === 1 && data.cell.section === 'body') {
+                                data.cell.content = '';
+                            }
+                        },
+                        didDrawPage: function (data) {
+                            addPdfFooter(doc, data.pageNumber, doc.internal.getNumberOfPages());
+                        }
+                    });
+                    y = doc.autoTable.previous.finalY + 15;
+                }
+
+                // Seção Danos Encontrados
+                if (y + 10 > doc.internal.pageSize.height - margin) {
+                    doc.addPage();
+                    y = margin;
+                }
+                doc.setFontSize(16);
+                doc.setTextColor(0, 61, 165); // Azul RE/MAX
+                doc.text("Danos Encontrados.", margin, y);
+                y += 10;
+                doc.setFontSize(12);
+                doc.setTextColor(51, 51, 51); // Cor principal do texto
+
+                if (damageItems.length === 0) {
+                    doc.text("Nenhum dano adicionado.", margin, y);
+                    y += lineHeight;
+                } else {
+                    const tableColumn = ["Item Danificado", "FOTO"];
+                    const tableRows = [];
+
+                    for (const item of damageItems) {
+                        const row = [item.description, ''];
+                        tableRows.push(row);
+                    }
+
+                    doc.autoTable({
+                        head: [tableColumn],
+                        body: tableRows,
+                        startY: y,
+                        margin: { left: margin, right: margin },
+                        styles: {
+                            lineColor: [187, 187, 187],
+                            lineWidth: 0.5,
+                            textColor: 51,
+                            fontSize: 10
+                        },
+                        headStyles: {
+                            fillColor: [240, 240, 240],
+                            textColor: 68,
+                            fontStyle: 'bold'
+                        },
+                        columnStyles: {
+                            1: { cellWidth: 40 }
+                        },
+                        didDrawCell: function (data) {
+                            if (data.column.index === 1 && data.cell.section === 'body') {
+                                const item = damageItems[data.row.index];
+                                if (item && item.image) {
+                                    try {
+                                        let img = new Image();
+                                        img.src = item.image;
+
+                                        let imgWidth = img.width;
+                                        let imgHeight = img.height;
+
+                                        const ratio = imgHeight / imageMaxHeight;
+                                        imgWidth = imgWidth / ratio;
+                                        imgHeight = imageMaxHeight;
+
+                                        const imgX = data.cell.x + (data.cell.width / 2) - (imgWidth / 2);
+                                        const imgY = data.cell.y + (data.cell.height / 2) - (imgHeight / 2);
+
+                                        doc.addImage(item.image, 'PNG', imgX, imgY, imgWidth, imgHeight);
+                                    } catch (e) {
+                                        console.error("Erro ao adicionar imagem de dano ao PDF:", e);
+                                        doc.text("Erro na Imagem", data.cell.x + 2, data.cell.y + (data.cell.height / 2));
+                                    }
+                                }
+                            }
+                        },
+                        didParseCell: function (data) {
+                            if (data.column.index === 1 && data.cell.section === 'body') {
+                                data.cell.content = '';
+                            }
+                        },
+                        didDrawPage: function (data) {
+                            addPdfFooter(doc, data.pageNumber, doc.internal.getNumberOfPages());
+                        }
+                    });
+                }
+
+                // Garante que o rodapé final seja adicionado em todas as páginas, incluindo a última após o conteúdo
+                const totalPages = doc.internal.getNumberOfPages();
+                for (let i = 1; i <= totalPages; i++) {
+                    doc.setPage(i);
+                    addPdfFooter(doc, i, totalPages);
+                }
+
+                doc.save('laudo_vistoria_REMAX.pdf');
+            }
+
+            /**
+             * Adiciona o rodapé a cada página do PDF.
+             * @param {jsPDF} doc - O objeto jsPDF.
+             * @param {number} pageNumber - O número da página atual.
+             * @param {number} totalPages - O número total de páginas (pode ser atualizado após o conteúdo).
+             */
+            function addPdfFooter(doc, pageNumber, totalPages) {
+                const pageSize = doc.internal.pageSize;
+                const pageHeight = pageSize.height ? pageSize.height : pageSize.getHeight();
+                const pageWidth = pageSize.width ? pageSize.width : pageSize.getWidth();
+                const footerY = pageHeight - 15;
+
+                // Page X of Y
+                doc.setFontSize(10);
+                doc.setTextColor(119, 119, 119); // Cinza do rodapé
+                doc.text(`Página ${pageNumber} de ${totalPages}`, pageWidth - 40, footerY, { align: 'right' });
+                // Developer info (centralizado)
+                doc.text("Desenvolvido por Peter Lange", pageWidth / 2, footerY, { align: 'center' });
+                doc.text("Corretor de Imóveis - CRECI 31687", pageWidth / 2, footerY + 5, { align: 'center' });
+            }
+
+
+            // Inicialização
+            document.addEventListener('DOMContentLoaded', () => {
+                setReportDate(); // Preenche a data atual
+                // Esconde as linhas de "Nenhum registro" se já houver itens ao recarregar a página (embora o js esteja limpo ao carregar)
+                if (inspectionItems.length > 0) noInspectionItemsRow.style.display = 'none';
+                if (damageItems.length > 0) noDamageItemsRow.style.display = 'none';
+            });
+            // Event Listeners
+            cpfInput.addEventListener('input', formatCPF);
+            openCameraInspectionButton.addEventListener('click', () => {
+                const description = inspectionItemDescriptionInput.value.trim();
+                if (description) {
+                    openCamera('inspection');
+                } else {
+                    alert('Por favor, digite uma descrição antes de abrir a câmera.');
+                }
+            });
+            triggerSelectPhotoInspectionButton.addEventListener('click', () => {
+                const description = inspectionItemDescriptionInput.value.trim();
+                if (description) {
+                    selectPhotoInspectionInput.click();
+                } else {
+                    alert('Por favor, digite uma descrição antes de selecionar a foto.');
+                }
+            });
+            selectPhotoInspectionInput.addEventListener('change', (e) => handleFileSelect(e, 'inspection'));
+
+            openCameraDamageButton.addEventListener('click', () => {
+                const description = damageItemDescriptionInput.value.trim();
+                if (description) {
+                    openCamera('damage');
+                } else {
+                    alert('Por favor, digite uma descrição antes de abrir a câmera.');
+                }
+            });
+            triggerSelectPhotoDamageButton.addEventListener('click', () => {
+                const description = damageItemDescriptionInput.value.trim();
+                if (description) {
+                    selectPhotoDamageInput.click();
+                } else {
+                    alert('Por favor, digite uma descrição antes de selecionar a foto.');
+                }
+            });
+            selectPhotoDamageInput.addEventListener('change', (e) => handleFileSelect(e, 'damage'));
+
+            takePhotoButton.addEventListener('click', takePhoto);
+            cancelCameraButton.addEventListener('click', closeCameraModal);
+            cameraModalCloseButton.addEventListener('click', closeCameraModal);
+            window.addEventListener('click', (event) => { // Fecha modal clicando fora
+                if (event.target == cameraModal) {
+                    closeCameraModal();
+                }
+            });
+            generatePdfButton.addEventListener('click', generatePDF);
+        </script>
+    </body>
+    </html>
