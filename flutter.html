@@ -651,6 +651,7 @@
                     <table id="inspectionItemsTable">
                         <thead>
                             <tr>
+                                <th>Nº</th>
                                 <th>ITEM</th>
                                 <th>FOTO</th>
                                 <th>AÇÕES</th>
@@ -658,7 +659,7 @@
                         </thead>
                         <tbody>
                             <tr id="noInspectionItems" class="no-records">
-                                <td colspan="3">Nenhum item de vistoria adicionado.</td>
+                                <td colspan="4">Nenhum item de vistoria adicionado.</td>
                             </tr>
                         </tbody>
                     </table>
@@ -687,6 +688,7 @@
                     <table id="damageItemsTable">
                         <thead>
                             <tr>
+                                <th>Nº</th>
                                 <th>Item Danificado</th>
                                 <th>Foto</th>
                                 <th>AÇÕES</th>
@@ -694,7 +696,7 @@
                         </thead>
                         <tbody>
                             <tr id="noDamageItems" class="no-records">
-                                <td colspan="3">Nenhum dano adicionado.</td>
+                                <td colspan="4">Nenhum dano adicionado.</td>
                             </tr>
                         </tbody>
                     </table>
@@ -832,6 +834,9 @@
             const row = tableBody.insertRow();
             row.setAttribute('data-id', item.id); // Adiciona o ID para fácil remoção
 
+            const numCell = row.insertCell(); // New cell for the number
+            numCell.textContent = dataArray.length; // The count
+
             const descriptionCell = row.insertCell();
             descriptionCell.textContent = item.description;
 
@@ -888,6 +893,14 @@
                 }
             }
 
+            // Re-renderiza a numeração após a remoção
+            Array.from(tableBody.rows).forEach((row, idx) => {
+                const firstCell = row.cells[0]; // Assuming the number is in the first cell
+                if (firstCell) {
+                    firstCell.textContent = idx + 1;
+                }
+            });
+
             // Mostra a linha "Nenhum registro" se não houver mais itens
             if (dataArray.length === 0) {
                 if (noRecordsRow) {
@@ -895,6 +908,7 @@
                 }
             }
         }
+
 
         /**
          * Abre o modal da câmera e inicia a transmissão.
@@ -1020,28 +1034,7 @@
             const pageHeight = doc.internal.pageSize.height;
             let y = 10; // Posição Y inicial
 
-            // Carregar a imagem do logo RE/MAX
-            const remaxLogoUrl = 'https://www.remax.com.br/wp-content/uploads/2021/04/remax_logo_header.png';
-            let remaxLogoData;
-
-            try {
-                const response = await fetch(remaxLogoUrl);
-                const blob = await response.blob();
-                remaxLogoData = await new Promise(resolve => {
-                    const reader = new FileReader();
-                    reader.onloadend = () => resolve(reader.result);
-                    reader.readAsDataURL(blob);
-                });
-            } catch (error) {
-                console.error("Erro ao carregar o logo RE/MAX:", error);
-                alert("Não foi possível carregar o logo RE/MAX para o PDF. O PDF será gerado sem ele.");
-                remaxLogoData = null;
-            }
-
-            // Cabeçalho - Logo RE/MAX e Título
-            if (remaxLogoData) {
-                doc.addImage(remaxLogoData, 'PNG', 10, 10, 50, 20); // Ajuste as dimensões conforme necessário
-            }
+            // Cabeçalho - Título
             doc.setFontSize(22);
             doc.setTextColor(0, 61, 165); // --remax-blue
             doc.text('LAUDO DE VISTORIA', doc.internal.pageSize.width / 2, 25, { align: 'center' });
@@ -1094,14 +1087,12 @@
             y = doc.lastAutoTable.finalY || y; // Pega a última posição Y após o texto que pode ter quebrado linha
             y += 10;
 
-            // **INÍCIO DA CORREÇÃO**
             let selectedPropertyState = '';
             const propertyStateRadio = document.querySelector('input[name="propertyState"]:checked');
             if (propertyStateRadio) {
                 selectedPropertyState = propertyStateRadio.value;
             }
             doc.text(`Estado do Imóvel: ${selectedPropertyState}`, 10, y);
-            // **FIM DA CORREÇÃO**
 
             y += 15;
 
@@ -1111,8 +1102,8 @@
             doc.text('Itens da Vistoria', doc.internal.pageSize.width / 2, y, { align: 'center' });
             y += 8;
 
-            const inspectionTableColumns = ["ITEM", "FOTO"];
-            const inspectionTableRows = inspectionItems.map(item => [item.description, '']);
+            const inspectionTableColumns = ["Nº", "ITEM", "FOTO"];
+            const inspectionTableRows = inspectionItems.map((item, index) => [index + 1, item.description, '']);
 
             doc.autoTable({
                 startY: y,
@@ -1134,11 +1125,12 @@
                     fontStyle: 'bold'
                 },
                 columnStyles: {
-                    0: { cellWidth: 100 }, // Largura para a descrição
-                    1: { cellWidth: 80, halign: 'center' } // Largura para a foto
+                    0: { cellWidth: 15, halign: 'center' }, // Largura para o número
+                    1: { cellWidth: 85 }, // Largura para a descrição (ajustado)
+                    2: { cellWidth: 80, halign: 'center' } // Largura para a foto
                 },
                 didDrawCell: function (data) {
-                    if (data.column.index === 1 && data.cell.section === 'body') {
+                    if (data.column.index === 2 && data.cell.section === 'body') { // Photo column
                         const item = inspectionItems[data.row.index];
                         if (item && item.image) {
                             const imgWidth = item.imageDimensions.width;
@@ -1165,7 +1157,7 @@
                     }
                 },
                 didParseCell: function (data) {
-                    if (data.column.index === 1 && data.cell.section === 'body') {
+                    if (data.column.index === 2 && data.cell.section === 'body') { // Photo column
                         // Aumenta a altura da linha para acomodar a imagem
                         data.row.height = 30; // Altura mínima para a imagem
                     }
@@ -1179,8 +1171,8 @@
             doc.text('Danos Encontrados', doc.internal.pageSize.width / 2, y, { align: 'center' });
             y += 8;
 
-            const damageTableColumns = ["ITEM DANIFICADO", "FOTO"];
-            const damageTableRows = damageItems.map(item => [item.description, '']);
+            const damageTableColumns = ["Nº", "ITEM DANIFICADO", "FOTO"];
+            const damageTableRows = damageItems.map((item, index) => [index + 1, item.description, '']);
 
             doc.autoTable({
                 startY: y,
@@ -1202,11 +1194,12 @@
                     fontStyle: 'bold'
                 },
                 columnStyles: {
-                    0: { cellWidth: 100 },
-                    1: { cellWidth: 80, halign: 'center' }
+                    0: { cellWidth: 15, halign: 'center' }, // Largura para o número
+                    1: { cellWidth: 85 }, // Largura para a descrição (ajustado)
+                    2: { cellWidth: 80, halign: 'center' } // Largura para a foto
                 },
                 didDrawCell: function (data) {
-                    if (data.column.index === 1 && data.cell.section === 'body') {
+                    if (data.column.index === 2 && data.cell.section === 'body') { // Photo column
                         const item = damageItems[data.row.index];
                         if (item && item.image) {
                             const imgWidth = item.imageDimensions.width;
@@ -1232,16 +1225,27 @@
                     }
                 },
                 didParseCell: function (data) {
-                    if (data.column.index === 1 && data.cell.section === 'body') {
+                    if (data.column.index === 2 && data.cell.section === 'body') { // Photo column
                         data.row.height = 30;
                     }
                 }
             });
             y = doc.autoTable.previous.finalY + 20;
 
-            // Rodapé
+            // Rodapé com numeração de páginas
+            const totalPages = doc.internal.getNumberOfPages();
+            for (let i = 1; i <= totalPages; i++) {
+                doc.setPage(i);
+                doc.setFontSize(10);
+                doc.setTextColor(119, 119, 119);
+                doc.text(`Página ${i} de ${totalPages}`, doc.internal.pageSize.width / 2, pageHeight - 10, { align: 'center' });
+            }
+
+            // Informações fixas no rodapé (no final do documento)
             doc.setFontSize(10);
             doc.setTextColor(119, 119, 119);
+            // Coloca as informações fixas do rodapé na última página ou onde for mais apropriado
+            // Considerando que a numeração de página é mais importante no final
             doc.text('Desenvolvido por Peter Lange', doc.internal.pageSize.width / 2, pageHeight - 20, { align: 'center' });
             doc.text('Corretor de Imóveis - CRECI 31687', doc.internal.pageSize.width / 2, pageHeight - 15, { align: 'center' });
 
