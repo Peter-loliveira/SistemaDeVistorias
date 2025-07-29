@@ -42,21 +42,28 @@
             color: var(--remax-blue);
             text-align: center;
             margin-bottom: 25px;
-            padding: 15px 0; /* Adicionado padding */
+            padding: 25px 0;
             border-bottom: 3px solid var(--remax-blue);
-            /* Semelhante ao footer */
             background-color: #f9f9f9;
-            /* Semelhante ao footer */
             border-radius: 8px 8px 0 0;
-            /* Arredondar apenas os cantos superiores */
             margin-top: -30px;
-            /* Ajusta para remover espaço extra do container */
             margin-left: -30px;
-            /* Ajusta para preencher a largura do container */
             margin-right: -30px;
-            /* Ajusta para preencher a largura do container */
             margin-bottom: 30px;
-            /* Espaço abaixo do título */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        h1 .logo {
+            height: 100px;
+            /* Altura fixa para o logo */
+            width: auto;
+            /* Mantém a proporção */
+            vertical-align: middle;
+            margin-right: 0;
+            /* Ajustado para centralizar */
         }
 
         h2 {
@@ -83,26 +90,151 @@
             color: #555;
         }
 
-        input[type="text"],
-        input[type="date"],
+        input,
+        input::placeholder,
         textarea,
+        textarea::placeholder,
+        select {
+            font-size: 1rem;
+            color: #333;
+        }
+
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        input {
+            -moz-appearance: textfield;
+        }
+
+        input::-ms-clear {
+            display: none;
+        }
+
+        input::-ms-reveal {
+            display: none;
+        }
+
+        input,
+        input::-webkit-input-placeholder,
+        textarea,
+        textarea::-webkit-input-placeholder,
+        select {
+            opacity: 1;
+            /* Prevents iOS placeholder color bug */
+        }
+
+        input::-moz-placeholder,
+        textarea::-moz-placeholder,
+        select::-moz-placeholder {
+            color: #777;
+            opacity: 1;
+        }
+
+        input:-ms-input-placeholder,
+        textarea:-ms-input-placeholder,
+        select:-ms-input-placeholder {
+            color: #777;
+            opacity: 1;
+        }
+
+        input::placeholder,
+        textarea::placeholder,
+        select::placeholder {
+            color: #777;
+            opacity: 1;
+        }
+
+        input:focus::-webkit-input-placeholder { color: transparent;
+        }
+        textarea:focus::-webkit-input-placeholder { color: transparent;
+        }
+        select:focus::-webkit-input-placeholder { color: transparent;
+        }
+        input:focus::-moz-placeholder { color: transparent;
+        }
+        textarea:focus::-moz-placeholder { color: transparent;
+        }
+        select:focus::-moz-placeholder { color: transparent;
+        }
+        input:focus:-ms-input-placeholder { color: transparent;
+        }
+        textarea:focus:-ms-input-placeholder,
+        select:focus:-ms-input-placeholder { color: transparent;
+        }
+        input:focus::placeholder { color: transparent;
+        }
+        textarea:focus::placeholder { color: transparent;
+        }
+        select:focus::placeholder { color: transparent;
+        }
+
+        input,
+        input::-webkit-input-placeholder,
+        textarea,
+        textarea::-webkit-input-placeholder,
+        select {
+            opacity: 1;
+            /* Prevents iOS placeholder color bug */
+        }
+
+        input::-moz-placeholder,
+        textarea::-moz-placeholder,
+        select::-moz-placeholder {
+            color: #777;
+            opacity: 1;
+        }
+
+        input:-ms-input-placeholder,
+        textarea:-ms-input-placeholder,
+        select:-ms-input-placeholder {
+            color: #777;
+            opacity: 1;
+        }
+
+        input::placeholder,
+        textarea::placeholder,
+        select::placeholder {
+            color: #777;
+            opacity: 1;
+        }
+
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        input {
+            -moz-appearance: textfield;
+        }
+
+        input::-ms-clear {
+            display: none;
+        }
+
+        input::-ms-reveal {
+            display: none;
+        }
+
+        input,
+        input::placeholder,
+        textarea,
+        textarea::placeholder,
         select {
             width: 100%;
             padding: 12px;
             border: 1px solid var(--remax-medium-gray);
             border-radius: 5px;
             box-sizing: border-box;
-            font-size: 1rem;
             transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            font-family: 'Roboto', sans-serif;
+            /* Garante consistência da fonte */
         }
 
-        input::placeholder,
-        textarea::placeholder {
-            color: #777;
-        }
-
-        input[type="text"]:focus,
-        input[type="date"]:focus,
+        input:focus,
         textarea:focus,
         select:focus {
             border-color: var(--remax-blue);
@@ -133,6 +265,8 @@
             flex-wrap: wrap;
             gap: 15px;
             margin-top: 0; /* Conforme requisito */
+            justify-content: center; /* Centraliza as opções de rádio */
+            width: 100%; /* Garante que o radio-group ocupe toda a largura disponível */
         }
 
         .radio-group label {
@@ -142,14 +276,15 @@
             font-weight: normal;
             color: #555; /* Cor padrão não selecionado */
             transition: color 0.3s ease;
+            font-size: 1rem; /* Garante consistência da fonte */
         }
 
-        .radio-group input[type="radio"] {
+        .radio-group input {
             margin-right: 8px;
             width: auto;
         }
 
-        .radio-group input[type="radio"]:checked + span {
+        .radio-group input:checked + span {
             color: var(--remax-blue);
             font-weight: bold;
         }
@@ -173,18 +308,13 @@
         }
         .button.icon-only { /* Novo estilo para botões apenas com ícone */
             padding: 0;
-            /* Ajustado para remover padding */
             width: 40px;
-            /* Garante um tamanho fixo e quadrado */
             height: 40px;
-            /* Garante um tamanho fixo e quadrado */
             gap: 0;
-            /* Remove o espaçamento se não houver texto */
         }
 
         .button .material-icons {
             font-size: 1.5rem;
-            /* Aumentado o tamanho do ícone */
         }
 
         .primary-button {
@@ -221,14 +351,11 @@
             gap: 10px;
             margin-top: 15px;
             flex-wrap: wrap;
-            justify-content: flex-end; /* Alinha os botões à direita */
+            justify-content: flex-end;
         }
-        /* Override general .action-buttons .button styles for this specific context */
         .input-with-buttons .action-buttons .button {
             flex-grow: 0;
-            /* Do not grow */
             max-width: none;
-            /* Remove max-width restriction */
         }
 
         .action-buttons .button {
@@ -282,7 +409,6 @@
             left: 0;
             top: 0;
             width: 100%;
-            /* Full width */
             height: 100%;
             overflow: auto;
             background-color: rgba(0,0,0,0.7);
@@ -378,70 +504,43 @@
         .form-group-row {
             display: flex;
             flex-wrap: wrap;
-            gap: 20px; /* Espaçamento entre os campos */
+            gap: 20px;
             margin-bottom: 18px;
-            /* Mantém o espaçamento entre as linhas */
         }
 
         .form-group-row .form-group {
             flex: 1;
-            /* Permite que cada item ocupe o espaço disponível */
             min-width: 250px;
-            /* Garante que os campos não fiquem muito pequenos */
             margin-bottom: 0;
-            /* Remove a margem inferior padrão para flex item */
         }
-        .form-group-row .form-group label { /* Centraliza os títulos dos campos dentro de form-group-row */
+        .form-group-row .form-group label {
             text-align: center;
-            width: 100%; /* Garante que o label ocupe toda a largura para centralizar o texto */
+            width: 100%;
         }
 
-        /* Divisor */
-        .divider {
-            height: 1px;
-            background-color: var(--remax-medium-gray);
-            margin: 40px 0;
-        }
-
-        /* Rodapé */
-        .site-footer {
-            margin-top: 40px;
-            padding: 20px;
-            text-align: center;
-            color: #777;
-            font-size: 0.9rem;
-            border-top: 3px solid var(--remax-blue);
-            background-color: #f9f9f9;
-            border-radius: 0 0 8px 8px;
-        }
+               /* Rodapé */
+        /* REMOVIDO: O rodapé e seus textos foram removidos conforme solicitação */
 
         /* Novo estilo para agrupar input e botões */
         .input-with-buttons {
             display: flex;
-            align-items: flex-end; /* Alinha os botões com a parte inferior do input */
+            align-items: flex-end;
             gap: 10px;
-            /* Espaço entre o campo de texto e os botões */
             margin-bottom: 18px;
-            /* Mantém o espaçamento vertical */
         }
 
         .input-with-buttons .form-group {
             flex-grow: 1;
-            /* Permite que o campo de texto ocupe o espaço restante */
             margin-bottom: 0;
-            /* Remove a margem inferior padrão para alinhamento em flex */
         }
 
         .input-with-buttons .action-buttons {
             display: flex;
             gap: 5px;
-            /* Espaço menor entre os botões de câmera e galeria */
             margin-top: 0;
-            /* Remove a margem superior desnecessária */
             justify-content: flex-start;
-            align-items: flex-end; /* Alinha os botões com a parte inferior */
+            align-items: flex-end;
             margin-bottom: 0;
-            /* Remove a margem inferior desnecessária */
         }
 
         /* Responsividade */
@@ -460,6 +559,22 @@
                 margin-left: -20px;
                 margin-right: -20px;
                 border-radius: 8px 8px 0 0;
+                flex-direction: column;
+                /* Empilha logo e título */
+                padding-left: 0;
+                /* Remove padding extra */
+                padding-top: 20px;
+                /* Ajuste para dar mais espaço em telas menores */
+                padding-bottom: 20px;
+            }
+
+            h1 .logo {
+                position: static;
+                /* Remove posicionamento absoluto */
+                margin-bottom: 10px;
+                /* Espaço abaixo do logo */
+                height: 80px;
+                /* Ajuste o tamanho para telas menores */
             }
 
             h2 {
@@ -467,14 +582,13 @@
             }
 
             .form-group.estado-imovel,
-            .form-group-row { /* Quebra em coluna em telas menores */
+            .form-group-row {
                 flex-direction: column;
                 align-items: flex-start;
                 gap: 10px;
             }
             .form-group-row .form-group {
                 min-width: 100%;
-                /* Ocupa largura total em telas menores */
             }
 
             .radio-group {
@@ -490,19 +604,16 @@
             .action-buttons .button {
                 max-width: 100%;
             }
-            .action-buttons .button.icon-only { /* Ajuste para botões apenas com ícone em telas pequenas */
+            .action-buttons .button.icon-only {
                 max-width: 40px;
-                /* Mantém o tamanho fixo para ícones */
             }
 
             .input-with-buttons {
                 flex-direction: column;
-                /* Quebra em coluna em telas menores */
                 align-items: stretch;
             }
             .input-with-buttons .action-buttons {
                 justify-content: center;
-                /* Centraliza os botões quando em coluna */
                 margin-top: 10px;
             }
 
@@ -521,10 +632,7 @@
             }
         }
 
-        .textFooter {
-            font-size: .7rem;
-        }
-
+        /* REMOVIDO: .textFooter foi removido conforme solicitação */
         @media (max-width: 480px) {
             .container {
                 padding: 15px;
@@ -536,9 +644,11 @@
                 margin-right: -15px;
                 border-radius: 8px 8px 0 0;
             }
+
             h2 {
                 font-size: 1.2rem;
             }
+
             .camera-modal-content {
                 padding: 15px;
             }
@@ -547,21 +657,33 @@
 </head>
 <body>
     <div class="container">
-        <h1>LAUDO DE VISTORIA</h1>
+        <h1>
+            <img src="LOGO.png" alt="Logotipo do Sistema" class="logo">
+        </h1>
+        <!-- Novo campo de rádio para tipo de laudo -->
+        <div class="info-block">
+            <h3>Tipo de Vistoria</h3>
+            <div class="form-group">
+                <div class="radio-group">
+                    <label><input type="radio" name="reportType" value="Inicial" required> <span>Inicial</span></label>
+                    <label><input type="radio" name="reportType" value="Final"> <span>Final</span></label>
+                </div>
+            </div>
+        </div>
+        <!-- Fim do novo campo -->
 
         <form id="inspectionForm">
             <div class="form-section">
-                <div class="form-group-row"> <div class="form-group">
+                <div class="form-group-row">
+                    <div class="form-group">
                         <label for="reportDate">Data do Laudo:</label>
                         <input type="date" id="reportDate" name="reportDate" required>
                     </div>
-
                     <div class="form-group">
                         <label for="contractDate">Data do Contrato:</label>
                         <input type="date" id="contractDate" name="contractDate" required>
                     </div>
                 </div>
-
                 <div class="info-block">
                     <h3>Informações do Corretor</h3>
                     <div class="form-group">
@@ -579,7 +701,6 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="info-block">
                     <h3>Informações do Imóvel</h3>
                     <div class="form-group-row">
@@ -591,6 +712,10 @@
                             <label for="tenant">Locatário:</label>
                             <input type="text" id="tenant" name="tenant" required>
                         </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="propertyAddress">Endereço do Imóvel:</label>
+                        <textarea id="propertyAddress" name="propertyAddress" required placeholder="Endereço completo do imóvel"></textarea>
                     </div>
                     <div class="form-group-row">
                         <div class="form-group">
@@ -610,26 +735,19 @@
                             </select>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label for="propertyAddress">Endereço do Imóvel:</label>
-                        <textarea id="propertyAddress" name="propertyAddress" required></textarea>
-                    </div>
-                </div>
-
-                <div class="form-group estado-imovel">
-                    <label>Estado do Imóvel:</label>
-                    <div class="radio-group">
-                        <label><input type="radio" name="propertyState" value="Novo" required> <span>Novo</span></label>
-                        <label><input type="radio" name="propertyState" value="Excelente"> <span>Excelente</span></label>
-                        <label><input type="radio" name="propertyState" value="Bom"> <span>Bom</span></label>
-                        <label><input type="radio" name="propertyState" value="Regular"> <span>Regular</span></label>
-                        <label><input type="radio" name="propertyState" value="Ruim"> <span>Ruim</span></label>
+                    <div class="form-group estado-imovel">
+                        <label>Estado do Imóvel:</label>
+                        <div class="radio-group">
+                            <label><input type="radio" name="propertyState" value="Novo" required> <span>Novo</span></label>
+                            <label><input type="radio" name="propertyState" value="Excelente"> <span>Excelente</span></label>
+                            <label><input type="radio" name="propertyState" value="Bom"> <span>Bom</span></label>
+                            <label><input type="radio" name="propertyState" value="Regular"> <span>Regular</span></label>
+                            <label><input type="radio" name="propertyState" value="Ruim"> <span>Ruim</span></label>
+                        </div>
                     </div>
                 </div>
             </div>
-
             <div class="info-block">
-                <h3>Itens da Vistoria e Danos Encontrados</h3>
                 <div class="form-section">
                     <h2>Itens da Vistoria.</h2>
                     <div class="input-with-buttons">
@@ -647,7 +765,6 @@
                             </button>
                         </div>
                     </div>
-
                     <table id="inspectionItemsTable">
                         <thead>
                             <tr>
@@ -664,9 +781,8 @@
                         </tbody>
                     </table>
                 </div>
-
-                <div class="divider"></div>
-
+            </div>
+            <div class="info-block">
                 <div class="form-section">
                     <h2>Danos Encontrados.</h2>
                     <div class="input-with-buttons">
@@ -684,7 +800,6 @@
                             </button>
                         </div>
                     </div>
-
                     <table id="damageItemsTable">
                         <thead>
                             <tr>
@@ -702,22 +817,15 @@
                     </table>
                 </div>
             </div>
-
             <button type="button" class="button pdf-button" id="generatePdf">
                 <span class="material-icons">picture_as_pdf</span> Gerar PDF
             </button>
-
-            <footer class="site-footer">
-                <p class = "textFooter">Desenvolvido por Peter Lange</p>
-                <p class = "textFooter">Corretor de Imóveis - CRECI 31687</p>
-            </footer>
         </form>
     </div>
 
     <div id="cameraModal" class="camera-modal">
         <div class="camera-modal-content">
-            <span class="camera-modal-close">&times;</span>
-            <h2>Pré-visualização da Câmera</h2>
+            <span class="camera-modal-close" id="cameraModalClose">&times;</span> <h2>Pré-visualização da Câmera</h2>
             <video id="cameraFeed" autoplay playsinline></video>
             <canvas id="cameraCanvas" style="display:none;"></canvas>
             <p id="cameraErrorMessage" class="camera-error-message" style="display:none;"></p>
@@ -732,6 +840,35 @@
         </div>
     </div>
 
+    <div id="messageBox" style="
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: #f8d7da;
+        color: #721c24;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        z-index: 1001;
+        text-align: center;
+        font-weight: bold;
+        border: 1px solid #f5c6cb;
+        max-width: 80%;
+    ">
+        <p id="messageText"></p>
+        <button id="closeMessageBox" style="
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        ">OK</button>
+    </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://unpkg.com/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.js"></script>
     <script>
@@ -741,570 +878,727 @@
         let inspectionItems = [];
         let damageItems = [];
 
-        // Elementos do DOM
-        const reportDateInput = document.getElementById('reportDate');
-        const cpfInput = document.getElementById('cpf');
-        const inspectionItemDescriptionInput = document.getElementById('inspectionItemDescription');
-        const openCameraInspectionButton = document.getElementById('openCameraInspection');
-        const selectPhotoInspectionInput = document.getElementById('selectPhotoInspection');
-        const triggerSelectPhotoInspectionButton = document.getElementById('triggerSelectPhotoInspection');
-        const inspectionItemsTableBody = document.getElementById('inspectionItemsTable').querySelector('tbody');
-        const noInspectionItemsRow = document.getElementById('noInspectionItems');
-        const damageItemDescriptionInput = document.getElementById('damageItemDescription');
-        const openCameraDamageButton = document.getElementById('openCameraDamage');
-        const selectPhotoDamageInput = document.getElementById('selectPhotoDamage');
-        const triggerSelectPhotoDamageButton = document.getElementById('triggerSelectPhotoDamage');
-        const damageItemsTableBody = document.getElementById('damageItemsTable').querySelector('tbody');
-        const noDamageItemsRow = document.getElementById('noDamageItems');
-        const generatePdfButton = document.getElementById('generatePdf');
+        // Elementos do DOM (agora inicializados dentro de DOMContentLoaded)
+        let reportDateInput;
+        let cpfInput;
+        let inspectionItemDescriptionInput;
+        let openCameraInspectionButton;
+        let selectPhotoInspectionInput;
+        let triggerSelectPhotoInspectionButton;
+        let inspectionItemsTableBody;
+        let noInspectionItemsRow;
+        let damageItemDescriptionInput;
+        let openCameraDamageButton;
+        let selectPhotoDamageInput;
+        let triggerSelectPhotoDamageButton;
+        let damageItemsTableBody;
+        let noDamageItemsRow;
 
-        // Elementos do Modal da Câmera
-        const cameraModal = document.getElementById('cameraModal');
-        const cameraFeed = document.getElementById('cameraFeed');
-        const cameraCanvas = document.getElementById('cameraCanvas');
-        const takePhotoButton = document.getElementById('takePhoto');
-        const cancelCameraButton = document.getElementById('cancelCamera');
-        const cameraModalCloseButton = document.querySelector('.camera-modal-close');
-        const cameraErrorMessage = document.getElementById('cameraErrorMessage');
+        let brokerNameInput;
+        let creciInput;
+        let propertyTypeSelect;
+        let destinationSelect;
+        let propertyAddressTextarea;
+        let landlordInput;
+        let tenantInput;
+        let contractDateInput;
+        let generatePdfButton;
+        let reportTypeRadios; // Novo elemento
 
-        let currentStream; // Para controlar o stream da câmera
-        let currentItemType = ''; // 'inspection' ou 'damage' para saber qual tabela atualizar
+        // Câmera
+        let cameraModal;
+        let cameraFeed;
+        let cameraCanvas;
+        let takePhotoButton;
+        let cancelCameraButton;
+        let cameraModalCloseButton;
+        let cameraErrorMessage;
+        let currentPhotoType = ''; // 'inspection' ou 'damage'
+        let currentItemDescriptionInput = null;
 
-        /**
-         * Preenche a data do laudo com a data atual.
-         */
-        function setReportDate() {
-            const today = new Date();
-            const year = today.getFullYear();
-            const month = String(today.getMonth() + 1).padStart(2, '0');
-            const day = String(today.getDate()).padStart(2, '0');
-            reportDateInput.value = `${year}-${month}-${day}`;
-        }
+        // New message box elements
+        let messageBox;
+        let messageText;
+        let closeMessageBoxButton;
 
-        /**
-         * Formata o CPF enquanto o usuário digita.
-         * @param {Event} event - O evento de input.
-         */
-        function formatCPF(event) {
-            let value = event.target.value.replace(/\D/g, '');
-            if (value.length > 9) {
-                value = value.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
-            } else if (value.length > 6) {
-                value = value.replace(/(\d{3})(\d{3})(\d{3})/, '$1.$2.$3');
-            } else if (value.length > 3) {
-                value = value.replace(/(\d{3})(\d{3})/, '$1.$2');
-            }
-            event.target.value = value;
-        }
-
-        /**
-         * Adiciona um item (vistoria ou dano) à tabela correspondente.
-         * @param {string} type - 'inspection' ou 'damage'.
-         * @param {string} description - A descrição do item.
-         * @param {string} imageData - A imagem em Base64, se houver.
-         * @param {number} originalWidth - Largura original da imagem.
-         * @param {number} originalHeight - Altura original da imagem.
-         */
-        function addItemToTable(type, description, imageData, originalWidth, originalHeight) {
-            const item = {
-                id: Date.now(), // ID único para remoção
-                description: description,
-                image: imageData || null,
-                imageDimensions: imageData ? { width: originalWidth, height: originalHeight } : null // Store dimensions
-            };
-
-            let tableBody, noRecordsRow, dataArray;
-            if (type === 'inspection') {
-                inspectionItems.push(item);
-                dataArray = inspectionItems;
-                tableBody = inspectionItemsTableBody;
-                noRecordsRow = noInspectionItemsRow;
+        // Function to display custom messages
+        function showMessage(message) {
+            if (messageText && messageBox) {
+                messageText.textContent = message;
+                messageBox.style.display = 'block';
             } else {
-                damageItems.push(item);
-                dataArray = damageItems;
-                tableBody = damageItemsTableBody;
-                noRecordsRow = noDamageItemsRow;
-            }
-
-            // Remove a linha "Nenhum registro" se houver itens
-            if (noRecordsRow && dataArray.length > 0) {
-                noRecordsRow.style.display = 'none';
-            }
-
-            const row = tableBody.insertRow();
-            row.setAttribute('data-id', item.id); // Adiciona o ID para fácil remoção
-
-            const numCell = row.insertCell(); // New cell for the number
-            numCell.textContent = dataArray.length; // The count
-
-            const descriptionCell = row.insertCell();
-            descriptionCell.textContent = item.description;
-
-            const imageCell = row.insertCell();
-            if (item.image) {
-                const img = document.createElement('img');
-                img.src = item.image;
-                img.alt = 'Foto do item';
-                imageCell.appendChild(img);
-            } else {
-                imageCell.textContent = 'N/A';
-            }
-
-            const actionsCell = row.insertCell();
-            const deleteButton = document.createElement('button');
-            deleteButton.classList.add('button', 'delete-button');
-            deleteButton.innerHTML = '<span class="material-icons">delete</span>'; // Removed text here
-            deleteButton.onclick = () => removeItem(type, item.id);
-            actionsCell.appendChild(deleteButton);
-
-            // Limpa o campo de texto
-            if (type === 'inspection') {
-                inspectionItemDescriptionInput.value = '';
-            } else {
-                damageItemDescriptionInput.value = '';
+                console.error("Message box elements not found.");
+                alert(message); // Fallback to alert if message box not ready
             }
         }
 
-        /**
-         * Remove um item da tabela e do array de dados.
-         * @param {string} type - 'inspection' ou 'damage'.
-         * @param {number} id - O ID do item a ser removido.
-         */
-        function removeItem(type, id) {
-            let dataArray, tableBody, noRecordsRow;
-            if (type === 'inspection') {
-                dataArray = inspectionItems;
-                tableBody = inspectionItemsTableBody;
-                noRecordsRow = noInspectionItemsRow;
-            } else {
-                dataArray = damageItems;
-                tableBody = damageItemsTableBody;
-                noRecordsRow = noDamageItemsRow;
-            }
-
-            const index = dataArray.findIndex(item => item.id === id);
-            if (index > -1) {
-                dataArray.splice(index, 1);
-
-                // Remove a linha da tabela
-                const rowToRemove = tableBody.querySelector(`tr[data-id="${id}"]`);
-                if (rowToRemove) {
-                    tableBody.removeChild(rowToRemove);
-                }
-            }
-
-            // Re-renderiza a numeração após a remoção
-            Array.from(tableBody.rows).forEach((row, idx) => {
-                const firstCell = row.cells[0]; // Assuming the number is in the first cell
-                if (firstCell) {
-                    firstCell.textContent = idx + 1;
-                }
-            });
-
-            // Mostra a linha "Nenhum registro" se não houver mais itens
-            if (dataArray.length === 0) {
-                if (noRecordsRow) {
-                    noRecordsRow.style.display = 'table-row';
-                }
+        // Event listener for closing the message box
+        // This will be attached inside DOMContentLoaded
+        function closeMessageBox() {
+            if (messageBox) {
+                messageBox.style.display = 'none';
             }
         }
 
 
-        /**
-         * Abre o modal da câmera e inicia a transmissão.
-         * @param {string} itemType - 'inspection' ou 'damage'.
-         */
-        async function openCamera(itemType) {
-            currentItemType = itemType;
-            cameraErrorMessage.style.display = 'none'; // Esconde mensagens de erro anteriores
-            cameraModal.style.display = 'flex';
-
+        // Função para abrir a câmera
+        async function openCamera(type, descriptionInput) {
+            currentPhotoType = type;
+            currentItemDescriptionInput = descriptionInput;
+            if (cameraErrorMessage) cameraErrorMessage.style.display = 'none';
             try {
-                // Tenta acessar a câmera traseira primeiro, se disponível
-                const stream = await navigator.mediaDevices.getUserMedia({
-                    video: { facingMode: { ideal: 'environment' } }, // Preferência pela câmera traseira
-                    audio: false
-                });
-                cameraFeed.srcObject = stream;
-                currentStream = stream;
+                const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+                if (cameraFeed) cameraFeed.srcObject = stream;
+                if (cameraModal) cameraModal.style.display = 'flex';
             } catch (err) {
                 console.error("Erro ao acessar a câmera: ", err);
-                cameraErrorMessage.textContent = 'Não foi possível acessar a câmera. Por favor, verifique as permissões.';
-                cameraErrorMessage.style.display = 'block';
-
-                // Tenta com a câmera frontal se a traseira falhar ou não existir
-                try {
-                    const frontStream = await navigator.mediaDevices.getUserMedia({
-                        video: { facingMode: 'user' }, // Câmera frontal
-                        audio: false
-                    });
-                    cameraFeed.srcObject = frontStream;
-                    currentStream = frontStream;
-                } catch (frontErr) {
-                    console.error("Erro ao acessar a câmera frontal: ", frontErr);
-                    cameraErrorMessage.textContent = 'Não foi possível acessar a câmera (frontal ou traseira). Por favor, verifique as permissões do navegador.';
+                if (cameraErrorMessage) {
+                    cameraErrorMessage.textContent = 'Não foi possível acessar a câmera. Verifique as permissões.';
                     cameraErrorMessage.style.display = 'block';
-                    closeCameraModal(); // Fecha o modal se nenhuma câmera funcionar
                 }
+                showMessage('Não foi possível acessar a câmera. Verifique as permissões do navegador.');
             }
         }
 
-        /**
-         * Fecha o modal da câmera e para a transmissão.
-         */
+        // Função para fechar a câmera
         function closeCameraModal() {
-            cameraModal.style.display = 'none';
-            if (currentStream) {
-                currentStream.getTracks().forEach(track => track.stop());
-                currentStream = null;
+            if (cameraFeed && cameraFeed.srcObject) {
+                const stream = cameraFeed.srcObject;
+                const tracks = stream.getTracks();
+                tracks.forEach(track => track.stop());
             }
-            cameraErrorMessage.style.display = 'none';
+            if (cameraModal) cameraModal.style.display = 'none';
         }
 
-        /**
-         * Tira uma foto da transmissão da câmera.
-         */
+        // Função para tirar foto
         function takePhoto() {
-            if (!currentStream) {
-                alert('Nenhuma câmera ativa.');
+            if (!cameraCanvas || !cameraFeed) {
+                console.error("Camera canvas or feed not available.");
+                showMessage("Erro: Câmera não disponível para tirar foto.");
                 return;
             }
-
             const context = cameraCanvas.getContext('2d');
             cameraCanvas.width = cameraFeed.videoWidth;
             cameraCanvas.height = cameraFeed.videoHeight;
             context.drawImage(cameraFeed, 0, 0, cameraCanvas.width, cameraCanvas.height);
-
-            const imageData = cameraCanvas.toDataURL('image/jpeg', 0.8); // Qualidade JPEG
-
-            // Determina qual campo de descrição usar
-            let descriptionInput;
-            if (currentItemType === 'inspection') {
-                descriptionInput = inspectionItemDescriptionInput;
-            } else if (currentItemType === 'damage') {
-                descriptionInput = damageItemDescriptionInput;
-            }
-
-            const description = descriptionInput.value.trim();
-            if (description) {
-                addItemToTable(currentItemType, description, imageData, cameraCanvas.width, cameraCanvas.height);
-                closeCameraModal();
-            } else {
-                alert('Por favor, digite uma descrição antes de tirar a foto.');
+            const photoDataUrl = cameraCanvas.toDataURL('image/png');
+            closeCameraModal();
+            if (currentPhotoType === 'inspection') {
+                addInspectionItem(currentItemDescriptionInput.value, photoDataUrl);
+            } else if (currentPhotoType === 'damage') {
+                addDamageItem(currentItemDescriptionInput.value, photoDataUrl);
             }
         }
 
-        /**
-         * Lida com a seleção de arquivos (fotos da galeria).
-         * @param {Event} event - O evento de mudança do input file.
-         * @param {string} type - 'inspection' ou 'damage'.
-         */
+        // Função para adicionar item de vistoria
+        function addInspectionItem(description, photo = '') {
+            if (description.trim() === '') {
+                showMessage('A descrição do item de vistoria não pode ser vazia.');
+                return;
+            }
+            const item = {
+                id: inspectionItems.length + 1,
+                description: description,
+                photo: photo
+            };
+            inspectionItems.push(item);
+            renderInspectionItems();
+            if (inspectionItemDescriptionInput) inspectionItemDescriptionInput.value = '';
+            if (noInspectionItemsRow) noInspectionItemsRow.style.display = 'none';
+        }
+
+        // Função para renderizar itens de vistoria na tabela
+        function renderInspectionItems() {
+            if (!inspectionItemsTableBody) return; // Ensure table body exists
+            inspectionItemsTableBody.innerHTML = ''; // Limpa a tabela
+            if (inspectionItems.length === 0) {
+                if (noInspectionItemsRow) {
+                    noInspectionItemsRow.style.display = 'table-row';
+                    inspectionItemsTableBody.appendChild(noInspectionItemsRow);
+                }
+                return;
+            }
+
+            inspectionItems.forEach(item => {
+                const row = inspectionItemsTableBody.insertRow();
+                row.insertCell().textContent = item.id;
+                row.insertCell().textContent = item.description;
+                const imgCell = row.insertCell();
+                if (item.photo) {
+                    const img = document.createElement('img');
+                    img.src = item.photo;
+                    imgCell.appendChild(img);
+                } else {
+                    imgCell.textContent = 'N/A';
+                }
+                const actionsCell = row.insertCell();
+                const deleteButton = document.createElement('button');
+                deleteButton.textContent = 'Excluir';
+                deleteButton.className = 'button delete-button';
+                deleteButton.onclick = () => deleteInspectionItem(item.id);
+                actionsCell.appendChild(deleteButton);
+            });
+        }
+
+        // Função para deletar item de vistoria
+        function deleteInspectionItem(id) {
+            inspectionItems = inspectionItems.filter(item => item.id !== id);
+            inspectionItems.forEach((item, index) => {
+                item.id = index + 1;
+            });
+            renderInspectionItems();
+            if (inspectionItems.length === 0 && noInspectionItemsRow) {
+                noInspectionItemsRow.style.display = 'table-row';
+                inspectionItemsTableBody.appendChild(noInspectionItemsRow);
+            }
+        }
+
+        // Função para adicionar dano encontrado
+        function addDamageItem(description, photo = '') {
+            if (description.trim() === '') {
+                showMessage('A descrição do dano não pode ser vazia.');
+                return;
+            }
+            const item = {
+                id: damageItems.length + 1,
+                description: description,
+                photo: photo
+            };
+            damageItems.push(item);
+            renderDamageItems();
+            if (damageItemDescriptionInput) damageItemDescriptionInput.value = '';
+            if (noDamageItemsRow) noDamageItemsRow.style.display = 'none';
+        }
+
+        // Função para renderizar danos na tabela
+        function renderDamageItems() {
+            if (!damageItemsTableBody) return; // Ensure table body exists
+            damageItemsTableBody.innerHTML = ''; // Limpa a tabela
+            if (damageItems.length === 0) {
+                if (noDamageItemsRow) {
+                    noDamageItemsRow.style.display = 'table-row';
+                    damageItemsTableBody.appendChild(noDamageItemsRow);
+                }
+                return;
+            }
+
+            damageItems.forEach(item => {
+                const row = damageItemsTableBody.insertRow();
+                row.insertCell().textContent = item.id;
+                row.insertCell().textContent = item.description;
+                const imgCell = row.insertCell();
+                if (item.photo) {
+                    const img = document.createElement('img');
+                    img.src = item.photo;
+                    imgCell.appendChild(img);
+                } else {
+                    imgCell.textContent = 'N/A';
+                }
+                const actionsCell = row.insertCell();
+                const deleteButton = document.createElement('button');
+                deleteButton.textContent = 'Excluir';
+                deleteButton.className = 'button delete-button';
+                deleteButton.onclick = () => deleteDamageItem(item.id);
+                actionsCell.appendChild(deleteButton);
+            });
+        }
+
+        // Função para deletar dano encontrado
+        function deleteDamageItem(id) {
+            damageItems = damageItems.filter(item => item.id !== id);
+            damageItems.forEach((item, index) => {
+                item.id = index + 1;
+            });
+            renderDamageItems();
+            if (damageItems.length === 0 && noDamageItemsRow) {
+                noDamageItemsRow.style.display = 'table-row';
+                damageItemsTableBody.appendChild(noDamageItemsRow);
+            }
+        }
+
+        // Função para lidar com a seleção de arquivo de foto
         function handleFileSelect(event, type) {
             const file = event.target.files[0];
             if (file) {
                 const reader = new FileReader();
-                reader.onload = (e) => {
-                    const img = new Image();
-                    img.onload = () => {
-                        let descriptionInput;
-                        if (type === 'inspection') {
-                            descriptionInput = inspectionItemDescriptionInput;
-                        } else if (type === 'damage') {
-                            descriptionInput = damageItemDescriptionInput;
-                        }
-
-                        const description = descriptionInput.value.trim();
-                        if (description) {
-                            addItemToTable(type, description, e.target.result, img.naturalWidth, img.naturalHeight);
-                        } else {
-                            alert('Por favor, digite uma descrição antes de selecionar a foto.');
-                        }
-                    };
-                    img.src = e.target.result;
+                reader.onload = function(e) {
+                    if (type === 'inspection') {
+                        addInspectionItem(inspectionItemDescriptionInput.value, e.target.result);
+                    } else if (type === 'damage') {
+                        addDamageItem(damageItemDescriptionInput.value, e.target.result);
+                    }
                 };
                 reader.readAsDataURL(file);
             }
         }
 
-        /**
-         * Gera o documento PDF com os dados do formulário e tabelas.
-         */
-        async function generatePDF() {
-            const doc = new jsPDF('p', 'mm', 'a4');
-            const pageHeight = doc.internal.pageSize.height;
-            let y = 10; // Posição Y inicial
-
-            // Cabeçalho - Título
-            doc.setFontSize(22);
-            doc.setTextColor(0, 61, 165); // --remax-blue
-            doc.text('LAUDO DE VISTORIA', doc.internal.pageSize.width / 2, 25, { align: 'center' });
-            y = 40;
-
-            // Linha de separação
-            doc.setDrawColor(0, 61, 165); // Cor da linha
-            doc.setLineWidth(1);
-            doc.line(10, y, 200, y); // x1, y1, x2, y2
-            y += 10;
-
-            // Informações de Data
-            doc.setFontSize(12);
-            doc.setTextColor(51, 51, 51); // Dark gray
-            doc.text(`Data do Laudo: ${reportDateInput.value}`, 10, y);
-            doc.text(`Data do Contrato: ${document.getElementById('contractDate').value}`, 100, y);
-            y += 10;
-
-            // Informações do Corretor
-            doc.setFontSize(16);
-            doc.setTextColor(0, 61, 165);
-            doc.text('Informações do Corretor', doc.internal.pageSize.width / 2, y, { align: 'center' });
-            y += 8;
-
-            doc.setFontSize(12);
-            doc.setTextColor(51, 51, 51);
-            doc.text(`Corretor(a): ${document.getElementById('brokerName').value}`, 10, y);
-            y += 7;
-            doc.text(`CRECI: ${document.getElementById('creci').value}`, 10, y);
-            doc.text(`CPF: ${document.getElementById('cpf').value}`, 100, y);
-            y += 10;
-
-            // Informações do Imóvel
-            doc.setFontSize(16);
-            doc.setTextColor(0, 61, 165);
-            doc.text('Informações do Imóvel', doc.internal.pageSize.width / 2, y, { align: 'center' });
-            y += 8;
-
-            doc.setFontSize(12);
-            doc.setTextColor(51, 51, 51);
-            doc.text(`Locador: ${document.getElementById('landlord').value}`, 10, y);
-            y += 7;
-            doc.text(`Locatário: ${document.getElementById('tenant').value}`, 10, y);
-            y += 7;
-            doc.text(`Tipo de Imóvel: ${document.getElementById('propertyType').value}`, 10, y);
-            doc.text(`Destinação: ${document.getElementById('destination').value}`, 100, y);
-            y += 7;
-            const propertyAddress = document.getElementById('propertyAddress').value;
-            doc.text(`Endereço do Imóvel: ${propertyAddress}`, 10, y, { maxWidth: 180 });
-            y = doc.lastAutoTable.finalY || y; // Pega a última posição Y após o texto que pode ter quebrado linha
-            y += 10;
-
-            let selectedPropertyState = '';
-            const propertyStateRadio = document.querySelector('input[name="propertyState"]:checked');
-            if (propertyStateRadio) {
-                selectedPropertyState = propertyStateRadio.value;
-            }
-            doc.text(`Estado do Imóvel: ${selectedPropertyState}`, 10, y);
-
-            y += 15;
-
-            // Itens da Vistoria
-            doc.setFontSize(16);
-            doc.setTextColor(0, 61, 165);
-            doc.text('Itens da Vistoria', doc.internal.pageSize.width / 2, y, { align: 'center' });
-            y += 8;
-
-            const inspectionTableColumns = ["Nº", "ITEM", "FOTO"];
-            const inspectionTableRows = inspectionItems.map((item, index) => [index + 1, item.description, '']);
-
-            doc.autoTable({
-                startY: y,
-                head: [inspectionTableColumns],
-                body: inspectionTableRows,
-                theme: 'grid',
-                styles: {
-                    font: 'helvetica',
-                    fontSize: 10,
-                    cellPadding: 3,
-                    textColor: [51, 51, 51],
-                    lineColor: [187, 187, 187],
-                    lineWidth: 0.5,
-                    valign: 'middle'
-                },
-                headStyles: {
-                    fillColor: [240, 240, 240],
-                    textColor: [68, 68, 68],
-                    fontStyle: 'bold'
-                },
-                columnStyles: {
-                    0: { cellWidth: 15, halign: 'center' }, // Largura para o número
-                    1: { cellWidth: 85 }, // Largura para a descrição (ajustado)
-                    2: { cellWidth: 80, halign: 'center' } // Largura para a foto
-                },
-                didDrawCell: function (data) {
-                    if (data.column.index === 2 && data.cell.section === 'body') { // Photo column
-                        const item = inspectionItems[data.row.index];
-                        if (item && item.image) {
-                            const imgWidth = item.imageDimensions.width;
-                            const imgHeight = item.imageDimensions.height;
-                            const aspectRatio = imgWidth / imgHeight;
-
-                            let cellWidth = data.cell.width - 2; // Padding
-                            let cellHeight = data.cell.height - 2; // Padding
-
-                            let newImgWidth = cellWidth;
-                            let newImgHeight = cellWidth / aspectRatio;
-
-                            if (newImgHeight > cellHeight) {
-                                newImgHeight = cellHeight;
-                                newImgWidth = cellHeight * aspectRatio;
-                            }
-
-                            // Centralizar a imagem na célula
-                            const x = data.cell.x + (data.cell.width - newImgWidth) / 2;
-                            const y = data.cell.y + (data.cell.height - newImgHeight) / 2;
-
-                            doc.addImage(item.image, 'JPEG', x, y, newImgWidth, newImgHeight);
-                        }
-                    }
-                },
-                didParseCell: function (data) {
-                    if (data.column.index === 2 && data.cell.section === 'body') { // Photo column
-                        // Aumenta a altura da linha para acomodar a imagem
-                        data.row.height = 30; // Altura mínima para a imagem
-                    }
+        // Função para pré-carregar imagens e armazenar suas dimensões
+        async function preloadImagesAndGetDimensions(items) {
+            const imagePromises = items.map(item => {
+                if (item.photo && item.photo !== 'N/A') {
+                    return new Promise((resolve) => {
+                        const img = new Image();
+                        img.src = item.photo;
+                        img.onload = () => {
+                            item.loadedImage = img; // Store the loaded image object
+                            item.naturalWidth = img.naturalWidth;
+                            item.naturalHeight = img.naturalHeight;
+                            resolve();
+                        };
+                        img.onerror = () => {
+                            console.warn(`Falha ao carregar imagem para o item: ${item.description}`);
+                            item.loadedImage = null; // Mark as failed
+                            item.naturalWidth = 0;
+                            item.naturalHeight = 0;
+                            resolve();
+                        };
+                    });
                 }
+                return Promise.resolve(); // No photo or already N/A
             });
-            y = doc.autoTable.previous.finalY + 15; // Atualiza a posição Y após a tabela
-
-            // Danos Encontrados
-            doc.setFontSize(16);
-            doc.setTextColor(0, 61, 165);
-            doc.text('Danos Encontrados', doc.internal.pageSize.width / 2, y, { align: 'center' });
-            y += 8;
-
-            const damageTableColumns = ["Nº", "ITEM DANIFICADO", "FOTO"];
-            const damageTableRows = damageItems.map((item, index) => [index + 1, item.description, '']);
-
-            doc.autoTable({
-                startY: y,
-                head: [damageTableColumns],
-                body: damageTableRows,
-                theme: 'grid',
-                styles: {
-                    font: 'helvetica',
-                    fontSize: 10,
-                    cellPadding: 3,
-                    textColor: [51, 51, 51],
-                    lineColor: [187, 187, 187],
-                    lineWidth: 0.5,
-                    valign: 'middle'
-                },
-                headStyles: {
-                    fillColor: [240, 240, 240],
-                    textColor: [68, 68, 68],
-                    fontStyle: 'bold'
-                },
-                columnStyles: {
-                    0: { cellWidth: 15, halign: 'center' }, // Largura para o número
-                    1: { cellWidth: 85 }, // Largura para a descrição (ajustado)
-                    2: { cellWidth: 80, halign: 'center' } // Largura para a foto
-                },
-                didDrawCell: function (data) {
-                    if (data.column.index === 2 && data.cell.section === 'body') { // Photo column
-                        const item = damageItems[data.row.index];
-                        if (item && item.image) {
-                            const imgWidth = item.imageDimensions.width;
-                            const imgHeight = item.imageDimensions.height;
-                            const aspectRatio = imgWidth / imgHeight;
-
-                            let cellWidth = data.cell.width - 2;
-                            let cellHeight = data.cell.height - 2;
-
-                            let newImgWidth = cellWidth;
-                            let newImgHeight = cellWidth / aspectRatio;
-
-                            if (newImgHeight > cellHeight) {
-                                newImgHeight = cellHeight;
-                                newImgWidth = cellHeight * aspectRatio;
-                            }
-
-                            const x = data.cell.x + (data.cell.width - newImgWidth) / 2;
-                            const y = data.cell.y + (data.cell.height - newImgHeight) / 2;
-
-                            doc.addImage(item.image, 'JPEG', x, y, newImgWidth, newImgHeight);
-                        }
-                    }
-                },
-                didParseCell: function (data) {
-                    if (data.column.index === 2 && data.cell.section === 'body') { // Photo column
-                        data.row.height = 30;
-                    }
-                }
-            });
-            y = doc.autoTable.previous.finalY + 20;
-
-            // Rodapé com numeração de páginas
-            const totalPages = doc.internal.getNumberOfPages();
-            for (let i = 1; i <= totalPages; i++) {
-                doc.setPage(i);
-                doc.setFontSize(10);
-                doc.setTextColor(119, 119, 119);
-                doc.text(`Página ${i} de ${totalPages}`, doc.internal.pageSize.width / 2, pageHeight - 10, { align: 'center' });
-            }
-
-            // Informações fixas no rodapé (no final do documento)
-            doc.setFontSize(10);
-            doc.setTextColor(119, 119, 119);
-            // Coloca as informações fixas do rodapé na última página ou onde for mais apropriado
-            // Considerando que a numeração de página é mais importante no final
-            doc.text('Desenvolvido por Peter Lange', doc.internal.pageSize.width / 2, pageHeight - 20, { align: 'center' });
-            doc.text('Corretor de Imóveis - CRECI 31687', doc.internal.pageSize.width / 2, pageHeight - 15, { align: 'center' });
-
-            doc.save('laudo_vistoria.pdf');
+            await Promise.all(imagePromises);
         }
 
+        // Função para gerar PDF
+        async function generatePDF() {
+            const doc = new jsPDF();
+            let yPos = 15;
+            const margin = 10;
+            const pageWidth = doc.internal.pageSize.getWidth();
+            const pageHeight = doc.internal.pageSize.getHeight();
+
+            // Pré-carregar todas as imagens das tabelas antes de gerar o PDF
+            await preloadImagesAndGetDimensions(inspectionItems);
+            await preloadImagesAndGetDimensions(damageItems);
+
+            // Load the logo image
+            const logoUrl = "LOGO.png"; // Path to your logo image
+            let loadedLogo = null;
+
+            try {
+                loadedLogo = await new Promise((resolve, reject) => {
+                    const img = new Image();
+                    img.src = logoUrl;
+                    img.onload = () => resolve(img);
+                    img.onerror = (err) => {
+                        console.error("Failed to load logo image for PDF:", err);
+                        resolve(null); // Resolve with null if loading fails
+                    };
+                });
+            } catch (error) {
+                console.error("Error loading logo image:", error);
+            }
+
+            if (loadedLogo) {
+                const logoHeightCm = 1.5; // Desired height in cm (half of 3cm)
+                const logoHeightPoints = logoHeightCm * 28.3465; // Convert cm to PDF points
+                const logoAspectRatio = loadedLogo.naturalWidth / loadedLogo.naturalHeight;
+                const logoWidthPoints = logoHeightPoints * logoAspectRatio;
+
+                // Center the logo horizontally
+                const logoX = (pageWidth - logoWidthPoints) / 2;
+                const logoY = yPos; // Place at current yPos
+
+                doc.addImage(loadedLogo, 'PNG', logoX, logoY, logoWidthPoints, logoHeightPoints);
+                yPos += logoHeightPoints + 15; // Adjust yPos after adding logo and add some spacing
+            } else {
+                // If logo fails to load, add a placeholder text or skip
+                doc.setFontSize(10);
+                doc.setFont("helvetica", "italic");
+                doc.text("Logotipo não disponível", pageWidth / 2, yPos, { align: "center" });
+                yPos += 15; // Adjust yPos for placeholder
+            }
+
+            // Título "Laudo de Vistoria"
+            doc.setFontSize(22);
+            doc.setFont("helvetica", "bold");
+            doc.text("Laudo de Vistoria", pageWidth / 2, yPos, { align: "center" });
+            yPos += 10;
+
+            // Linha vermelha abaixo do título (como no estilo REMAX)
+            doc.setDrawColor(230, 14, 22); // Cor vermelha (remax-red)
+            doc.setLineWidth(1.5);
+            doc.line(margin, yPos, pageWidth - margin, yPos);
+            yPos += 15; // Aumenta o yPos para o conteúdo abaixo da linha
+
+            // Coletar dados dos campos
+            const reportType = document.querySelector('input[name="reportType"]:checked') ? document.querySelector('input[name="reportType"]:checked').value : 'Não informado';
+            const reportDate = reportDateInput && reportDateInput.value ? new Date(reportDateInput.value).toLocaleDateString('pt-BR') : '';
+            const brokerName = brokerNameInput ? (brokerNameInput.value || '') : '';
+            const cpf = cpfInput ? (cpfInput.value || '') : '';
+            const creci = creciInput ? (creciInput.value || '') : '';
+            const propertyType = propertyTypeSelect ? (propertyTypeSelect.value || '') : '';
+            const destination = destinationSelect ? (destinationSelect.value || '') : '';
+            const propertyAddress = propertyAddressTextarea ? (propertyAddressTextarea.value || '') : '';
+            const landlord = landlordInput ? (landlordInput.value || '') : '';
+            const tenant = tenantInput ? (tenantInput.value || '') : '';
+            const contractDate = contractDateInput && contractDateInput.value ? new Date(contractDateInput.value).toLocaleDateString('pt-BR') : '';
+
+            // Texto dinâmico
+            const dynamicText = `Este é um Laudo de Vistoria ${reportType}. Vistoria executada pelo(a) corretor(a) ${brokerName}, inscrito no CPF sob o nº ${cpf}, registrado(a) no CRECI-BA sob o nº ${creci}, no imóvel ${propertyType}, com destinação ${destination} situado no(a) ${propertyAddress}, de propriedade do(a) Sr.(a) ${landlord} que foi locado para o(a) Sr.(a) ${tenant}. O presente “laudo de vistoria” foi executado pelos abaixo assinados e passa a ser parte integrante do CONTRATO DE LOCAÇÃO datado de ${contractDate}, para todos os fins e efeitos de direito.`;
+
+            doc.setFontSize(10);
+            doc.setFont("helvetica", "normal");
+            const splitText = doc.splitTextToSize(dynamicText, pageWidth - (2 * margin));
+            doc.text(splitText, margin, yPos);
+            yPos += doc.getTextDimensions(splitText).h + 10; // Adiciona altura do texto + espaçamento
+
+            // Acrescentar no PDF, após o texto já incluso, uma informação sobre o "Estado do Imóvel" com a informação que foi selecionada
+            const propertyState = document.querySelector('input[name="propertyState"]:checked') ? document.querySelector('input[name="propertyState"]:checked').value : 'Não informado';
+            doc.setFontSize(12); // Reduced font size to fit on one line
+            doc.setFont("helvetica", "bold");
+            // Display "Estado do Imóvel:" and its value side-by-side
+            doc.text(`Estado do Imóvel: ${propertyState}`, margin, yPos);
+            yPos += 15; // Adjusted yPos for the single line
+
+            // Function to add a table to the PDF
+            const addTableToPDF = (doc, items, tableTitle, startY) => {
+                // Calculate header height dynamically
+                const headerText = ["Nº", "DESCRIÇÃO", "FOTO"]; // Base texts for measurement
+                const tempDoc = new jsPDF(); // Temporary doc to measure text
+                tempDoc.setFontSize(10); // Assuming header font size is 10
+                tempDoc.setFont("helvetica", "bold");
+                let maxHeaderTextHeight = 0;
+                headerText.forEach(text => {
+                    const textDimensions = tempDoc.getTextDimensions(text);
+                    if (textDimensions.h > maxHeaderTextHeight) {
+                        maxHeaderTextHeight = textDimensions.h;
+                    }
+                });
+                const headerMinHeightPoints = maxHeaderTextHeight * 2; // Double the necessary height
+
+                let descriptionHeaderContent = "DESCRIÇÃO";
+                if (tableTitle.includes("Vistoria")) {
+                    descriptionHeaderContent = "ITEM";
+                } else if (tableTitle.includes("Danos")) {
+                    descriptionHeaderContent = "Item Danificado";
+                }
+
+                const tableHeaders = [
+                    { content: 'Nº', dataKey: 'id' },
+                    { content: descriptionHeaderContent, dataKey: 'description' },
+                    { content: 'FOTO', dataKey: 'photo' }
+                ];
+
+                const tableBody = items.map(item => [
+                    item.id,
+                    item.description,
+                    '' // Pass empty string for photo data to prevent raw base64 text
+                ]);
+
+                const cellHeightCm = 4; // 3cm image + 0.5cm top + 0.5cm bottom
+                const cellHeightPoints = cellHeightCm * 28.3465;
+
+                doc.setFontSize(18);
+                doc.setFont("helvetica", "bold");
+                doc.text(tableTitle, pageWidth / 2, startY, { align: "center" });
+                startY += 10;
+                doc.setDrawColor(230, 14, 22); // Red line
+                doc.setLineWidth(1.5);
+                doc.line(margin, startY, pageWidth - margin, startY);
+                startY += 15;
+
+                doc.autoTable({
+                    startY: startY,
+                    head: [tableHeaders.map(h => h.content)], // Use content for display
+                    body: tableBody,
+                    theme: 'grid',
+                    styles: {
+                        font: 'helvetica',
+                        fontSize: 10,
+                        textColor: [51, 51, 51], // #333
+                        lineColor: [187, 187, 187], // --remax-medium-gray
+                        lineWidth: 0.1,
+                        cellPadding: 0 // Set padding to 0 here, manage manually in didDrawCell
+                    },
+                    headStyles: {
+                        fillColor: [240, 240, 240], // #f0f0f0
+                        textColor: [68, 68, 68], // #444
+                        fontStyle: 'bold',
+                        minCellHeight: headerMinHeightPoints, // Set header height
+                        halign: 'center', // Horizontal alignment for headers
+                        valign: 'middle' // Vertical alignment for headers
+                    },
+                    columnStyles: {
+                        0: { cellWidth: 15, halign: 'center' }, // Column 0: 'Nº'
+                        1: { cellWidth: 'auto' }, // Column 1: 'ITEM' or 'Item Danificado'
+                        2: { // Column 2: 'FOTO'
+                            cellWidth: 4 * 28.3465, // 4cm width for image column (3cm image + 2*0.5cm padding)
+                            minCellHeight: cellHeightPoints, // Ensure row height accommodates 4cm
+                            halign: 'center',
+                            valign: 'middle'
+                        }
+                    },
+                    didDrawCell: function (data) {
+                        if (data.section === 'body' && data.column.index === 2) { // Check column index for 'FOTO'
+                            const item = items[data.row.index];
+
+                            if (item && item.loadedImage) {
+                                const img = item.loadedImage;
+
+                                const targetImageHeightCm = 3;
+                                let finalImageHeightPoints = targetImageHeightCm * 28.3465;
+                                let finalImageWidthPoints = (img.naturalWidth / img.naturalHeight) * finalImageHeightPoints;
+
+                                // Define vertical padding (0.5cm top, 0.5cm bottom)
+                                const verticalPaddingCm = 0.5;
+                                const verticalPaddingPoints = verticalPaddingCm * 28.3465;
+
+                                // Available space for image within the cell, considering vertical padding
+                                const availableCellContentHeight = data.cell.height - (2 * verticalPaddingPoints);
+
+                                // If the calculated height (3cm) is too large for the available content height, scale down
+                                if (finalImageHeightPoints > availableCellContentHeight) {
+                                    const scaleFactor = availableCellContentHeight / finalImageHeightPoints;
+                                    finalImageHeightPoints *= scaleFactor;
+                                    finalImageWidthPoints *= scaleFactor;
+                                }
+
+                                // If the calculated width overflows the cell width, scale down to fit
+                                if (finalImageWidthPoints > data.cell.width) { // No horizontal padding specified, so use full cell width
+                                    const scaleFactor = data.cell.width / finalImageWidthPoints;
+                                    finalImageWidthPoints *= scaleFactor;
+                                    finalImageHeightPoints *= scaleFactor;
+                                }
+
+                                // Position image centered horizontally and with 0.5cm top/bottom padding vertically
+                                const x = data.cell.x + (data.cell.width - finalImageWidthPoints) / 2;
+                                const y = data.cell.y + verticalPaddingPoints; // Start after top padding
+
+                                doc.addImage(img.src, 'PNG', x, y, finalImageWidthPoints, finalImageHeightPoints);
+                            }
+                            data.cell.text = []; // Ensure no text is rendered
+                        }
+                    },
+                    didParseCell: function (data) {
+                        if (data.section === 'body' && data.column.index === 2) { // Check column index for 'FOTO'
+                            data.cell.styles.minCellHeight = cellHeightPoints;
+                        }
+                    }
+                });
+
+                // Update yPos after table
+                return doc.autoTable.previous.finalY + 15; // Add some space after the table
+            };
+
+
+            // Adicionar tabela de Itens da Vistoria
+            yPos = addTableToPDF(doc, inspectionItems, "Itens da Vistoria", yPos);
+
+            // Adicionar tabela de Danos Encontrados
+            yPos = addTableToPDF(doc, damageItems, "Danos Encontrados", yPos);
+
+
+            // Check if a new page is needed for signatures
+            const signatureBlockHeight = 50; // Approximate height for all signatures
+            if (yPos + signatureBlockHeight > pageHeight - margin) {
+                doc.addPage();
+                yPos = margin; // Reset yPos for new page
+            }
+
+            // Add signature fields
+            doc.setFontSize(10);
+            doc.setFont("helvetica", "normal");
+
+            const signatureLineLength = 70; // Length of the signature line
+            const spacingBetweenSignatures = 20; // Horizontal spacing between landlord and tenant
+            const textOffset = 5; // Offset for text below the line
+
+            // Locador and Locatário signatures (side-by-side, centered)
+            const totalWidth = (signatureLineLength * 2) + spacingBetweenSignatures;
+            const startX = (pageWidth - totalWidth) / 2;
+
+            // Locador
+            doc.setDrawColor(0, 0, 0); // Define a cor da linha para preto
+            doc.line(startX, yPos + 10, startX + signatureLineLength, yPos + 10);
+            doc.text("LOCADOR", startX + signatureLineLength / 2, yPos + 10 + textOffset, { align: "center" });
+
+            // Locatário
+            const tenantX = startX + signatureLineLength + spacingBetweenSignatures;
+            doc.setDrawColor(0, 0, 0); // Define a cor da linha para preto
+            doc.line(tenantX, yPos + 10, tenantX + signatureLineLength, yPos + 10);
+            doc.text("LOCATÁRIO", tenantX + signatureLineLength / 2, yPos + 10 + textOffset, { align: "center" });
+
+            yPos += 30; // Move yPos down for broker signature
+
+            // Corretor signature (centered below others with more space)
+            doc.setDrawColor(0, 0, 0); // Define a cor da linha para preto
+            doc.line(pageWidth / 2 - signatureLineLength / 2, yPos + 20, pageWidth / 2 + signatureLineLength / 2, yPos + 20);
+            doc.text("CORRETOR", pageWidth / 2, yPos + 20 + textOffset, { align: "center" });
+
+            // Footer para numeração de página
+            const addPageNumbers = () => {
+                const pageCount = doc.internal.getNumberOfPages();
+                for (let i = 1; i <= pageCount; i++) {
+                    doc.setPage(i);
+                    doc.setFontSize(10);
+                    doc.setTextColor(100);
+                    doc.text(`Página ${i} de ${pageCount}`, pageWidth / 2, pageHeight - 10, { align: 'center' });
+                }
+            };
+
+            addPageNumbers(); // Add page numbers to all pages
+            doc.save("laudo_de_vistoria.pdf");
+
+        }
         // Event Listeners
         document.addEventListener('DOMContentLoaded', () => {
-            setReportDate(); // Preenche a data atual ao carregar a página
+            // Inicialização dos elementos do DOM
+            reportDateInput = document.getElementById('reportDate');
+            cpfInput = document.getElementById('cpf');
+            inspectionItemDescriptionInput = document.getElementById('inspectionItemDescription');
+            openCameraInspectionButton = document.getElementById('openCameraInspection');
+            selectPhotoInspectionInput = document.getElementById('selectPhotoInspection');
+            triggerSelectPhotoInspectionButton = document.getElementById('triggerSelectPhotoInspection');
+            inspectionItemsTableBody = document.getElementById('inspectionItemsTable').querySelector('tbody');
+            noInspectionItemsRow = document.getElementById('noInspectionItems');
+            damageItemDescriptionInput = document.getElementById('damageItemDescription');
+            openCameraDamageButton = document.getElementById('openCameraDamage');
+            selectPhotoDamageInput = document.getElementById('selectPhotoDamage');
+            triggerSelectPhotoDamageButton = document.getElementById('triggerSelectPhotoDamage');
+            damageItemsTableBody = document.getElementById('damageItemsTable').querySelector('tbody');
+            noDamageItemsRow = document.getElementById('noDamageItems');
 
-            cpfInput.addEventListener('input', formatCPF);
+            brokerNameInput = document.getElementById('brokerName');
+            creciInput = document.getElementById('creci');
+            propertyTypeSelect = document.getElementById('propertyType');
+            destinationSelect = document.getElementById('destination');
+            propertyAddressTextarea = document.getElementById('propertyAddress');
+            landlordInput = document.getElementById('landlord');
+            tenantInput = document.getElementById('tenant');
+            contractDateInput = document.getElementById('contractDate');
+            generatePdfButton = document.getElementById('generatePdf');
+            reportTypeRadios = document.querySelectorAll('input[name="reportType"]'); // Inicializa os rádios
 
-            openCameraInspectionButton.addEventListener('click', () => {
-                const description = inspectionItemDescriptionInput.value.trim();
-                if (description) {
-                    openCamera('inspection');
-                } else {
-                    alert('Por favor, digite uma descrição antes de abrir a câmera.');
-                }
-            });
-            triggerSelectPhotoInspectionButton.addEventListener('click', () => {
-                const description = inspectionItemDescriptionInput.value.trim();
-                if (description) {
-                    selectPhotoInspectionInput.click();
-                } else {
-                    alert('Por favor, digite uma descrição antes de selecionar a foto.');
-                }
-            });
-            selectPhotoInspectionInput.addEventListener('change', (e) => handleFileSelect(e, 'inspection'));
+            cameraModal = document.getElementById('cameraModal');
+            cameraFeed = document.getElementById('cameraFeed');
+            cameraCanvas = document.getElementById('cameraCanvas');
+            takePhotoButton = document.getElementById('takePhoto');
+            cancelCameraButton = document.getElementById('cancelCamera');
+            cameraModalCloseButton = document.getElementById('cameraModalClose');
+            cameraErrorMessage = document.getElementById('cameraErrorMessage');
 
-            openCameraDamageButton.addEventListener('click', () => {
-                const description = damageItemDescriptionInput.value.trim();
-                if (description) {
-                    openCamera('damage');
-                } else {
-                    alert('Por favor, digite uma descrição antes de abrir a câmera.');
-                }
-            });
-            triggerSelectPhotoDamageButton.addEventListener('click', () => {
-                const description = damageItemDescriptionInput.value.trim();
-                if (description) {
-                    selectPhotoDamageInput.click();
-                } else {
-                    alert('Por favor, digite uma descrição antes de selecionar a foto.');
-                }
-            });
-            selectPhotoDamageInput.addEventListener('change', (e) => handleFileSelect(e, 'damage'));
+            messageBox = document.getElementById('messageBox');
+            messageText = document.getElementById('messageText');
+            closeMessageBoxButton = document.getElementById('closeMessageBox');
 
-            takePhotoButton.addEventListener('click', takePhoto);
-            cancelCameraButton.addEventListener('click', closeCameraModal);
-            cameraModalCloseButton.addEventListener('click', closeCameraModal);
-            window.addEventListener('click', (event) => { // Fecha modal clicando fora
-                if (event.target == cameraModal) {
-                    closeCameraModal();
-                }
-            });
+            // Debugging: Check if elements are found (now after initialization)
+            if (!reportDateInput) console.error("Element with ID 'reportDate' not found.");
+            if (!contractDateInput) console.error("Element with ID 'contractDate' not found.");
+            if (!brokerNameInput) console.error("Element with ID 'brokerName' not found.");
+            if (!creciInput) console.error("Element with ID 'creci' not found.");
+            if (!cpfInput) console.error("Element with ID 'cpf' not found.");
+            if (!landlordInput) console.error("Element with ID 'landlord' not found.");
+            if (!tenantInput) console.error("Element with ID 'tenant' not found.");
+            if (!propertyTypeSelect) console.error("Element with ID 'propertyType' not found.");
+            if (!destinationSelect) console.error("Element with ID 'destination' not found.");
+            if (!propertyAddressTextarea) console.error("Element with ID 'propertyAddress' not found.");
+            if (!inspectionItemDescriptionInput) console.error("Element with ID 'inspectionItemDescription' not found.");
+            if (!openCameraInspectionButton) console.error("Element with ID 'openCameraInspection' not found.");
+            if (!selectPhotoInspectionInput) console.error("Element with ID 'selectPhotoInspection' not found.");
+            if (!triggerSelectPhotoInspectionButton) console.error("Element with ID 'triggerSelectPhotoInspection' not found.");
+            if (!inspectionItemsTableBody) console.error("Element with ID 'inspectionItemsTable' tbody not found.");
+            if (!noInspectionItemsRow) console.error("Element with ID 'noInspectionItems' not found.");
+            if (!damageItemDescriptionInput) console.error("Element with ID 'damageItemDescription' not found.");
+            if (!openCameraDamageButton) console.error("Element with ID 'openCameraDamage' not found.");
+            if (!selectPhotoDamageInput) console.error("Element with ID 'selectPhotoDamage' not found.");
+            if (!triggerSelectPhotoDamageButton) console.error("Element with ID 'triggerSelectPhotoDamage' not found.");
+            if (!damageItemsTableBody) console.error("Element with ID 'damageItemsTable' tbody not found.");
+            if (!noDamageItemsRow) console.error("Element with ID 'noDamageItems' not found.");
+            if (!generatePdfButton) console.error("Element with ID 'generatePdf' not found.");
+            if (!cameraModal) console.error("Element with ID 'cameraModal' not found.");
+            if (!cameraFeed) console.error("Element with ID 'cameraFeed' not found.");
+            if (!cameraCanvas) console.error("Element with ID 'cameraCanvas' not found.");
+            if (!takePhotoButton) console.error("Element with ID 'takePhoto' not found.");
+            if (!cancelCameraButton) console.error("Element with ID 'cancelCamera' not found.");
+            if (!cameraModalCloseButton) console.error("Element with ID 'cameraModalClose' not found.");
+            if (!cameraErrorMessage) console.error("Element with ID 'cameraErrorMessage' not found.");
+            if (!messageBox) console.error("Element with ID 'messageBox' not found.");
+            if (!messageText) console.error("Element with ID 'messageText' not found.");
+            if (!closeMessageBoxButton) console.error("Element with ID 'closeMessageBox' not found.");
+            if (!reportTypeRadios || reportTypeRadios.length === 0) console.error("Radio buttons with name 'reportType' not found.");
 
-            generatePdfButton.addEventListener('click', generatePDF);
-        });
+
+            renderInspectionItems();
+            renderDamageItems();
+
+            if (cpfInput) {
+                cpfInput.addEventListener('input', (e) => {
+                    let value = e.target.value.replace(/\D/g, ''); // Remove tudo que não é dígito
+                    if (value.length > 9) {
+                        value = value.replace(/^(\d{3})(\d{3})(\d{3})(\d{2})$/, '$1.$2.$3-$4');
+                    } else if (value.length > 6) {
+                        value = value.replace(/^(\d{3})(\d{3})(\d{3})$/, '$1.$2.$3');
+                    } else if (value.length > 3) {
+                        value = value.replace(/^(\d{3})(\d{3})$/, '$1.$2');
+                    }
+                    e.target.value = value;
+                });
+            }
+
+
+            if (openCameraInspectionButton) {
+                openCameraInspectionButton.addEventListener('click', () => {
+                    const description = inspectionItemDescriptionInput.value.trim();
+                    if (description) {
+                        openCamera('inspection', inspectionItemDescriptionInput);
+                    } else {
+                        showMessage('Por favor, digite uma descrição antes de abrir a câmera.');
+                    }
+                });
+            }
+            if (triggerSelectPhotoInspectionButton) {
+                triggerSelectPhotoInspectionButton.addEventListener('click', () => {
+                    const description = inspectionItemDescriptionInput.value.trim();
+                    if (description) {
+                        selectPhotoInspectionInput.click();
+                    } else {
+                        showMessage('Por favor, digite uma descrição antes de selecionar a foto.');
+                    }
+                });
+            }
+            if (selectPhotoInspectionInput) {
+                selectPhotoInspectionInput.addEventListener('change', (e) => handleFileSelect(e, 'inspection'));
+            }
+
+            if (openCameraDamageButton) {
+                openCameraDamageButton.addEventListener('click', () => {
+                    const description = damageItemDescriptionInput.value.trim();
+                    if (description) {
+                        openCamera('damage', damageItemDescriptionInput);
+                    } else {
+                        showMessage('Por favor, digite uma descrição antes de abrir a câmera.');
+                    }
+                });
+            }
+            if (triggerSelectPhotoDamageButton) {
+                triggerSelectPhotoDamageButton.addEventListener('click', () => {
+                    const description = damageItemDescriptionInput.value.trim();
+                    if (description) {
+                        selectPhotoDamageInput.click();
+                    } else {
+                        showMessage('Por favor, digite uma descrição antes de selecionar a foto.');
+                    }
+                });
+            }
+            if (selectPhotoDamageInput) {
+                selectPhotoDamageInput.addEventListener('change', (e) => handleFileSelect(e, 'damage'));
+            }
+
+            if (takePhotoButton) takePhotoButton.addEventListener('click', takePhoto);
+            if (cancelCameraButton) cancelCameraButton.addEventListener('click', closeCameraModal);
+            if (cameraModalCloseButton) cameraModalCloseButton.addEventListener('click', closeCameraModal);
+            if (window && cameraModal) { // Fecha modal clicando fora
+                window.addEventListener('click', (event) => {
+                    if (event.target == cameraModal) {
+                        closeCameraModal();
+                    }
+                });
+            }
+            if (generatePdfButton) generatePdfButton.addEventListener('click', generatePDF);
+            if (closeMessageBoxButton) closeMessageBoxButton.addEventListener('click', closeMessageBox);
+        });      
+        
     </script>
 </body>
 </html>
