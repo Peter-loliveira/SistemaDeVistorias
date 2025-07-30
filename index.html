@@ -176,54 +176,6 @@
         textarea,
         textarea::-webkit-input-placeholder,
         select {
-            opacity: 1;
-            /* Prevents iOS placeholder color bug */
-        }
-
-        input::-moz-placeholder,
-        textarea::-moz-placeholder,
-        select::-moz-placeholder {
-            color: #777;
-            opacity: 1;
-        }
-
-        input:-ms-input-placeholder,
-        textarea:-ms-input-placeholder,
-        select:-ms-input-placeholder {
-            color: #777;
-            opacity: 1;
-        }
-
-        input::placeholder,
-        textarea::placeholder,
-        select::placeholder {
-            color: #777;
-            opacity: 1;
-        }
-
-        input::-webkit-outer-spin-button,
-        input::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-
-        input {
-            -moz-appearance: textfield;
-        }
-
-        input::-ms-clear {
-            display: none;
-        }
-
-        input::-ms-reveal {
-            display: none;
-        }
-
-        input,
-        input::placeholder,
-        textarea,
-        textarea::placeholder,
-        select {
             width: 100%;
             padding: 12px;
             border: 1px solid var(--remax-medium-gray);
@@ -676,6 +628,19 @@
             <div class="form-section">
                 <div class="form-group-row">
                     <div class="form-group">
+                        <label for="municipioSelect">Município:</label>
+                        <select id="municipioSelect" name="municipioSelect" required>
+                            <option value="Camaçari" selected>Camaçari</option>
+                            <option value="Lauro de Freitas">Lauro de Freitas</option>
+                            <option value="Salvador">Salvador</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" id="selectedMunicipioText" name="selectedMunicipioText" value="Camaçari" readonly>
+                    </div>
+                </div>
+                <div class="form-group-row">
+                    <div class="form-group">
                         <label for="reportDate">Data do Laudo:</label>
                         <input type="date" id="reportDate" name="reportDate" required>
                     </div>
@@ -904,6 +869,9 @@
         let contractDateInput;
         let generatePdfButton;
         let reportTypeRadios; // Novo elemento
+
+        let municipioSelect; // Novo elemento
+        let selectedMunicipioTextInput; // Novo elemento
 
         // Câmera
         let cameraModal;
@@ -1223,7 +1191,8 @@
 
             // Coletar dados dos campos
             const reportType = document.querySelector('input[name="reportType"]:checked') ? document.querySelector('input[name="reportType"]:checked').value : 'Não informado';
-            const reportDate = reportDateInput && reportDateInput.value ? new Date(reportDateInput.value).toLocaleDateString('pt-BR') : '';
+            const municipio = municipioSelect ? (municipioSelect.value || '') : ''; // Get value from the select
+            const reportDateValue = reportDateInput && reportDateInput.value ? reportDateInput.value : ''; // Get raw date string
             const brokerName = brokerNameInput ? (brokerNameInput.value || '') : '';
             const cpf = cpfInput ? (cpfInput.value || '') : '';
             const creci = creciInput ? (creciInput.value || '') : '';
@@ -1235,7 +1204,7 @@
             const contractDate = contractDateInput && contractDateInput.value ? new Date(contractDateInput.value).toLocaleDateString('pt-BR') : '';
 
             // Texto dinâmico
-            const dynamicText = `Este é um Laudo de Vistoria ${reportType}. Vistoria executada pelo(a) corretor(a) ${brokerName}, inscrito no CPF sob o nº ${cpf}, registrado(a) no CRECI-BA sob o nº ${creci}, no imóvel ${propertyType}, com destinação ${destination} situado no(a) ${propertyAddress}, de propriedade do(a) Sr.(a) ${landlord} que foi locado para o(a) Sr.(a) ${tenant}. O presente “laudo de vistoria” foi executado pelos abaixo assinados e passa a ser parte integrante do CONTRATO DE LOCAÇÃO datado de ${contractDate}, para todos os fins e efeitos de direito.`;
+            const dynamicText = `Este é um Laudo de Vistoria ${reportType} no município de ${municipio}. Vistoria executada pelo(a) corretor(a) ${brokerName}, inscrito no CPF sob o nº ${cpf}, registrado(a) no CRECI-BA sob o nº ${creci}, no imóvel ${propertyType}, com destinação ${destination} situado no(a) ${propertyAddress}, de propriedade do(a) Sr.(a) ${landlord} que foi locado para o(a) Sr.(a) ${tenant}. O presente “laudo de vistoria” foi executado pelos abaixo assinados e passa a ser parte integrante do CONTRATO DE LOCAÇÃO datado de ${contractDate}, para todos os fins e efeitos de direito.`;
 
             doc.setFontSize(10);
             doc.setFont("helvetica", "normal");
@@ -1253,6 +1222,9 @@
 
             // Function to add a table to the PDF
             const addTableToPDF = (doc, items, tableTitle, startY) => {
+                // Convert 0.5cm to points for padding
+                const cellPaddingPoints = 0.5 * 28.3465;
+
                 // Calculate header height dynamically
                 const headerText = ["Nº", "DESCRIÇÃO", "FOTO"]; // Base texts for measurement
                 const tempDoc = new jsPDF(); // Temporary doc to measure text
@@ -1286,7 +1258,8 @@
                     '' // Pass empty string for photo data to prevent raw base64 text
                 ]);
 
-                const cellHeightCm = 4; // 3cm image + 0.5cm top + 0.5cm bottom
+                const targetImageHeightCm = 3; // Define a altura alvo para a imagem em cm
+                const cellHeightCm = targetImageHeightCm + (2 * 0.5); // 3cm imagem + 0.5cm superior + 0.5cm preenchimento inferior
                 const cellHeightPoints = cellHeightCm * 28.3465;
 
                 doc.setFontSize(18);
@@ -1309,7 +1282,7 @@
                         textColor: [51, 51, 51], // #333
                         lineColor: [187, 187, 187], // --remax-medium-gray
                         lineWidth: 0.1,
-                        cellPadding: 0 // Set padding to 0 here, manage manually in didDrawCell
+                        cellPadding: cellPaddingPoints // Apply global padding to all cells
                     },
                     headStyles: {
                         fillColor: [240, 240, 240], // #f0f0f0
@@ -1320,10 +1293,10 @@
                         valign: 'middle' // Vertical alignment for headers
                     },
                     columnStyles: {
-                        0: { cellWidth: 15, halign: 'center' }, // Column 0: 'Nº'
-                        1: { cellWidth: 'auto' }, // Column 1: 'ITEM' or 'Item Danificado'
+                        0: { cellWidth: 15, halign: 'center', valign: 'middle' }, // Column 0: 'Nº'
+                        1: { cellWidth: 'auto', halign: 'left', valign: 'middle' }, // Column 1: 'ITEM' or 'Item Danificado'
                         2: { // Column 2: 'FOTO'
-                            cellWidth: 4 * 28.3465, // 4cm width for image column (3cm image + 2*0.5cm padding)
+                            cellWidth: cellHeightCm * 28.3465, // Adjust width to be proportional to 3cm height + padding
                             minCellHeight: cellHeightPoints, // Ensure row height accommodates 4cm
                             halign: 'center',
                             valign: 'middle'
@@ -1336,34 +1309,20 @@
                             if (item && item.loadedImage) {
                                 const img = item.loadedImage;
 
-                                const targetImageHeightCm = 3;
                                 let finalImageHeightPoints = targetImageHeightCm * 28.3465;
                                 let finalImageWidthPoints = (img.naturalWidth / img.naturalHeight) * finalImageHeightPoints;
 
-                                // Define vertical padding (0.5cm top, 0.5cm bottom)
-                                const verticalPaddingCm = 0.5;
-                                const verticalPaddingPoints = verticalPaddingCm * 28.3465;
-
-                                // Available space for image within the cell, considering vertical padding
-                                const availableCellContentHeight = data.cell.height - (2 * verticalPaddingPoints);
-
-                                // If the calculated height (3cm) is too large for the available content height, scale down
-                                if (finalImageHeightPoints > availableCellContentHeight) {
-                                    const scaleFactor = availableCellContentHeight / finalImageHeightPoints;
-                                    finalImageHeightPoints *= scaleFactor;
-                                    finalImageWidthPoints *= scaleFactor;
-                                }
-
-                                // If the calculated width overflows the cell width, scale down to fit
-                                if (finalImageWidthPoints > data.cell.width) { // No horizontal padding specified, so use full cell width
+                                // If the calculated width overflows the cell's content width, scale down to fit
+                                // data.cell.width already accounts for padding due to global cellPadding
+                                if (finalImageWidthPoints > data.cell.width) {
                                     const scaleFactor = data.cell.width / finalImageWidthPoints;
                                     finalImageWidthPoints *= scaleFactor;
                                     finalImageHeightPoints *= scaleFactor;
                                 }
 
-                                // Position image centered horizontally and with 0.5cm top/bottom padding vertically
+                                // Position image centered horizontally and vertically within the cell's content area
                                 const x = data.cell.x + (data.cell.width - finalImageWidthPoints) / 2;
-                                const y = data.cell.y + verticalPaddingPoints; // Start after top padding
+                                const y = data.cell.y + (data.cell.height - finalImageHeightPoints) / 2;
 
                                 doc.addImage(img.src, 'PNG', x, y, finalImageWidthPoints, finalImageHeightPoints);
                             }
@@ -1388,6 +1347,30 @@
             // Adicionar tabela de Danos Encontrados
             yPos = addTableToPDF(doc, damageItems, "Danos Encontrados", yPos);
 
+            // Formatar a data para o texto do município e data da vistoria
+            let formattedReportDate = '';
+            if (reportDateValue) {
+                const dateParts = reportDateValue.split('-'); // YYYY-MM-DD
+                const year = parseInt(dateParts[0]);
+                const month = parseInt(dateParts[1]) - 1; // Month is 0-indexed
+                const day = parseInt(dateParts[2]);
+                const dateObj = new Date(year, month, day);
+
+                const monthNames = [
+                    "janeiro", "fevereiro", "março", "abril", "maio", "junho",
+                    "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"
+                ];
+                formattedReportDate = `${day} de ${monthNames[month]} de ${year}`;
+            }
+
+            // Novo texto com município e data da vistoria
+            const locationAndDateText = `${municipio}, ${formattedReportDate},`; // Adicionado vírgula no final
+
+            // Adicionar o novo texto ao PDF antes das assinaturas
+            doc.setFontSize(10);
+            doc.setFont("helvetica", "normal");
+            doc.text(locationAndDateText, margin, yPos);
+            yPos += 10; // Ajusta a posição Y para a próxima linha
 
             // Check if a new page is needed for signatures
             const signatureBlockHeight = 50; // Approximate height for all signatures
@@ -1470,6 +1453,9 @@
             generatePdfButton = document.getElementById('generatePdf');
             reportTypeRadios = document.querySelectorAll('input[name="reportType"]'); // Inicializa os rádios
 
+            municipioSelect = document.getElementById('municipioSelect'); // Inicializa o novo elemento
+            selectedMunicipioTextInput = document.getElementById('selectedMunicipioText'); // Inicializa o novo elemento
+
             cameraModal = document.getElementById('cameraModal');
             cameraFeed = document.getElementById('cameraFeed');
             cameraCanvas = document.getElementById('cameraCanvas');
@@ -1517,6 +1503,8 @@
             if (!messageText) console.error("Element with ID 'messageText' not found.");
             if (!closeMessageBoxButton) console.error("Element with ID 'closeMessageBox' not found.");
             if (!reportTypeRadios || reportTypeRadios.length === 0) console.error("Radio buttons with name 'reportType' not found.");
+            if (!municipioSelect) console.error("Element with ID 'municipioSelect' not found."); // Debugging para o novo elemento
+            if (!selectedMunicipioTextInput) console.error("Element with ID 'selectedMunicipioText' not found."); // Debugging para o novo elemento
 
 
             renderInspectionItems();
@@ -1534,6 +1522,15 @@
                     }
                     e.target.value = value;
                 });
+            }
+
+            // Event listener for municipio select
+            if (municipioSelect && selectedMunicipioTextInput) {
+                municipioSelect.addEventListener('change', () => {
+                    selectedMunicipioTextInput.value = municipioSelect.value;
+                });
+                // Set initial value on load
+                selectedMunicipioTextInput.value = municipioSelect.value;
             }
 
 
@@ -1597,8 +1594,7 @@
             }
             if (generatePdfButton) generatePdfButton.addEventListener('click', generatePDF);
             if (closeMessageBoxButton) closeMessageBoxButton.addEventListener('click', closeMessageBox);
-        });      
-        
+        });
     </script>
 </body>
 </html>
