@@ -1247,7 +1247,7 @@
                 }
 
                 const tableHeaders = [
-                    { content: 'Nº', dataKey: 'id' },
+                    { content: '', dataKey: 'id' },
                     { content: descriptionHeaderContent, dataKey: 'description' },
                     { content: 'FOTO', dataKey: 'photo' }
                 ];
@@ -1258,7 +1258,7 @@
                     '' // Pass empty string for photo data to prevent raw base64 text
                 ]);
 
-                const targetImageHeightCm = 3; // Define a altura alvo para a imagem em cm
+                const targetImageHeightCm = 1.5; // Define a altura alvo para a imagem em cm
                 const cellHeightCm = targetImageHeightCm + (2 * 0.5); // 3cm imagem + 0.5cm superior + 0.5cm preenchimento inferior
                 const cellHeightPoints = cellHeightCm * 28.3465;
 
@@ -1272,6 +1272,7 @@
                 startY += 15;
 
                 doc.autoTable({
+        showHead: 'firstPage',
                     startY: startY,
                     head: [tableHeaders.map(h => h.content)], // Use content for display
                     body: tableBody,
@@ -1310,21 +1311,25 @@
                                 const img = item.loadedImage;
 
                                 let finalImageHeightPoints = targetImageHeightCm * 28.3465;
-                                let finalImageWidthPoints = (img.naturalWidth / img.naturalHeight) * finalImageHeightPoints;
+let finalImageWidthPoints = (img.naturalWidth / img.naturalHeight) * finalImageHeightPoints;
 
-                                // If the calculated width overflows the cell's content width, scale down to fit
-                                // data.cell.width already accounts for padding due to global cellPadding
-                                if (finalImageWidthPoints > data.cell.width) {
-                                    const scaleFactor = data.cell.width / finalImageWidthPoints;
-                                    finalImageWidthPoints *= scaleFactor;
-                                    finalImageHeightPoints *= scaleFactor;
-                                }
+// Garantir que largura e altura cabem dentro da célula
+if (finalImageWidthPoints > data.cell.width) {
+    const scaleFactor = data.cell.width / finalImageWidthPoints;
+    finalImageWidthPoints *= scaleFactor;
+    finalImageHeightPoints *= scaleFactor;
+}
+if (finalImageHeightPoints > data.cell.height) {
+    const scaleFactorH = data.cell.height / finalImageHeightPoints;
+    finalImageHeightPoints *= scaleFactorH;
+    finalImageWidthPoints *= scaleFactorH;
+}
 
-                                // Position image centered horizontally and vertically within the cell's content area
-                                const x = data.cell.x + (data.cell.width - finalImageWidthPoints) / 2;
-                                const y = data.cell.y + (data.cell.height - finalImageHeightPoints) / 2;
+// Centralizar a imagem na célula
+const x = data.cell.x + (data.cell.width - finalImageWidthPoints) / 2;
+const y = data.cell.y + (data.cell.height - finalImageHeightPoints) / 2;
 
-                                doc.addImage(img.src, 'PNG', x, y, finalImageWidthPoints, finalImageHeightPoints);
+doc.addImage(img.src, 'PNG', x, y, finalImageWidthPoints, finalImageHeightPoints);
                             }
                             data.cell.text = []; // Ensure no text is rendered
                         }
@@ -1394,20 +1399,20 @@
             // Locador
             doc.setDrawColor(0, 0, 0); // Define a cor da linha para preto
             doc.line(startX, yPos + 10, startX + signatureLineLength, yPos + 10);
-            doc.text("LOCADOR", startX + signatureLineLength / 2, yPos + 10 + textOffset, { align: "center" });
+            doc.text(landlord || "LOCADOR", startX + signatureLineLength / 2, yPos + 10 + textOffset, { align: "center" });
 
             // Locatário
             const tenantX = startX + signatureLineLength + spacingBetweenSignatures;
             doc.setDrawColor(0, 0, 0); // Define a cor da linha para preto
             doc.line(tenantX, yPos + 10, tenantX + signatureLineLength, yPos + 10);
-            doc.text("LOCATÁRIO", tenantX + signatureLineLength / 2, yPos + 10 + textOffset, { align: "center" });
+            doc.text(tenant || "LOCATÁRIO", tenantX + signatureLineLength / 2, yPos + 10 + textOffset, { align: "center" });
 
             yPos += 30; // Move yPos down for broker signature
 
             // Corretor signature (centered below others with more space)
             doc.setDrawColor(0, 0, 0); // Define a cor da linha para preto
             doc.line(pageWidth / 2 - signatureLineLength / 2, yPos + 20, pageWidth / 2 + signatureLineLength / 2, yPos + 20);
-            doc.text("CORRETOR", pageWidth / 2, yPos + 20 + textOffset, { align: "center" });
+            doc.text(brokerName || "CORRETOR", pageWidth / 2, yPos + 20 + textOffset, { align: "center" });
 
             // Footer para numeração de página
             const addPageNumbers = () => {
