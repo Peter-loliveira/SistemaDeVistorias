@@ -1199,7 +1199,7 @@
 
             // Coletar dados dos campos
             const reportType = document.querySelector('input[name="reportType"]:checked') ? document.querySelector('input[name="reportType"]:checked').value : 'Não informado';
-            const municipio = municipioSelect ? (municipioSelect.value || '') : ''; // Get value from the select
+            const municipio = selectedMunicipioText ? (selectedMunicipioText.value || '') : ''; // Get value from the select
             const reportDateValue = reportDateInput && reportDateInput.value ? reportDateInput.value : ''; // Get raw date string
             const brokerName = brokerNameInput ? (brokerNameInput.value || '') : '';
             const cpf = cpfInput ? (cpfInput.value || '') : '';
