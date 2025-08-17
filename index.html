@@ -638,7 +638,7 @@
                             
                         </div>
                         <div class="form-group">
-                            <input type="text" id="selectedMunicipioText" name="selectedMunicipioText" value="Camaçari" readonly>
+                            <input type="text" id="selectedMunicipioText" name="selectedMunicipioText" value="Camaçari" >
                         </div>
                     </div>
                 </div>
@@ -704,7 +704,7 @@
                                 <option value="">Selecione</option>
                                 <option value="Residencial">Residencial</option>
                                 <option value="Comercial">Comercial</option>
-                                <option value="Temporada">Temporada</option>
+                                <option value="Aluguel de Temporada">Aluguel de Temporada</option>
                             </select>
                         </div>
                     </div>
@@ -1212,7 +1212,7 @@
             const contractDate = contractDateInput && contractDateInput.value ? new Date(contractDateInput.value).toLocaleDateString('pt-BR') : '';
 
             // Texto dinâmico
-            const dynamicText = `Este é um Laudo de Vistoria ${reportType} no município de ${municipio}. Vistoria executada pelo(a) corretor(a) ${brokerName}, inscrito no CPF sob o nº ${cpf}, registrado(a) no CRECI-BA sob o nº ${creci}, no imóvel ${propertyType}, com destinação ${destination} situado no(a) ${propertyAddress}, de propriedade do(a) Sr.(a) ${landlord} que foi locado para o(a) Sr.(a) ${tenant}. O presente “laudo de vistoria” foi executado pelos abaixo assinados e passa a ser parte integrante do CONTRATO DE LOCAÇÃO datado de ${contractDate}, para todos os fins e efeitos de direito.`;
+            const dynamicText = `Este é um Laudo de Vistoria ${reportType}, executada pelo(a) corretor(a) ${brokerName}, inscrito no CPF sob o nº ${cpf}, registrado(a) no CRECI-BA sob o nº ${creci}, em imóvel do tipo ${propertyType}, com destinação do tipo ${destination} situado no(a) ${propertyAddress}, no municipio de ${municipio}, de propriedade do(a) Sr.(a) ${landlord}, que foi locado para o(a) Sr.(a) ${tenant}. O presente “laudo de vistoria” foi executado pelos abaixo assinados e passa a ser parte integrante do CONTRATO DE LOCAÇÃO datado de ${contractDate}, para todos os fins e efeitos de direito.`;
 
             doc.setFontSize(10);
             doc.setFont("helvetica", "normal");
