@@ -42,7 +42,7 @@
             color: var(--remax-blue);
             text-align: center;
             margin-bottom: 25px;
-            padding: 25px 0;
+            padding: 25px 20px;
             border-bottom: 3px solid var(--remax-blue);
             background-color: #f9f9f9;
             border-radius: 8px 8px 0 0;
@@ -52,18 +52,28 @@
             margin-bottom: 30px;
             display: flex;
             align-items: center;
-            justify-content: center;
+            justify-content: space-between;
             position: relative;
         }
 
         h1 .logo {
             height: 100px;
-            /* Altura fixa para o logo */
+            /* Altura fixa para todos os logos */
             width: auto;
             /* Mantém a proporção */
             vertical-align: middle;
-            margin-right: 0;
-            /* Ajustado para centralizar */
+        }
+
+        h1 .logo-left {
+            margin-right: auto;
+        }
+
+        h1 .logo-center {
+            margin: 0 auto;
+        }
+
+        h1 .logo-right {
+            margin-left: auto;
         }
 
         h2 {
@@ -611,7 +621,9 @@
 <body>
     <div class="container">
         <h1>
-            <img src="LOGO.png" alt="Logotipo do Sistema" class="logo">
+            <img src="LogoBalao.png" alt="Logo Balão" class="logo logo-left">
+            <img src="LogoCentral.png" alt="Logo Central" class="logo logo-center">
+            <img src="LogoLitoranea.png" alt="Logo Litorânea" class="logo logo-right">
         </h1>
         <!-- Novo campo de rádio para tipo de laudo -->
         <div class="info-block">
@@ -1150,7 +1162,7 @@
             await preloadImagesAndGetDimensions(damageItems);
 
             // Load the logo image
-            const logoUrl = "LOGO.png"; // Path to your logo image
+            const logoUrl = "LogoCentral.png"; // Path to your logo image
             let loadedLogo = null;
 
             try {
