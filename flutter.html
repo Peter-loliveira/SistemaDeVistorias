@@ -606,6 +606,7 @@
             }
         }
     </style>
+<base target="_blank">
 </head>
 <body>
     <div class="container">
@@ -629,14 +630,17 @@
                 <div class="form-group-row">
                     <div class="form-group">
                         <label for="municipioSelect">Município:</label>
+                        <div class="form-group">
                         <select id="municipioSelect" name="municipioSelect" required>
                             <option value="Camaçari" selected>Camaçari</option>
                             <option value="Lauro de Freitas">Lauro de Freitas</option>
                             <option value="Salvador">Salvador</option>
                         </select>
-                    </div>
-                    <div class="form-group">
-                        <input type="text" id="selectedMunicipioText" name="selectedMunicipioText" value="Camaçari" readonly>
+                            
+                        </div>
+                        <div class="form-group">
+                            <input type="text" id="selectedMunicipioText" name="selectedMunicipioText" value="Camaçari" >
+                        </div>
                     </div>
                 </div>
                 <div class="form-group-row">
@@ -687,8 +691,12 @@
                             <label for="propertyType">Tipo de Imóvel:</label>
                             <select id="propertyType" name="propertyType" required>
                                 <option value="">Selecione</option>
-                                <option value="Casa">Casa</option>
                                 <option value="Apartamento">Apartamento</option>
+                                <option value="Casa">Casa</option>
+                                <option value="Casa de Condominio">Casa de Condominio</option>
+                                <option value="Terreno">Terreno</option>
+                                <option value="Sala Comercial">Sala Comercial</option>
+                                <option value="Sitio">Sitio</option>
                             </select>
                         </div>
                         <div class="form-group">
@@ -696,6 +704,8 @@
                             <select id="destination" name="destination" required>
                                 <option value="">Selecione</option>
                                 <option value="Residencial">Residencial</option>
+                                <option value="Aluguel">Aluguel</option>
+                                <option value="Aluguel de Temporada">Aluguel de Temporada</option>
                                 <option value="Comercial">Comercial</option>
                             </select>
                         </div>
@@ -1191,7 +1201,7 @@
 
             // Coletar dados dos campos
             const reportType = document.querySelector('input[name="reportType"]:checked') ? document.querySelector('input[name="reportType"]:checked').value : 'Não informado';
-            const municipio = municipioSelect ? (municipioSelect.value || '') : ''; // Get value from the select
+            const municipio = selectedMunicipioText ? (selectedMunicipioText.value || '') : ''; // Get value from the select
             const reportDateValue = reportDateInput && reportDateInput.value ? reportDateInput.value : ''; // Get raw date string
             const brokerName = brokerNameInput ? (brokerNameInput.value || '') : '';
             const cpf = cpfInput ? (cpfInput.value || '') : '';
@@ -1204,7 +1214,7 @@
             const contractDate = contractDateInput && contractDateInput.value ? new Date(contractDateInput.value).toLocaleDateString('pt-BR') : '';
 
             // Texto dinâmico
-            const dynamicText = `Este é um Laudo de Vistoria ${reportType} no município de ${municipio}. Vistoria executada pelo(a) corretor(a) ${brokerName}, inscrito no CPF sob o nº ${cpf}, registrado(a) no CRECI-BA sob o nº ${creci}, no imóvel ${propertyType}, com destinação ${destination} situado no(a) ${propertyAddress}, de propriedade do(a) Sr.(a) ${landlord} que foi locado para o(a) Sr.(a) ${tenant}. O presente “laudo de vistoria” foi executado pelos abaixo assinados e passa a ser parte integrante do CONTRATO DE LOCAÇÃO datado de ${contractDate}, para todos os fins e efeitos de direito.`;
+            const dynamicText = `Este Laudo de Vistoria ${reportType}, executada pelo(a) corretor(a) ${brokerName}, inscrito no CPF sob o nº ${cpf}, registrado(a) no CRECI-BA sob o nº ${creci}, em imóvel do tipo ${propertyType}, com destinação do tipo ${destination} situado no(a) ${propertyAddress}, no municipio de ${municipio}, de propriedade do(a) Sr.(a) ${landlord}, que foi locado para o(a) Sr.(a) ${tenant}. O presente “laudo de vistoria” foi executado pelos abaixo assinados e passa a ser parte integrante do CONTRATO DE LOCAÇÃO datado de ${contractDate}, para todos os fins e efeitos de direito.`;
 
             doc.setFontSize(10);
             doc.setFont("helvetica", "normal");
@@ -1247,7 +1257,7 @@
                 }
 
                 const tableHeaders = [
-                    { content: 'Nº', dataKey: 'id' },
+                    { content: '', dataKey: 'id' },
                     { content: descriptionHeaderContent, dataKey: 'description' },
                     { content: 'FOTO', dataKey: 'photo' }
                 ];
@@ -1258,7 +1268,7 @@
                     '' // Pass empty string for photo data to prevent raw base64 text
                 ]);
 
-                const targetImageHeightCm = 3; // Define a altura alvo para a imagem em cm
+                const targetImageHeightCm = 1.5; // Define a altura alvo para a imagem em cm
                 const cellHeightCm = targetImageHeightCm + (2 * 0.5); // 3cm imagem + 0.5cm superior + 0.5cm preenchimento inferior
                 const cellHeightPoints = cellHeightCm * 28.3465;
 
@@ -1272,6 +1282,7 @@
                 startY += 15;
 
                 doc.autoTable({
+        showHead: 'firstPage',
                     startY: startY,
                     head: [tableHeaders.map(h => h.content)], // Use content for display
                     body: tableBody,
@@ -1293,7 +1304,7 @@
                         valign: 'middle' // Vertical alignment for headers
                     },
                     columnStyles: {
-                        0: { cellWidth: 15, halign: 'center', valign: 'middle' }, // Column 0: 'Nº'
+                        0: { cellWidth: 35, halign: 'center', valign: 'middle' }, // Column 0: 'Nº'
                         1: { cellWidth: 'auto', halign: 'left', valign: 'middle' }, // Column 1: 'ITEM' or 'Item Danificado'
                         2: { // Column 2: 'FOTO'
                             cellWidth: cellHeightCm * 28.3465, // Adjust width to be proportional to 3cm height + padding
@@ -1310,21 +1321,25 @@
                                 const img = item.loadedImage;
 
                                 let finalImageHeightPoints = targetImageHeightCm * 28.3465;
-                                let finalImageWidthPoints = (img.naturalWidth / img.naturalHeight) * finalImageHeightPoints;
+let finalImageWidthPoints = (img.naturalWidth / img.naturalHeight) * finalImageHeightPoints;
 
-                                // If the calculated width overflows the cell's content width, scale down to fit
-                                // data.cell.width already accounts for padding due to global cellPadding
-                                if (finalImageWidthPoints > data.cell.width) {
-                                    const scaleFactor = data.cell.width / finalImageWidthPoints;
-                                    finalImageWidthPoints *= scaleFactor;
-                                    finalImageHeightPoints *= scaleFactor;
-                                }
+// Garantir que largura e altura cabem dentro da célula
+if (finalImageWidthPoints > data.cell.width) {
+    const scaleFactor = data.cell.width / finalImageWidthPoints;
+    finalImageWidthPoints *= scaleFactor;
+    finalImageHeightPoints *= scaleFactor;
+}
+if (finalImageHeightPoints > data.cell.height) {
+    const scaleFactorH = data.cell.height / finalImageHeightPoints;
+    finalImageHeightPoints *= scaleFactorH;
+    finalImageWidthPoints *= scaleFactorH;
+}
 
-                                // Position image centered horizontally and vertically within the cell's content area
-                                const x = data.cell.x + (data.cell.width - finalImageWidthPoints) / 2;
-                                const y = data.cell.y + (data.cell.height - finalImageHeightPoints) / 2;
+// Centralizar a imagem na célula
+const x = data.cell.x + (data.cell.width - finalImageWidthPoints) / 2;
+const y = data.cell.y + (data.cell.height - finalImageHeightPoints) / 2;
 
-                                doc.addImage(img.src, 'PNG', x, y, finalImageWidthPoints, finalImageHeightPoints);
+doc.addImage(img.src, 'PNG', x, y, finalImageWidthPoints, finalImageHeightPoints);
                             }
                             data.cell.text = []; // Ensure no text is rendered
                         }
@@ -1394,20 +1409,20 @@
             // Locador
             doc.setDrawColor(0, 0, 0); // Define a cor da linha para preto
             doc.line(startX, yPos + 10, startX + signatureLineLength, yPos + 10);
-            doc.text("LOCADOR", startX + signatureLineLength / 2, yPos + 10 + textOffset, { align: "center" });
+            doc.text(landlord || "LOCADOR", startX + signatureLineLength / 2, yPos + 10 + textOffset, { align: "center" });
 
             // Locatário
             const tenantX = startX + signatureLineLength + spacingBetweenSignatures;
             doc.setDrawColor(0, 0, 0); // Define a cor da linha para preto
             doc.line(tenantX, yPos + 10, tenantX + signatureLineLength, yPos + 10);
-            doc.text("LOCATÁRIO", tenantX + signatureLineLength / 2, yPos + 10 + textOffset, { align: "center" });
+            doc.text(tenant || "LOCATÁRIO", tenantX + signatureLineLength / 2, yPos + 10 + textOffset, { align: "center" });
 
             yPos += 30; // Move yPos down for broker signature
 
             // Corretor signature (centered below others with more space)
             doc.setDrawColor(0, 0, 0); // Define a cor da linha para preto
             doc.line(pageWidth / 2 - signatureLineLength / 2, yPos + 20, pageWidth / 2 + signatureLineLength / 2, yPos + 20);
-            doc.text("CORRETOR", pageWidth / 2, yPos + 20 + textOffset, { align: "center" });
+            doc.text(brokerName || "CORRETOR", pageWidth / 2, yPos + 20 + textOffset, { align: "center" });
 
             // Footer para numeração de página
             const addPageNumbers = () => {
