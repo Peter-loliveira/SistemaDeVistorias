@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -42,7 +43,7 @@
             color: var(--remax-blue);
             text-align: center;
             margin-bottom: 25px;
-            padding: 25px 0;
+            padding: 25px 20px;
             border-bottom: 3px solid var(--remax-blue);
             background-color: #f9f9f9;
             border-radius: 8px 8px 0 0;
@@ -52,18 +53,28 @@
             margin-bottom: 30px;
             display: flex;
             align-items: center;
-            justify-content: center;
+            justify-content: space-between;
             position: relative;
         }
 
         h1 .logo {
             height: 100px;
-            /* Altura fixa para o logo */
+            /* Altura fixa para todos os logos */
             width: auto;
             /* Mantém a proporção */
             vertical-align: middle;
-            margin-right: 0;
-            /* Ajustado para centralizar */
+        }
+
+        h1 .logo-left {
+            margin-right: auto;
+        }
+
+        h1 .logo-center {
+            margin: 0 auto;
+        }
+
+        h1 .logo-right {
+            margin-left: auto;
         }
 
         h2 {
@@ -147,28 +158,49 @@
             opacity: 1;
         }
 
-        input:focus::-webkit-input-placeholder { color: transparent;
+        input:focus::-webkit-input-placeholder {
+            color: transparent;
         }
-        textarea:focus::-webkit-input-placeholder { color: transparent;
+
+        textarea:focus::-webkit-input-placeholder {
+            color: transparent;
         }
-        select:focus::-webkit-input-placeholder { color: transparent;
+
+        select:focus::-webkit-input-placeholder {
+            color: transparent;
         }
-        input:focus::-moz-placeholder { color: transparent;
+
+        input:focus::-moz-placeholder {
+            color: transparent;
         }
-        textarea:focus::-moz-placeholder { color: transparent;
+
+        textarea:focus::-moz-placeholder {
+            color: transparent;
         }
-        select:focus::-moz-placeholder { color: transparent;
+
+        select:focus::-moz-placeholder {
+            color: transparent;
         }
-        input:focus:-ms-input-placeholder { color: transparent;
+
+        input:focus:-ms-input-placeholder {
+            color: transparent;
         }
+
         textarea:focus:-ms-input-placeholder,
-        select:focus:-ms-input-placeholder { color: transparent;
+        select:focus:-ms-input-placeholder {
+            color: transparent;
         }
-        input:focus::placeholder { color: transparent;
+
+        input:focus::placeholder {
+            color: transparent;
         }
-        textarea:focus::placeholder { color: transparent;
+
+        textarea:focus::placeholder {
+            color: transparent;
         }
-        select:focus::placeholder { color: transparent;
+
+        select:focus::placeholder {
+            color: transparent;
         }
 
         input,
@@ -204,21 +236,26 @@
             flex-direction: row;
             align-items: center;
             gap: 20px;
-            flex-wrap: wrap; /* Permite quebrar linha em telas menores */
+            flex-wrap: wrap;
+            /* Permite quebrar linha em telas menores */
         }
 
         .form-group.estado-imovel label {
             margin-bottom: 0;
-            flex-shrink: 0; /* Impede que o label encolha */
+            flex-shrink: 0;
+            /* Impede que o label encolha */
         }
 
         .radio-group {
             display: flex;
             flex-wrap: wrap;
             gap: 15px;
-            margin-top: 0; /* Conforme requisito */
-            justify-content: center; /* Centraliza as opções de rádio */
-            width: 100%; /* Garante que o radio-group ocupe toda a largura disponível */
+            margin-top: 0;
+            /* Conforme requisito */
+            justify-content: center;
+            /* Centraliza as opções de rádio */
+            width: 100%;
+            /* Garante que o radio-group ocupe toda a largura disponível */
         }
 
         .radio-group label {
@@ -226,9 +263,11 @@
             align-items: center;
             cursor: pointer;
             font-weight: normal;
-            color: #555; /* Cor padrão não selecionado */
+            color: #555;
+            /* Cor padrão não selecionado */
             transition: color 0.3s ease;
-            font-size: 1rem; /* Garante consistência da fonte */
+            font-size: 1rem;
+            /* Garante consistência da fonte */
         }
 
         .radio-group input {
@@ -236,7 +275,7 @@
             width: auto;
         }
 
-        .radio-group input:checked + span {
+        .radio-group input:checked+span {
             color: var(--remax-blue);
             font-weight: bold;
         }
@@ -256,9 +295,12 @@
             height: 40px;
             min-height: 40px;
             font-weight: bold;
-            white-space: nowrap; /* Previne quebra de linha em botões com ícone e texto */
+            white-space: nowrap;
+            /* Previne quebra de linha em botões com ícone e texto */
         }
-        .button.icon-only { /* Novo estilo para botões apenas com ícone */
+
+        .button.icon-only {
+            /* Novo estilo para botões apenas com ícone */
             padding: 0;
             width: 40px;
             height: 40px;
@@ -305,6 +347,7 @@
             flex-wrap: wrap;
             justify-content: flex-end;
         }
+
         .input-with-buttons .action-buttons .button {
             flex-grow: 0;
             max-width: none;
@@ -323,7 +366,8 @@
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
         }
 
-        th, td {
+        th,
+        td {
             border: 1px solid var(--remax-medium-gray);
             padding: 12px;
             text-align: left;
@@ -363,7 +407,7 @@
             width: 100%;
             height: 100%;
             overflow: auto;
-            background-color: rgba(0,0,0,0.7);
+            background-color: rgba(0, 0, 0, 0.7);
             justify-content: center;
             align-items: center;
             flex-direction: column;
@@ -377,7 +421,7 @@
             border-radius: 8px;
             width: 90%;
             max-width: 600px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
             position: relative;
             display: flex;
             flex-direction: column;
@@ -465,12 +509,13 @@
             min-width: 250px;
             margin-bottom: 0;
         }
+
         .form-group-row .form-group label {
             text-align: center;
             width: 100%;
         }
 
-               /* Rodapé */
+        /* Rodapé */
         /* REMOVIDO: O rodapé e seus textos foram removidos conforme solicitação */
 
         /* Novo estilo para agrupar input e botões */
@@ -539,6 +584,7 @@
                 align-items: flex-start;
                 gap: 10px;
             }
+
             .form-group-row .form-group {
                 min-width: 100%;
             }
@@ -556,6 +602,7 @@
             .action-buttons .button {
                 max-width: 100%;
             }
+
             .action-buttons .button.icon-only {
                 max-width: 40px;
             }
@@ -564,12 +611,14 @@
                 flex-direction: column;
                 align-items: stretch;
             }
+
             .input-with-buttons .action-buttons {
                 justify-content: center;
                 margin-top: 10px;
             }
 
-            th, td {
+            th,
+            td {
                 padding: 8px;
                 font-size: 0.9rem;
             }
@@ -606,42 +655,55 @@
             }
         }
     </style>
+    <base target="_blank">
+    <base target="_blank">
 </head>
-<body>
-    <div class="container">
-        <h1>
-            <img src="LOGO.png" alt="Logotipo do Sistema" class="logo">
-        </h1>
-        <!-- Novo campo de rádio para tipo de laudo -->
-        <div class="info-block">
-            <h3>Tipo de Vistoria</h3>
-            <div class="form-group">
-                <div class="radio-group">
-                    <label><input type="radio" name="reportType" value="Inicial" required> <span>Inicial</span></label>
-                    <label><input type="radio" name="reportType" value="Final"> <span>Final</span></label>
-                </div>
-            </div>
-        </div>
-        <!-- Fim do novo campo -->
 
+
+
+<body>
+        <h1>
+            <img src="LogoBalao.png" alt="Logo Balão" class="logo logo-left">
+            <img src="LogoCentral.png" alt="Logo Central" class="logo logo-center">
+            <img src="LogoLitoranea.png" alt="Logo Litorânea" class="logo logo-right">
+        </h1>
+        
         <form id="inspectionForm">
-            <div class="form-section">
-                <div class="form-group-row">
+            <!-- Novo campo de rádio para tipo de laudo -->
+            <div class="info-block">
+                <div class="form-section">
+                    <h2>Tipo de Vistoria</h2>
                     <div class="form-group">
-                        <label for="municipioSelect">Município:</label>
-                        <div class="form-group">
-                        <select id="municipioSelect" name="municipioSelect" required>
-                            <option value="Camaçari" selected>Camaçari</option>
-                            <option value="Lauro de Freitas">Lauro de Freitas</option>
-                            <option value="Salvador">Salvador</option>
-                        </select>
-                            
-                        </div>
-                        <div class="form-group">
-                            <input type="text" id="selectedMunicipioText" name="selectedMunicipioText" value="Camaçari" >
+                        <div class="radio-group">
+                            <label><input type="radio" name="reportType" value="Inicial" required>
+                                <span>Inicial</span></label>
+                            <label><input type="radio" name="reportType" value="Final"> <span>Final</span></label>
                         </div>
                     </div>
                 </div>
+            </div>
+            <!-- Fim do novo campo -->
+            <div class="info-block">
+                <div class="form-section">
+                    <h2>Informações do Laudo</h2>
+                    <div class="form-group-row">
+                        <div class="form-group">
+                            <label for="municipioSelect">Município:</label>
+                            <div class="form-group">
+                                <select id="municipioSelect" name="municipioSelect" required>
+                                    <option value="Camaçari" selected>Camaçari</option>
+                                    <option value="Lauro de Freitas">Lauro de Freitas</option>
+                                    <option value="Salvador">Salvador</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <input type="text" id="selectedMunicipioText" name="selectedMunicipioText"
+                                    value="Camaçari" placeholder="Município selecionado aparecerá aqui" required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="form-group-row">
                     <div class="form-group">
                         <label for="reportDate">Data do Laudo:</label>
@@ -652,153 +714,168 @@
                         <input type="date" id="contractDate" name="contractDate" required>
                     </div>
                 </div>
-                <div class="info-block">
-                    <h3>Informações do Corretor</h3>
-                    <div class="form-group">
-                        <label for="brokerName">Corretor(a):</label>
-                        <input type="text" id="brokerName" name="brokerName" required>
-                    </div>
-                    <div class="form-group-row">
-                        <div class="form-group">
-                            <label for="creci">CRECI:</label>
-                            <input type="text" id="creci" name="creci" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="cpf">CPF:</label>
-                            <input type="text" id="cpf" name="cpf" maxlength="14" placeholder="XXX.XXX.XXX-XX" required>
-                        </div>
-                    </div>
-                </div>
-                <div class="info-block">
-                    <h3>Informações do Imóvel</h3>
-                    <div class="form-group-row">
-                        <div class="form-group">
-                            <label for="landlord">Locador:</label>
-                            <input type="text" id="landlord" name="landlord" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="tenant">Locatário:</label>
-                            <input type="text" id="tenant" name="tenant" required>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="propertyAddress">Endereço do Imóvel:</label>
-                        <textarea id="propertyAddress" name="propertyAddress" required placeholder="Endereço completo do imóvel"></textarea>
-                    </div>
-                    <div class="form-group-row">
-                        <div class="form-group">
-                            <label for="propertyType">Tipo de Imóvel:</label>
-                            <select id="propertyType" name="propertyType" required>
-                                <option value="">Selecione</option>
-                                <option value="Apartamento">Apartamento</option>
-                                <option value="Casa">Casa</option>
-                                <option value="Casa de Condominio">Casa de Condominio</option>
-                                <option value="Terreno">Terreno</option>
-                                <option value="Sala Comercial">Sala Comercial</option>
-                                <option value="Sitio">Sitio</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="destination">Destinação:</label>
-                            <select id="destination" name="destination" required>
-                                <option value="">Selecione</option>
-                                <option value="Residencial">Residencial</option>
-                                <option value="Comercial">Comercial</option>
-                                <option value="Aluguel de Temporada">Aluguel de Temporada</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group estado-imovel">
-                        <label>Estado do Imóvel:</label>
-                        <div class="radio-group">
-                            <label><input type="radio" name="propertyState" value="Novo" required> <span>Novo</span></label>
-                            <label><input type="radio" name="propertyState" value="Excelente"> <span>Excelente</span></label>
-                            <label><input type="radio" name="propertyState" value="Bom"> <span>Bom</span></label>
-                            <label><input type="radio" name="propertyState" value="Regular"> <span>Regular</span></label>
-                            <label><input type="radio" name="propertyState" value="Ruim"> <span>Ruim</span></label>
-                        </div>
-                    </div>
-                </div>
             </div>
-            <div class="info-block">
-                <div class="form-section">
-                    <h2>Itens da Vistoria.</h2>
-                    <div class="input-with-buttons">
-                        <div class="form-group">
-                            <label for="inspectionItemDescription">Descrição do Item:</label>
-                            <input type="text" id="inspectionItemDescription" placeholder="Ex: Porta da sala, parede da cozinha, etc.">
-                        </div>
-                        <div class="action-buttons">
-                            <button type="button" class="button primary-button icon-only" id="openCameraInspection">
-                                <span class="material-icons">camera_alt</span>
-                            </button>
-                            <input type="file" id="selectPhotoInspection" accept="image/*" style="display: none;">
-                            <button type="button" class="button primary-button icon-only" id="triggerSelectPhotoInspection">
-                                <span class="material-icons">collections</span>
-                            </button>
-                        </div>
-                    </div>
-                    <table id="inspectionItemsTable">
-                        <thead>
-                            <tr>
-                                <th>Nº</th>
-                                <th>ITEM</th>
-                                <th>FOTO</th>
-                                <th>AÇÕES</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr id="noInspectionItems" class="no-records">
-                                <td colspan="4">Nenhum item de vistoria adicionado.</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <div class="info-block">
-                <div class="form-section">
-                    <h2>Danos Encontrados.</h2>
-                    <div class="input-with-buttons">
-                        <div class="form-group">
-                            <label for="damageItemDescription">Descrição do Dano:</label>
-                            <input type="text" id="damageItemDescription" placeholder="Ex: Vidro quebrado, pintura descascada, etc.">
-                        </div>
-                        <div class="action-buttons">
-                            <button type="button" class="button primary-button icon-only" id="openCameraDamage">
-                                <span class="material-icons">camera_alt</span>
-                            </button>
-                            <input type="file" id="selectPhotoDamage" accept="image/*" style="display: none;">
-                            <button type="button" class="button primary-button icon-only" id="triggerSelectPhotoDamage">
-                                <span class="material-icons">collections</span>
-                            </button>
-                        </div>
-                    </div>
-                    <table id="damageItemsTable">
-                        <thead>
-                            <tr>
-                                <th>Nº</th>
-                                <th>Item Danificado</th>
-                                <th>Foto</th>
-                                <th>AÇÕES</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr id="noDamageItems" class="no-records">
-                                <td colspan="4">Nenhum dano adicionado.</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <button type="button" class="button pdf-button" id="generatePdf">
-                <span class="material-icons">picture_as_pdf</span> Gerar PDF
-            </button>
         </form>
+    
+
+
+    
+    <div class="info-block">
+        <div class="form-section">
+            <h2>Informações do Corretor</h2>
+            <div class="form-group">
+                <label for="brokerName">Corretor(a):</label>
+                <input type="text" id="brokerName" name="brokerName" required>
+            </div>
+            <div class="form-group-row">
+                <div class="form-group">
+                    <label for="creci">CRECI:</label>
+                    <input type="text" id="creci" name="creci" required>
+                </div>
+                <div class="form-group">
+                    <label for="cpf">CPF:</label>
+                    <input type="text" id="cpf" name="cpf" maxlength="14" placeholder="XXX.XXX.XXX-XX" required>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="info-block">
+        <div class="form-section">
+            <h2>Informações do Imóvel</h2>
+            <div class="form-group-row">
+                <div class="form-group">
+                    <label for="landlord">Locador:</label>
+                    <input type="text" id="landlord" name="landlord" required>
+                </div>
+                <div class="form-group">
+                    <label for="tenant">Locatário:</label>
+                    <input type="text" id="tenant" name="tenant" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="propertyAddress">Endereço do Imóvel:</label>
+                <textarea id="propertyAddress" name="propertyAddress" required
+                    placeholder="Endereço completo do imóvel"></textarea>
+            </div>
+            <div class="form-group-row">
+                <div class="form-group">
+                    <label for="propertyType">Tipo de Imóvel:</label>
+                    <select id="propertyType" name="propertyType" required>
+                        <option value="">Selecione</option>
+                        <option value="Apartamento">Apartamento</option>
+                        <option value="Casa">Casa</option>
+                        <option value="Casa de Condominio">Casa de Condominio</option>
+                        <option value="Terreno">Terreno</option>
+                        <option value="Sala Comercial">Sala Comercial</option>
+                        <option value="Sitio">Sitio</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="destination">Destinação:</label>
+                    <select id="destination" name="destination" required>
+                        <option value="">Selecione</option>
+                        <option value="Residencial">Residencial</option>
+                        <option value="Aluguel">Aluguel</option>
+                        <option value="Aluguel de Temporada">Aluguel de Temporada</option>
+                        <option value="Comercial">Comercial</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group estado-imovel">
+                <label>Estado do Imóvel:</label>
+                <div class="radio-group">
+                    <label><input type="radio" name="propertyState" value="Novo" required> <span>Novo</span></label>
+                    <label><input type="radio" name="propertyState" value="Excelente"> <span>Excelente</span></label>
+                    <label><input type="radio" name="propertyState" value="Bom"> <span>Bom</span></label>
+                    <label><input type="radio" name="propertyState" value="Regular"> <span>Regular</span></label>
+                    <label><input type="radio" name="propertyState" value="Ruim"> <span>Ruim</span></label>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <div class="info-block">
+        <div class="form-section">
+            <h2>Itens da Vistoria.</h2>
+            <div class="input-with-buttons">
+                <div class="form-group">
+                    <label for="inspectionItemDescription">Descrição do Item:</label>
+                    <input type="text" id="inspectionItemDescription"
+                        placeholder="Ex: Porta da sala, parede da cozinha, etc.">
+                </div>
+                <div class="action-buttons">
+                    <button type="button" class="button primary-button icon-only" id="openCameraInspection">
+                        <span class="material-icons">camera_alt</span>
+                    </button>
+                    <input type="file" id="selectPhotoInspection" accept="image/*" style="display: none;">
+                    <button type="button" class="button primary-button icon-only" id="triggerSelectPhotoInspection">
+                        <span class="material-icons">collections</span>
+                    </button>
+                </div>
+            </div>
+            <table id="inspectionItemsTable">
+                <thead>
+                    <tr>
+                        <th>Nº</th>
+                        <th>ITEM</th>
+                        <th>FOTO</th>
+                        <th>AÇÕES</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr id="noInspectionItems" class="no-records">
+                        <td colspan="4">Nenhum item de vistoria adicionado.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="info-block">
+        <div class="form-section">
+            <h2>Danos Encontrados.</h2>
+            <div class="input-with-buttons">
+                <div class="form-group">
+                    <label for="damageItemDescription">Descrição do Dano:</label>
+                    <input type="text" id="damageItemDescription"
+                        placeholder="Ex: Vidro quebrado, pintura descascada, etc.">
+                </div>
+                <div class="action-buttons">
+                    <button type="button" class="button primary-button icon-only" id="openCameraDamage">
+                        <span class="material-icons">camera_alt</span>
+                    </button>
+                    <input type="file" id="selectPhotoDamage" accept="image/*" style="display: none;">
+                    <button type="button" class="button primary-button icon-only" id="triggerSelectPhotoDamage">
+                        <span class="material-icons">collections</span>
+                    </button>
+                </div>
+            </div>
+            <table id="damageItemsTable">
+                <thead>
+                    <tr>
+                        <th>Nº</th>
+                        <th>Item Danificado</th>
+                        <th>Foto</th>
+                        <th>AÇÕES</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr id="noDamageItems" class="no-records">
+                        <td colspan="4">Nenhum dano adicionado.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <button type="button" class="button pdf-button" id="generatePdf">
+        <span class="material-icons">picture_as_pdf</span> Gerar PDF
+    </button>
+    </form>
     </div>
 
     <div id="cameraModal" class="camera-modal">
         <div class="camera-modal-content">
-            <span class="camera-modal-close" id="cameraModalClose">&times;</span> <h2>Pré-visualização da Câmera</h2>
+            <span class="camera-modal-close" id="cameraModalClose">&times;</span>
+            <h2>Pré-visualização da Câmera</h2>
             <video id="cameraFeed" autoplay playsinline></video>
             <canvas id="cameraCanvas" style="display:none;"></canvas>
             <p id="cameraErrorMessage" class="camera-error-message" style="display:none;"></p>
@@ -1097,7 +1174,7 @@
             const file = event.target.files[0];
             if (file) {
                 const reader = new FileReader();
-                reader.onload = function(e) {
+                reader.onload = function (e) {
                     if (type === 'inspection') {
                         addInspectionItem(inspectionItemDescriptionInput.value, e.target.result);
                     } else if (type === 'damage') {
@@ -1137,55 +1214,74 @@
 
         // Função para gerar PDF
         async function generatePDF() {
-            const doc = new jsPDF();
+            const doc = new jsPDF({ margin: { bottom: 40 } });
             let yPos = 15;
             const margin = 10;
             const pageWidth = doc.internal.pageSize.getWidth();
             const pageHeight = doc.internal.pageSize.getHeight();
+            const contentHeight = pageHeight - 40; // Reserve 40 points for footer
 
             // Pré-carregar todas as imagens das tabelas antes de gerar o PDF
             await preloadImagesAndGetDimensions(inspectionItems);
             await preloadImagesAndGetDimensions(damageItems);
 
-            // Load the logo image
-            const logoUrl = "LOGO.png"; // Path to your logo image
-            let loadedLogo = null;
+            // Load the three logo images
+            const logoUrls = {
+                left: "LogoBalao.png",
+                center: "LogoCentral.png",
+                right: "LogoLitoranea.png"
+            };
 
-            try {
-                loadedLogo = await new Promise((resolve, reject) => {
-                    const img = new Image();
-                    img.src = logoUrl;
-                    img.onload = () => resolve(img);
-                    img.onerror = (err) => {
-                        console.error("Failed to load logo image for PDF:", err);
-                        resolve(null); // Resolve with null if loading fails
-                    };
-                });
-            } catch (error) {
-                console.error("Error loading logo image:", error);
+            const loadedLogos = {};
+            const logoHeightCm = 1.5;
+            const logoHeightPoints = logoHeightCm * 28.3465;
+
+            // Load all three logos
+            for (const [position, url] of Object.entries(logoUrls)) {
+                try {
+                    loadedLogos[position] = await new Promise((resolve) => {
+                        const img = new Image();
+                        img.src = url;
+                        img.onload = () => resolve(img);
+                        img.onerror = () => {
+                            console.warn(`Failed to load logo: ${url}`);
+                            resolve(null);
+                        };
+                    });
+                } catch (error) {
+                    console.error(`Error loading ${url}:`, error);
+                    loadedLogos[position] = null;
+                }
             }
 
-            if (loadedLogo) {
-                const logoHeightCm = 1.5; // Desired height in cm (half of 3cm)
-                const logoHeightPoints = logoHeightCm * 28.3465; // Convert cm to PDF points
-                const logoAspectRatio = loadedLogo.naturalWidth / loadedLogo.naturalHeight;
-                const logoWidthPoints = logoHeightPoints * logoAspectRatio;
+            // Calculate dimensions for each logo with fixed height
+            const logoSpacing = 30; // Space between logos
+            const logosToRender = [];
+            let totalWidth = 0;
 
-                // Center the logo horizontally
-                const logoX = (pageWidth - logoWidthPoints) / 2;
-                const logoY = yPos; // Place at current yPos
-
-                doc.addImage(loadedLogo, 'PNG', logoX, logoY, logoWidthPoints, logoHeightPoints);
-                yPos += logoHeightPoints + 15; // Adjust yPos after adding logo and add some spacing
-            } else {
-                // If logo fails to load, add a placeholder text or skip
-                doc.setFontSize(10);
-                doc.setFont("helvetica", "italic");
-                doc.text("Logotipo não disponível", pageWidth / 2, yPos, { align: "center" });
-                yPos += 15; // Adjust yPos for placeholder
+            // Calculate widths maintaining aspect ratio
+            for (const [position, img] of Object.entries(loadedLogos)) {
+                if (img) {
+                    const aspectRatio = img.naturalWidth / img.naturalHeight;
+                    const width = logoHeightPoints * aspectRatio;
+                    logosToRender.push({ position, img, width });
+                    totalWidth += width;
+                }
             }
 
-            // Título "Laudo de Vistoria"
+            // Add spacing to total width
+            totalWidth += logoSpacing * (logosToRender.length - 1);
+
+            // Calculate starting X to center the group
+            let currentX = (pageWidth - totalWidth) / 2;
+
+            // Render all logos with same Y position and fixed height
+            logosToRender.forEach((logo, index) => {
+                doc.addImage(logo.img, 'PNG', currentX, yPos, logo.width, logoHeightPoints);
+                currentX += logo.width + logoSpacing;
+            });
+
+            yPos += logoHeightPoints + 15; // Adjust yPos after adding logos// Título "Laudo de Vistoria"
             doc.setFontSize(22);
             doc.setFont("helvetica", "bold");
             doc.text("Laudo de Vistoria", pageWidth / 2, yPos, { align: "center" });
@@ -1212,7 +1308,7 @@
             const contractDate = contractDateInput && contractDateInput.value ? new Date(contractDateInput.value).toLocaleDateString('pt-BR') : '';
 
             // Texto dinâmico
-            const dynamicText = `Este é um Laudo de Vistoria ${reportType}, executada pelo(a) corretor(a) ${brokerName}, inscrito no CPF sob o nº ${cpf}, registrado(a) no CRECI-BA sob o nº ${creci}, em imóvel do tipo ${propertyType}, com destinação do tipo ${destination} situado no(a) ${propertyAddress}, no municipio de ${municipio}, de propriedade do(a) Sr.(a) ${landlord}, que foi locado para o(a) Sr.(a) ${tenant}. O presente “laudo de vistoria” foi executado pelos abaixo assinados e passa a ser parte integrante do CONTRATO DE LOCAÇÃO datado de ${contractDate}, para todos os fins e efeitos de direito.`;
+            const dynamicText = `Este Laudo de Vistoria ${reportType}, executada pelo(a) corretor(a) ${brokerName}, inscrito no CPF sob o nº ${cpf}, registrado(a) no CRECI-BA sob o nº ${creci}, em imóvel do tipo ${propertyType}, com destinação do tipo ${destination} situado no(a) ${propertyAddress}, no municipio de ${municipio}, de propriedade do(a) Sr.(a) ${landlord}, que foi locado para o(a) Sr.(a) ${tenant}. O presente “laudo de vistoria” foi executado pelos abaixo assinados e passa a ser parte integrante do CONTRATO DE LOCAÇÃO datado de ${contractDate}, para todos os fins e efeitos de direito.`;
 
             doc.setFontSize(10);
             doc.setFont("helvetica", "normal");
@@ -1280,7 +1376,8 @@
                 startY += 15;
 
                 doc.autoTable({
-        showHead: 'firstPage',
+                    showHead: 'firstPage',
+                    rowPageBreak: 'avoid', // Prevent rows from splitting across pages
                     startY: startY,
                     head: [tableHeaders.map(h => h.content)], // Use content for display
                     body: tableBody,
@@ -1302,7 +1399,7 @@
                         valign: 'middle' // Vertical alignment for headers
                     },
                     columnStyles: {
-                        0: { cellWidth: 15, halign: 'center', valign: 'middle' }, // Column 0: 'Nº'
+                        0: { cellWidth: 35, halign: 'center', valign: 'middle' }, // Column 0: 'Nº'
                         1: { cellWidth: 'auto', halign: 'left', valign: 'middle' }, // Column 1: 'ITEM' or 'Item Danificado'
                         2: { // Column 2: 'FOTO'
                             cellWidth: cellHeightCm * 28.3465, // Adjust width to be proportional to 3cm height + padding
@@ -1319,25 +1416,25 @@
                                 const img = item.loadedImage;
 
                                 let finalImageHeightPoints = targetImageHeightCm * 28.3465;
-let finalImageWidthPoints = (img.naturalWidth / img.naturalHeight) * finalImageHeightPoints;
+                                let finalImageWidthPoints = (img.naturalWidth / img.naturalHeight) * finalImageHeightPoints;
 
-// Garantir que largura e altura cabem dentro da célula
-if (finalImageWidthPoints > data.cell.width) {
-    const scaleFactor = data.cell.width / finalImageWidthPoints;
-    finalImageWidthPoints *= scaleFactor;
-    finalImageHeightPoints *= scaleFactor;
-}
-if (finalImageHeightPoints > data.cell.height) {
-    const scaleFactorH = data.cell.height / finalImageHeightPoints;
-    finalImageHeightPoints *= scaleFactorH;
-    finalImageWidthPoints *= scaleFactorH;
-}
+                                // Garantir que largura e altura cabem dentro da célula
+                                if (finalImageWidthPoints > data.cell.width) {
+                                    const scaleFactor = data.cell.width / finalImageWidthPoints;
+                                    finalImageWidthPoints *= scaleFactor;
+                                    finalImageHeightPoints *= scaleFactor;
+                                }
+                                if (finalImageHeightPoints > data.cell.height) {
+                                    const scaleFactorH = data.cell.height / finalImageHeightPoints;
+                                    finalImageHeightPoints *= scaleFactorH;
+                                    finalImageWidthPoints *= scaleFactorH;
+                                }
 
-// Centralizar a imagem na célula
-const x = data.cell.x + (data.cell.width - finalImageWidthPoints) / 2;
-const y = data.cell.y + (data.cell.height - finalImageHeightPoints) / 2;
+                                // Centralizar a imagem na célula
+                                const x = data.cell.x + (data.cell.width - finalImageWidthPoints) / 2;
+                                const y = data.cell.y + (data.cell.height - finalImageHeightPoints) / 2;
 
-doc.addImage(img.src, 'PNG', x, y, finalImageWidthPoints, finalImageHeightPoints);
+                                doc.addImage(img.src, 'PNG', x, y, finalImageWidthPoints, finalImageHeightPoints);
                             }
                             data.cell.text = []; // Ensure no text is rendered
                         }
@@ -1383,57 +1480,104 @@ doc.addImage(img.src, 'PNG', x, y, finalImageWidthPoints, finalImageHeightPoints
             doc.setFontSize(10);
             doc.setFont("helvetica", "normal");
             doc.text(locationAndDateText, margin, yPos);
-            yPos += 10; // Ajusta a posição Y para a próxima linha
+            yPos += 10; // Aumentado espaço antes das assinaturas
 
-            // Check if a new page is needed for signatures
-            const signatureBlockHeight = 50; // Approximate height for all signatures
-            if (yPos + signatureBlockHeight > pageHeight - margin) {
-                doc.addPage();
-                yPos = margin; // Reset yPos for new page
-            }
+            // Function to add signatures on the last page
+            const addSignatures = () => {
+                // Go to last page
+                const totalPages = doc.internal.getNumberOfPages();
+                doc.setPage(totalPages);
 
-            // Add signature fields
-            doc.setFontSize(10);
-            doc.setFont("helvetica", "normal");
+                // Check available space on last page
+                const lastPageY = doc.autoTable.previous ? doc.autoTable.previous.finalY : margin;
+                const signatureBlockHeight = 50;
+                const footerExclusiveSpace = 35;
 
-            const signatureLineLength = 70; // Length of the signature line
-            const spacingBetweenSignatures = 20; // Horizontal spacing between landlord and tenant
-            const textOffset = 5; // Offset for text below the line
+                // If not enough space on last page, add new page for signatures
+                if (lastPageY + signatureBlockHeight + footerExclusiveSpace > pageHeight) {
+                    doc.addPage();
+                }
 
-            // Locador and Locatário signatures (side-by-side, centered)
-            const totalWidth = (signatureLineLength * 2) + spacingBetweenSignatures;
-            const startX = (pageWidth - totalWidth) / 2;
+                let sigY = doc.autoTable.previous ? doc.autoTable.previous.finalY + 20 : margin + 20;
 
-            // Locador
-            doc.setDrawColor(0, 0, 0); // Define a cor da linha para preto
-            doc.line(startX, yPos + 10, startX + signatureLineLength, yPos + 10);
-            doc.text(landlord || "LOCADOR", startX + signatureLineLength / 2, yPos + 10 + textOffset, { align: "center" });
+                // If we added a new page, start from top
+                if (doc.internal.getCurrentPageInfo().pageNumber > totalPages) {
+                    sigY = margin + 20;
+                }
 
-            // Locatário
-            const tenantX = startX + signatureLineLength + spacingBetweenSignatures;
-            doc.setDrawColor(0, 0, 0); // Define a cor da linha para preto
-            doc.line(tenantX, yPos + 10, tenantX + signatureLineLength, yPos + 10);
-            doc.text(tenant || "LOCATÁRIO", tenantX + signatureLineLength / 2, yPos + 10 + textOffset, { align: "center" });
+                doc.setFontSize(10);
+                doc.setFont("helvetica", "normal");
 
-            yPos += 30; // Move yPos down for broker signature
+                const signatureLineLength = 70;
+                const spacingBetweenSignatures = 20;
+                const textOffset = 5;
 
-            // Corretor signature (centered below others with more space)
-            doc.setDrawColor(0, 0, 0); // Define a cor da linha para preto
-            doc.line(pageWidth / 2 - signatureLineLength / 2, yPos + 20, pageWidth / 2 + signatureLineLength / 2, yPos + 20);
-            doc.text(brokerName || "CORRETOR", pageWidth / 2, yPos + 20 + textOffset, { align: "center" });
+                // Locador and Locatário signatures (side-by-side, centered)
+                const totalWidth = (signatureLineLength * 2) + spacingBetweenSignatures;
+                const startX = (pageWidth - totalWidth) / 2;
 
-            // Footer para numeração de página
-            const addPageNumbers = () => {
+                // Locador
+                doc.setDrawColor(0, 0, 0);
+                doc.line(startX, sigY + 10, startX + signatureLineLength, sigY + 10);
+                doc.text(landlord || "LOCADOR", startX + signatureLineLength / 2, sigY + 10 + textOffset, { align: "center" });
+
+                // Locatário
+                const tenantX = startX + signatureLineLength + spacingBetweenSignatures;
+                doc.setDrawColor(0, 0, 0);
+                doc.line(tenantX, sigY + 10, tenantX + signatureLineLength, sigY + 10);
+                doc.text(tenant || "LOCATÁRIO", tenantX + signatureLineLength / 2, sigY + 10 + textOffset, { align: "center" });
+
+                sigY += 30;
+
+                // Corretor signature
+                doc.setDrawColor(0, 0, 0);
+                doc.line(pageWidth / 2 - signatureLineLength / 2, sigY + 20, pageWidth / 2 + signatureLineLength / 2, sigY + 20);
+                doc.text(brokerName || "CORRETOR", pageWidth / 2, sigY + 20 + textOffset, { align: "center" });
+            };
+
+            // Call signatures function to add them on last page
+            addSignatures();
+
+            // Footer com informações da empresa (esquerda) e numeração (direita)
+            const addFooter = () => {
                 const pageCount = doc.internal.getNumberOfPages();
+                const footerY = pageHeight - 12; // Position from bottom
+
                 for (let i = 1; i <= pageCount; i++) {
                     doc.setPage(i);
-                    doc.setFontSize(10);
+                    doc.setFontSize(9);
                     doc.setTextColor(100);
-                    doc.text(`Página ${i} de ${pageCount}`, pageWidth / 2, pageHeight - 10, { align: 'center' });
+
+                    // Left side - Company info
+                    const companyInfo = [
+                        'RE/MAX Litorânea',
+                        'Rua Direta de Jauá, Loja 4, Jauá, Camaçari, Bahia, CEP: 42828-576',
+                        'Telefone: (71) 3672-1664 | E-mail: litoranea@remax.com.br'
+                    ];
+
+                    let leftY = footerY - 8; // Start a bit higher for multi-line text
+                    companyInfo.forEach((line, index) => {
+                        doc.setFont("helvetica", index === 0 ? "bold" : "normal");
+                        doc.text(line, margin, leftY + (index * 5), { align: 'left' });
+                    });
+
+                    // Right side - Page numbers
+                    doc.setFont("helvetica", "normal");
+                    doc.text(`Página ${i} de ${pageCount}`, pageWidth - margin, footerY, { align: 'right' });
                 }
             };
 
-            addPageNumbers(); // Add page numbers to all pages
+            // Ensure footer has exclusive space on each page
+            const footerExclusiveSpace = 30; // Minimum space needed for footer
+            const currentPage = doc.internal.getCurrentPageInfo().pageNumber;
+            const currentY = doc.autoTable.previous ? doc.autoTable.previous.finalY : yPos;
+
+            // Check if there's enough space for footer on current page
+            if (currentY + footerExclusiveSpace > pageHeight - 20) {
+                doc.addPage();
+            }
+
+            addFooter(); // Add footer to all pages
             doc.save("laudo_de_vistoria.pdf");
 
         }
@@ -1537,14 +1681,7 @@ doc.addImage(img.src, 'PNG', x, y, finalImageWidthPoints, finalImageHeightPoints
                 });
             }
 
-            // Event listener for municipio select
-            if (municipioSelect && selectedMunicipioTextInput) {
-                municipioSelect.addEventListener('change', () => {
-                    selectedMunicipioTextInput.value = municipioSelect.value;
-                });
-                // Set initial value on load
-                selectedMunicipioTextInput.value = municipioSelect.value;
-            }
+
 
 
             if (openCameraInspectionButton) {
@@ -1610,4 +1747,5 @@ doc.addImage(img.src, 'PNG', x, y, finalImageWidthPoints, finalImageHeightPoints
         });
     </script>
 </body>
+
 </html>
