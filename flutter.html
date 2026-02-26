@@ -644,14 +644,15 @@
                         <label for="municipioSelect">Município:</label>
                         <div class="form-group">
                         <select id="municipioSelect" name="municipioSelect" required>
-                            <option value="Camaçari" selected>Camaçari</option>
+                            <option value="" selected>Selecione um Município</option>
+                            <option value="Camaçari">Camaçari</option>
                             <option value="Lauro de Freitas">Lauro de Freitas</option>
                             <option value="Salvador">Salvador</option>
                         </select>
                             
                         </div>
                         <div class="form-group">
-                            <input type="text" id="selectedMunicipioText" name="selectedMunicipioText" value="Camaçari" >
+                            <input type="text" id="selectedMunicipioText" name="selectedMunicipioText" value="" readonly placeholder="Município selecionado aparecerá aqui" required>
                         </div>
                     </div>
                 </div>
@@ -1151,55 +1152,57 @@
 
         // Função para gerar PDF
         async function generatePDF() {
-            const doc = new jsPDF();
+            const doc = new jsPDF({ margin: { bottom: 40 } });
             let yPos = 15;
             const margin = 10;
             const pageWidth = doc.internal.pageSize.getWidth();
             const pageHeight = doc.internal.pageSize.getHeight();
+            const contentHeight = pageHeight - 40; // Reserve 40 points for footer
 
             // Pré-carregar todas as imagens das tabelas antes de gerar o PDF
             await preloadImagesAndGetDimensions(inspectionItems);
             await preloadImagesAndGetDimensions(damageItems);
 
-            // Load the logo image
-            const logoUrl = "LogoCentral.png"; // Path to your logo image
+            // Load the single logo image
+            const logoUrl = "Logo.png";
             let loadedLogo = null;
 
             try {
-                loadedLogo = await new Promise((resolve, reject) => {
+                loadedLogo = await new Promise((resolve) => {
                     const img = new Image();
                     img.src = logoUrl;
                     img.onload = () => resolve(img);
-                    img.onerror = (err) => {
-                        console.error("Failed to load logo image for PDF:", err);
-                        resolve(null); // Resolve with null if loading fails
+                    img.onerror = () => {
+                        console.warn(`Failed to load logo: ${logoUrl}`);
+                        resolve(null);
                     };
                 });
             } catch (error) {
-                console.error("Error loading logo image:", error);
+                console.error(`Error loading ${logoUrl}:`, error);
             }
 
             if (loadedLogo) {
-                const logoHeightCm = 1.5; // Desired height in cm (half of 3cm)
-                const logoHeightPoints = logoHeightCm * 28.3465; // Convert cm to PDF points
-                const logoAspectRatio = loadedLogo.naturalWidth / loadedLogo.naturalHeight;
-                const logoWidthPoints = logoHeightPoints * logoAspectRatio;
+                // Calculate logo width: page width minus 4cm (2cm on each side)
+                const marginCm = 2;
+                const marginPoints = marginCm * 28.3465;
+                const maxLogoWidth = pageWidth - (marginPoints * 2);
 
-                // Center the logo horizontally
-                const logoX = (pageWidth - logoWidthPoints) / 2;
-                const logoY = yPos; // Place at current yPos
+                // Calculate height maintaining aspect ratio
+                const aspectRatio = loadedLogo.naturalHeight / loadedLogo.naturalWidth;
+                const logoWidth = maxLogoWidth;
+                const logoHeight = logoWidth * aspectRatio;
 
-                doc.addImage(loadedLogo, 'PNG', logoX, logoY, logoWidthPoints, logoHeightPoints);
-                yPos += logoHeightPoints + 15; // Adjust yPos after adding logo and add some spacing
+                // Position logo with 2cm margin on left
+                const logoX = marginPoints;
+
+                doc.addImage(loadedLogo, 'PNG', logoX, yPos, logoWidth, logoHeight);
+                yPos += logoHeight + 15;
             } else {
-                // If logo fails to load, add a placeholder text or skip
                 doc.setFontSize(10);
                 doc.setFont("helvetica", "italic");
                 doc.text("Logotipo não disponível", pageWidth / 2, yPos, { align: "center" });
-                yPos += 15; // Adjust yPos for placeholder
-            }
-
-            // Título "Laudo de Vistoria"
+                yPos += 15;
+            }// Título "Laudo de Vistoria"
             doc.setFontSize(22);
             doc.setFont("helvetica", "bold");
             doc.text("Laudo de Vistoria", pageWidth / 2, yPos, { align: "center" });
@@ -1295,6 +1298,7 @@
 
                 doc.autoTable({
         showHead: 'firstPage',
+                    rowPageBreak: 'avoid', // Prevent rows from splitting across pages
                     startY: startY,
                     head: [tableHeaders.map(h => h.content)], // Use content for display
                     body: tableBody,
@@ -1399,55 +1403,102 @@ doc.addImage(img.src, 'PNG', x, y, finalImageWidthPoints, finalImageHeightPoints
             doc.text(locationAndDateText, margin, yPos);
             yPos += 10; // Ajusta a posição Y para a próxima linha
 
-            // Check if a new page is needed for signatures
-            const signatureBlockHeight = 50; // Approximate height for all signatures
-            if (yPos + signatureBlockHeight > pageHeight - margin) {
-                doc.addPage();
-                yPos = margin; // Reset yPos for new page
-            }
+            // Function to add signatures on the last page
+            const addSignatures = () => {
+                // Go to last page
+                const totalPages = doc.internal.getNumberOfPages();
+                doc.setPage(totalPages);
 
-            // Add signature fields
-            doc.setFontSize(10);
-            doc.setFont("helvetica", "normal");
+                // Check available space on last page
+                const lastPageY = doc.autoTable.previous ? doc.autoTable.previous.finalY : margin;
+                const signatureBlockHeight = 50;
+                const footerExclusiveSpace = 35;
 
-            const signatureLineLength = 70; // Length of the signature line
-            const spacingBetweenSignatures = 20; // Horizontal spacing between landlord and tenant
-            const textOffset = 5; // Offset for text below the line
+                // If not enough space on last page, add new page for signatures
+                if (lastPageY + signatureBlockHeight + footerExclusiveSpace > pageHeight) {
+                    doc.addPage();
+                }
 
-            // Locador and Locatário signatures (side-by-side, centered)
-            const totalWidth = (signatureLineLength * 2) + spacingBetweenSignatures;
-            const startX = (pageWidth - totalWidth) / 2;
+                let sigY = doc.autoTable.previous ? doc.autoTable.previous.finalY + 20 : margin + 20;
 
-            // Locador
-            doc.setDrawColor(0, 0, 0); // Define a cor da linha para preto
-            doc.line(startX, yPos + 10, startX + signatureLineLength, yPos + 10);
-            doc.text(landlord || "LOCADOR", startX + signatureLineLength / 2, yPos + 10 + textOffset, { align: "center" });
+                // If we added a new page, start from top
+                if (doc.internal.getCurrentPageInfo().pageNumber > totalPages) {
+                    sigY = margin + 20;
+                }
 
-            // Locatário
-            const tenantX = startX + signatureLineLength + spacingBetweenSignatures;
-            doc.setDrawColor(0, 0, 0); // Define a cor da linha para preto
-            doc.line(tenantX, yPos + 10, tenantX + signatureLineLength, yPos + 10);
-            doc.text(tenant || "LOCATÁRIO", tenantX + signatureLineLength / 2, yPos + 10 + textOffset, { align: "center" });
+                doc.setFontSize(10);
+                doc.setFont("helvetica", "normal");
 
-            yPos += 30; // Move yPos down for broker signature
+                const signatureLineLength = 70;
+                const spacingBetweenSignatures = 20;
+                const textOffset = 5;
 
-            // Corretor signature (centered below others with more space)
-            doc.setDrawColor(0, 0, 0); // Define a cor da linha para preto
-            doc.line(pageWidth / 2 - signatureLineLength / 2, yPos + 20, pageWidth / 2 + signatureLineLength / 2, yPos + 20);
-            doc.text(brokerName || "CORRETOR", pageWidth / 2, yPos + 20 + textOffset, { align: "center" });
+                // Locador and Locatário signatures (side-by-side, centered)
+                const totalWidth = (signatureLineLength * 2) + spacingBetweenSignatures;
+                const startX = (pageWidth - totalWidth) / 2;
 
-            // Footer para numeração de página
-            const addPageNumbers = () => {
+                // Locador
+                doc.setDrawColor(0, 0, 0);
+                doc.line(startX, sigY + 10, startX + signatureLineLength, sigY + 10);
+                doc.text(landlord || "LOCADOR", startX + signatureLineLength / 2, sigY + 10 + textOffset, { align: "center" });
+
+                // Locatário
+                const tenantX = startX + signatureLineLength + spacingBetweenSignatures;
+                doc.setDrawColor(0, 0, 0);
+                doc.line(tenantX, sigY + 10, tenantX + signatureLineLength, sigY + 10);
+                doc.text(tenant || "LOCATÁRIO", tenantX + signatureLineLength / 2, sigY + 10 + textOffset, { align: "center" });
+
+                sigY += 30;
+
+                // Corretor signature
+                doc.setDrawColor(0, 0, 0);
+                doc.line(pageWidth / 2 - signatureLineLength / 2, sigY + 20, pageWidth / 2 + signatureLineLength / 2, sigY + 20);
+                doc.text(brokerName || "CORRETOR", pageWidth / 2, sigY + 20 + textOffset, { align: "center" });
+            };
+
+            // Call signatures function to add them on last page
+            addSignatures();
+
+            // Footer com informações da empresa (esquerda) e numeração (direita)
+            const addFooter = () => {
                 const pageCount = doc.internal.getNumberOfPages();
+                const footerY = pageHeight - 12; // Position from bottom
+
                 for (let i = 1; i <= pageCount; i++) {
                     doc.setPage(i);
-                    doc.setFontSize(10);
+                    doc.setFontSize(9);
                     doc.setTextColor(100);
-                    doc.text(`Página ${i} de ${pageCount}`, pageWidth / 2, pageHeight - 10, { align: 'center' });
+
+                    // Left side - Company info
+                    const companyInfo = [
+                        'RE/MAX Litorânea',
+                        'Rua Direta de Jauá, Loja 4, Jauá, Camaçari, Bahia, CEP: 42828-576',
+                        'Telefone: (71) 3672-1664 | E-mail: litoranea@remax.com.br'
+                    ];
+
+                    let leftY = footerY - 8; // Start a bit higher for multi-line text
+                    companyInfo.forEach((line, index) => {
+                        doc.setFont("helvetica", index === 0 ? "bold" : "normal");
+                        doc.text(line, margin, leftY + (index * 5), { align: 'left' });
+                    });
+
+                    // Right side - Page numbers
+                    doc.setFont("helvetica", "normal");
+                    doc.text(`Página ${i} de ${pageCount}`, pageWidth - margin, footerY, { align: 'right' });
                 }
             };
 
-            addPageNumbers(); // Add page numbers to all pages
+            // Ensure footer has exclusive space on each page
+            const footerExclusiveSpace = 30; // Minimum space needed for footer
+            const currentPage = doc.internal.getCurrentPageInfo().pageNumber;
+            const currentY = doc.autoTable.previous ? doc.autoTable.previous.finalY : yPos;
+
+            // Check if there's enough space for footer on current page
+            if (currentY + footerExclusiveSpace > pageHeight - 20) {
+                doc.addPage();
+            }
+
+            addFooter(); // Add footer to all pages
             doc.save("laudo_de_vistoria.pdf");
 
         }
@@ -1554,10 +1605,12 @@ doc.addImage(img.src, 'PNG', x, y, finalImageWidthPoints, finalImageHeightPoints
             // Event listener for municipio select
             if (municipioSelect && selectedMunicipioTextInput) {
                 municipioSelect.addEventListener('change', () => {
-                    selectedMunicipioTextInput.value = municipioSelect.value;
+                    if (municipioSelect.value) {
+                        selectedMunicipioTextInput.value = municipioSelect.value;
+                    } else {
+                        selectedMunicipioTextInput.value = '';
+                    }
                 });
-                // Set initial value on load
-                selectedMunicipioTextInput.value = municipioSelect.value;
             }
 
 
