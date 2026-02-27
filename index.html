@@ -687,19 +687,18 @@
                 <div class="form-section">
                     <h2>Informações do Laudo</h2>
                     <div class="form-group-row">
+                        <!-- NOVO: Select de Estado e Município lado a lado -->
+                        <div class="form-group">
+                            <label for="estadoSelect">Estado:</label>
+                            <select id="estadoSelect" name="estadoSelect" required>
+                                <!-- Opções serão carregadas via JavaScript -->
+                            </select>
+                        </div>
                         <div class="form-group">
                             <label for="municipioSelect">Município:</label>
-                            <div class="form-group">
-                                <select id="municipioSelect" name="municipioSelect" required>
-                                    <option value="Camaçari" selected>Camaçari</option>
-                                    <option value="Lauro de Freitas">Lauro de Freitas</option>
-                                    <option value="Salvador">Salvador</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <input type="text" id="selectedMunicipioText" name="selectedMunicipioText"
-                                    value="Camaçari" placeholder="Município selecionado aparecerá aqui" required>
-                            </div>
+                            <select id="municipioSelect" name="municipioSelect" required>
+                                <!-- Opções serão carregadas via JavaScript baseado no estado -->
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -928,6 +927,10 @@
         let inspectionItems = [];
         let damageItems = [];
 
+        // Dados dos estados e municípios
+        let estadosData = [];
+        let municipiosData = [];
+
         // Elementos do DOM (agora inicializados dentro de DOMContentLoaded)
         let reportDateInput;
         let cpfInput;
@@ -955,8 +958,8 @@
         let generatePdfButton;
         let reportTypeRadios; // Novo elemento
 
-        let municipioSelect; // Novo elemento
-        let selectedMunicipioTextInput; // Novo elemento
+        let estadoSelect; // NOVO: Select de Estado
+        let municipioSelect; // MODIFICADO: Agora é o select de município dependente
 
         // Câmera
         let cameraModal;
@@ -993,6 +996,70 @@
             }
         }
 
+                // NOVO: Função para carregar dados dos arquivos JSON
+        async function loadLocationData() {
+            try {
+                // Carregar estados
+                const estadosResponse = await fetch('estados.json');
+                estadosData = await estadosResponse.json();
+                
+                // Carregar municípios
+                const municipiosResponse = await fetch('municipios.json');
+                municipiosData = await municipiosResponse.json();
+                
+                // Popular select de estados
+                populateEstadosSelect();
+                
+                // Definir BA (Bahia) como padrão e carregar seus municípios
+                const bahiaId = 29; // ID da Bahia
+                estadoSelect.value = bahiaId;
+                updateMunicipiosSelect(bahiaId);
+                
+                // Selecionar Camaçari como padrão após carregar os municípios
+                setTimeout(() => {
+                    for (let i = 0; i < municipioSelect.options.length; i++) {
+                        if (municipioSelect.options[i].value === 'Camaçari') {
+                            municipioSelect.selectedIndex = i;
+                            break;
+                        }
+                    }
+                }, 100);
+                
+            } catch (error) {
+                console.error('Erro ao carregar dados de localização:', error);
+                showMessage('Erro ao carregar dados de estados e municípios. Verifique se os arquivos JSON estão disponíveis.');
+            }
+        }
+
+        // NOVO: Função para popular o select de estados
+        function populateEstadosSelect() {
+            estadoSelect.innerHTML = '';
+            estadosData.forEach(estado => {
+                const option = document.createElement('option');
+                option.value = estado.id;
+                option.textContent = `${estado.name} (${estado.abbr})`;
+                estadoSelect.appendChild(option);
+            });
+        }
+
+        // NOVO: Função para atualizar o select de municípios baseado no estado
+        function updateMunicipiosSelect(stateId) {
+            municipioSelect.innerHTML = '';
+            
+            // Filtrar municípios do estado selecionado
+            const municipiosFiltrados = municipiosData.filter(m => m.state_id === parseInt(stateId));
+            
+            // Ordenar por nome
+            municipiosFiltrados.sort((a, b) => a.name.localeCompare(b.name));
+            
+            // Adicionar opções
+            municipiosFiltrados.forEach(municipio => {
+                const option = document.createElement('option');
+                option.value = municipio.name;
+                option.textContent = municipio.name;
+                municipioSelect.appendChild(option);
+            });
+        }
 
         // Função para abrir a câmera
         async function openCamera(type, descriptionInput) {
@@ -1293,10 +1360,18 @@
             doc.line(margin, yPos, pageWidth - margin, yPos);
             yPos += 15; // Aumenta o yPos para o conteúdo abaixo da linha
 
-            // Coletar dados dos campos
+             // Coletar dados dos campos
             const reportType = document.querySelector('input[name="reportType"]:checked') ? document.querySelector('input[name="reportType"]:checked').value : 'Não informado';
-            const municipio = selectedMunicipioText ? (selectedMunicipioText.value || '') : ''; // Get value from the select
-            const reportDateValue = reportDateInput && reportDateInput.value ? reportDateInput.value : ''; // Get raw date string
+            
+            // MODIFICADO: Pegar o nome do município e estado selecionados
+            const municipio = municipioSelect ? municipioSelect.value : '';
+            
+            // NOVO: Pegar a sigla do estado selecionado
+            const estadoId = estadoSelect ? parseInt(estadoSelect.value) : 0;
+            const estadoObj = estadosData.find(e => e.id === estadoId);
+            const estado = estadoObj ? estadoObj.abbr : '';
+            
+            const reportDateValue = reportDateInput && reportDateInput.value ? reportDateInput.value : '';
             const brokerName = brokerNameInput ? (brokerNameInput.value || '') : '';
             const cpf = cpfInput ? (cpfInput.value || '') : '';
             const creci = creciInput ? (creciInput.value || '') : '';
@@ -1307,8 +1382,8 @@
             const tenant = tenantInput ? (tenantInput.value || '') : '';
             const contractDate = contractDateInput && contractDateInput.value ? new Date(contractDateInput.value).toLocaleDateString('pt-BR') : '';
 
-            // Texto dinâmico
-            const dynamicText = `Este Laudo de Vistoria ${reportType}, executada pelo(a) corretor(a) ${brokerName}, inscrito no CPF sob o nº ${cpf}, registrado(a) no CRECI-BA sob o nº ${creci}, em imóvel do tipo ${propertyType}, com destinação do tipo ${destination} situado no(a) ${propertyAddress}, no municipio de ${municipio}, de propriedade do(a) Sr.(a) ${landlord}, que foi locado para o(a) Sr.(a) ${tenant}. O presente “LAUDO DE VISTORIA” foi executado pelos abaixo assinados e passa a ser parte integrante do CONTRATO DE LOCAÇÃO datado de ${contractDate}, para todos os fins e efeitos de direito.`;
+            // Texto dinâmico MODIFICADO
+            const dynamicText = `Este Laudo de Vistoria ${reportType}, executada pelo(a) corretor(a) ${brokerName}, inscrito no CPF sob o nº ${cpf}, registrado(a) no CRECI-BA sob o nº ${creci}, em imóvel do tipo ${propertyType}, com destinação do tipo ${destination} situado no(a) ${propertyAddress}, no municipio de ${municipio}/${estado}, de propriedade do(a) Sr.(a) ${landlord}, que foi locado para o(a) Sr.(a) ${tenant}. O presente "LAUDO DE VISTORIA" foi executado pelos abaixo assinados e passa a ser parte integrante do CONTRATO DE LOCAÇÃO datado de ${contractDate}, para todos os fins e efeitos de direito.`;
 
             doc.setFontSize(10);
             doc.setFont("helvetica", "normal");
@@ -1610,8 +1685,9 @@
             generatePdfButton = document.getElementById('generatePdf');
             reportTypeRadios = document.querySelectorAll('input[name="reportType"]'); // Inicializa os rádios
 
-            municipioSelect = document.getElementById('municipioSelect'); // Inicializa o novo elemento
-            selectedMunicipioTextInput = document.getElementById('selectedMunicipioText'); // Inicializa o novo elemento
+            // NOVO: Inicializar selects de estado e município
+            estadoSelect = document.getElementById('estadoSelect');
+            municipioSelect = document.getElementById('municipioSelect');
 
             cameraModal = document.getElementById('cameraModal');
             cameraFeed = document.getElementById('cameraFeed');
@@ -1660,22 +1736,32 @@
             if (!messageText) console.error("Element with ID 'messageText' not found.");
             if (!closeMessageBoxButton) console.error("Element with ID 'closeMessageBox' not found.");
             if (!reportTypeRadios || reportTypeRadios.length === 0) console.error("Radio buttons with name 'reportType' not found.");
-            if (!municipioSelect) console.error("Element with ID 'municipioSelect' not found."); // Debugging para o novo elemento
-            if (!selectedMunicipioTextInput) console.error("Element with ID 'selectedMunicipioText' not found."); // Debugging para o novo elemento
+            if (!estadoSelect) console.error("Element with ID 'estadoSelect' not found.");
+            if (!municipioSelect) console.error("Element with ID 'municipioSelect' not found.");
 
 
             renderInspectionItems();
             renderDamageItems();
 
+            // NOVO: Carregar dados de estados e municípios
+            loadLocationData();
+
+            // NOVO: Event listener para quando o estado mudar
+            if (estadoSelect) {
+                estadoSelect.addEventListener('change', (e) => {
+                    updateMunicipiosSelect(e.target.value);
+                });
+            }
+
             if (cpfInput) {
                 cpfInput.addEventListener('input', (e) => {
-                    let value = e.target.value.replace(/\D/g, ''); // Remove tudo que não é dígito
+                    let value = e.target.value.replace(/\\D/g, ''); // Remove tudo que não é dígito
                     if (value.length > 9) {
-                        value = value.replace(/^(\d{3})(\d{3})(\d{3})(\d{2})$/, '$1.$2.$3-$4');
+                        value = value.replace(/^(\\d{3})(\\d{3})(\\d{3})(\\d{2})$/, '$1.$2.$3-$4');
                     } else if (value.length > 6) {
-                        value = value.replace(/^(\d{3})(\d{3})(\d{3})$/, '$1.$2.$3');
+                        value = value.replace(/^(\\d{3})(\\d{3})(\\d{3})$/, '$1.$2.$3');
                     } else if (value.length > 3) {
-                        value = value.replace(/^(\d{3})(\d{3})$/, '$1.$2');
+                        value = value.replace(/^(\\d{3})(\\d{3})$/, '$1.$2');
                     }
                     e.target.value = value;
                 });
