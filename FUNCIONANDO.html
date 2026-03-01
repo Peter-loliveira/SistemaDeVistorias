@@ -331,7 +331,7 @@
         .pdf-button {
             background-color: var(--remax-red);
             color: #fff;
-            margin-top: 30px;
+            /* margin-top: 30px; */
             width: 100%;
         }
 
@@ -652,14 +652,18 @@
             display: flex;
             gap: 15px;
             justify-content: center;
-            margin-top: 30px;
+            align-items: center;
+            margin-top: 0;
             flex-wrap: wrap;
+            padding: 10px 0;
         }
 
         .button-container .button {
             min-width: 200px;
             flex: 1 1 auto;
             max-width: 250px;
+            vertical-align: middle;
+            line-height: 1;
         }
 
         .save-photos-button {
@@ -882,13 +886,18 @@
             </table>
         </div>
     </div>
-    <div class="button-container">
-        <button type="button" class="button save-photos-button" id="savePhotos">
-            <span class="material-icons">folder_zip</span> Salvar Fotos
-        </button>
-        <button type="button" class="button pdf-button" id="generatePdf">
-            <span class="material-icons">picture_as_pdf</span> Gerar PDF
-        </button>
+    <div class="info-block">
+        <div class="form-section">
+            <h2>Exportar Laudo</h2>
+            <div class="button-container">
+                <button type="button" class="button save-photos-button" id="savePhotos">
+                    <span class="material-icons">folder_zip</span> Salvar Fotos
+                </button>
+                <button type="button" class="button pdf-button" id="generatePdf">
+                    <span class="material-icons">picture_as_pdf</span> Gerar PDF
+                </button>
+            </div>
+        </div>
     </div>
     </form>
     </div>
