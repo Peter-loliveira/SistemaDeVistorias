@@ -10,33 +10,42 @@
         /* Variáveis de Cor RE/MAX */
         :root {
             --remax-blue: #003da5;
-            --remax-red: #e60e16;
-            --remax-light-gray: #cccccc;
-            --remax-medium-gray: #bbbbbb;
-            --remax-dark-gray: #aaaaaa;
+            --remax-red: #dc1c2c;
+            --remax-light-gray: #f8f9fa;
+            --remax-medium-gray: #e9ecef;
+            --remax-dark-gray: #6c757d;
+            --remax-text: #2d3436;
+            --remax-white: #ffffff;
+            --remax-shadow: rgba(0, 0, 0, 0.08);
+            --remax-shadow-hover: rgba(0, 0, 0, 0.12);
+            --remax-border: #dee2e6;
+            --remax-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         /* Estilos Gerais */
         body {
-            font-family: 'Roboto', sans-serif;
+            font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             margin: 0;
-            padding: 20px;
-            background-color: var(--remax-light-gray);
-            color: #333;
+            padding: 0;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%);
+            color: var(--remax-text);
             line-height: 1.6;
             display: flex;
             flex-direction: column;
             min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
         .container {
-            max-width: 1200px;
-            margin: 20px auto;
-            background-color: #fff;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            max-width: 900px;
+            margin: 40px auto;
+            background-color: var(--remax-white);
+            padding: 0;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px var(--remax-shadow), 0 8px 25px rgba(0, 61, 165, 0.08);
             flex-grow: 1;
+            overflow: hidden;
         }
 
         /* Container do logo do cabeçalho */
