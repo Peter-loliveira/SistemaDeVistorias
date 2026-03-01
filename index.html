@@ -1839,7 +1839,7 @@
                     hasPhotos = true;
                     // Sanitizar o nome do arquivo (remover caracteres inválidos)
                     const safeDescription = item.description.replace(/[^a-zA-Z0-9À-ÿ\s]/g, '').substring(0, 50);
-                    const fileName = `${item.id}_${safeDescription}.jpg`;
+                    const fileName = `${item.id}_${safeDescription}.png`;
 
                     // Converter Data URL para Blob
                     const blob = dataURLToBlob(item.photo);
@@ -1854,7 +1854,7 @@
                     hasPhotos = true;
                     // Sanitizar o nome do arquivo
                     const safeDescription = item.description.replace(/[^a-zA-Z0-9À-ÿ\s]/g, '').substring(0, 50);
-                    const fileName = `${item.id}_${safeDescription}.jpg`;
+                    const fileName = `${item.id}_${safeDescription}.png`;
 
                     // Converter Data URL para Blob
                     const blob = dataURLToBlob(item.photo);
