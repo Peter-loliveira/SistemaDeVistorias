@@ -948,7 +948,7 @@
             </div>
             <div class="form-group estado-imovel">
                 <!-- <div class="radio-group"> -->
-                    <div class="ConditionButtons">
+                <div class="ConditionButtons">
                     <label class="TextoEstadoImovel">Estado do Imóvel:</label>
                     <button data-condition="novo" onclick="selectCondition(this)">NOVO</button>
                     <button data-condition="excelente" onclick="selectCondition(this)">EXCELENTE</button>
@@ -1662,7 +1662,7 @@
             yPos += 15; // Espaçamento adicional após o texto introdutório
 
             // Acrescentar no PDF, após o texto já incluso, uma informação sobre o "Estado do Imóvel" com a informação que foi selecionada
-            const propertyState = document.querySelector('input[name="propertyState"]:checked') ? document.querySelector('input[name="propertyState"]:checked').value : 'Não informado';
+            const propertyState = getPropertyConditionForPDF();
             doc.setFontSize(12);
 
             // "Estado do Imóvel:" em normal, valor em negrito
@@ -2221,6 +2221,55 @@
             // Adiciona a classe 'active' apenas ao botão clicado
             clickedButton.classList.add('active');
         }
+
+        // Variável para armazenar a condição selecionada
+        let selectedPropertyCondition = '';
+
+        // Função para selecionar a condição do imóvel
+        function selectCondition(clickedButton) {
+            const allButtons = document.querySelectorAll('.ConditionButtons button');
+            allButtons.forEach(button => {
+                button.classList.remove('active');
+            });
+            clickedButton.classList.add('active');
+
+            // Armazenar o valor da condição selecionada
+            selectedPropertyCondition = clickedButton.getAttribute('data-condition');
+        }
+
+        // Função para obter a condição do imóvel formatada para o PDF
+        function getPropertyConditionForPDF() {
+            if (!selectedPropertyCondition) {
+                return 'Não informado';
+            }
+
+            // Converter para formato com primeira letra maiúscula
+            const conditionMap = {
+                'novo': 'Novo',
+                'excelente': 'Excelente',
+                'bom': 'Bom',
+                'regular': 'Regular',
+                'ruim': 'Ruim'
+            };
+
+            return conditionMap[selectedPropertyCondition] || 'Não informado';
+        }
+
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            // ... código existente ...
+
+            // Inicializar os botões de condição do imóvel
+            const conditionButtons = document.querySelectorAll('.ConditionButtons button');
+            conditionButtons.forEach(button => {
+                button.addEventListener('click', () => selectCondition(button));
+            });
+
+            // ... resto do código ...
+        });
+
+        // Na função generatePDF(), substitua a linha que pega o propertyState por:
+        const propertyState = getPropertyConditionForPDF();
     </script>
 </body>
 
