@@ -644,7 +644,7 @@
                 padding: 15px;
             }
         }
-    
+
         .button-container {
             display: flex;
             gap: 15px;
@@ -672,7 +672,152 @@
             background-color: #f5c04d;
         }
 
-</style>
+        .ConditionButtons {
+            display: flex;
+            gap: 12px;
+            padding: 30px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .ConditionButtons button {
+            /* Todas as dimensões iguais baseadas no maior texto */
+            min-width: 100px;
+            height: 40px;
+
+            /* Fundo branco e bordas */
+            background-color: #ffffff;
+            border: 3px solid;
+            border-radius: 12px;
+
+            /* Texto em maiúsculas */
+            font-weight: 700;
+            font-size: 14px;
+            letter-spacing: 1px;
+
+            /* Cursor e transição suave */
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+            /* Sombra sutil */
+            /* box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); */
+        }
+
+        /* Cores individuais para cada botão - degradê de qualidade */
+
+        /* NOVO - Roxo/Neutro (novo item, ainda não avaliado) */
+        .ConditionButtons button[data-condition="novo"] {
+            border-color: #9b59b6;
+            color: #9b59b6;
+        }
+
+        .ConditionButtons button[data-condition="novo"]:hover {
+            background-color: #f3e5f5;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(155, 89, 182, 0.3);
+        }
+
+        .ConditionButtons button[data-condition="novo"].active {
+            background-color: #9b59b6;
+            color: #ffffff;
+            box-shadow: 0 4px 15px rgba(155, 89, 182, 0.5);
+        }
+
+        /* EXCELENTE - Verde (melhor qualidade) */
+        .ConditionButtons button[data-condition="excelente"] {
+            border-color: #6b67e1;
+            color: #6b67e1;
+        }
+
+        .ConditionButtons button[data-condition="excelente"]:hover {
+            background-color: #e8f5e9;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(39, 174, 96, 0.3);
+        }
+
+        .ConditionButtons button[data-condition="excelente"].active {
+            background-color: #6b67e1;
+            color: #ffffff;
+            box-shadow: 0 4px 15px #6b67e1;
+        }
+
+        /* BOM - Verde-amarelado (boa qualidade) */
+        .ConditionButtons button[data-condition="bom"] {
+            border-color: #2ecc71;
+            color: #2ecc71;
+        }
+
+        .ConditionButtons button[data-condition="bom"]:hover {
+            background-color: #e8f8f5;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(46, 204, 113, 0.3);
+        }
+
+        .ConditionButtons button[data-condition="bom"].active {
+            background-color: #2ecc71;
+            color: #ffffff;
+            box-shadow: 0 4px 15px rgba(46, 204, 113, 0.5);
+        }
+
+        /* REGULAR - Amarelo/Laranja (qualidade média) */
+        .ConditionButtons button[data-condition="regular"] {
+            border-color: #f39c12;
+            color: #f39c12;
+        }
+
+        .ConditionButtons button[data-condition="regular"]:hover {
+            background-color: #fef5e7;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(243, 156, 18, 0.3);
+        }
+
+        .ConditionButtons button[data-condition="regular"].active {
+            background-color: #f39c12;
+            color: #ffffff;
+            box-shadow: 0 4px 15px rgba(243, 156, 18, 0.5);
+        }
+
+        /* RUIM - Vermelho (pior qualidade) */
+        .ConditionButtons button[data-condition="ruim"] {
+            border-color: #e74c3c;
+            color: #e74c3c;
+        }
+
+        .ConditionButtons button[data-condition="ruim"]:hover {
+            background-color: #fdedec;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(231, 76, 60, 0.3);
+        }
+
+        .ConditionButtons button[data-condition="ruim"].active {
+            background-color: #e74c3c;
+            color: #ffffff;
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.5);
+        }
+
+        /* Animação de clique */
+        .ConditionButtons button:active {
+            transform: scale(0.95);
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .ConditionButtons {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .ConditionButtons button {
+                min-width: 120px;
+                height: 50px;
+                font-size: 12px;
+            }
+        }
+
+        .TextoEstadoImovel {
+            margin-top: 1%;
+        }
+    </style>
     <base target="_blank">
 
 </head>
@@ -697,8 +842,10 @@
                     </div>
                 </div>
                 <div class="form-group" style="margin-top: 15px; display: flex;">
-                    <label style="display: flex; align-items: center; gap: 8px; font-weight: normal; text-transform: none; cursor: pointer; font-size: 1rem; justify-content: center;">
-                        <input type="checkbox" id="vistoriaComplementar" name="vistoriaComplementar" style="width: auto;">
+                    <label
+                        style="display: flex; align-items: center; gap: 8px; font-weight: normal; text-transform: none; cursor: pointer; font-size: 1rem; justify-content: center;">
+                        <input type="checkbox" id="vistoriaComplementar" name="vistoriaComplementar"
+                            style="width: auto;">
                         <span>Vistoria Complementar</span>
                     </label>
                 </div>
@@ -737,9 +884,6 @@
             </div>
         </div>
     </form>
-
-
-
 
     <div class="info-block">
         <div class="form-section">
@@ -803,14 +947,16 @@
                 </div>
             </div>
             <div class="form-group estado-imovel">
-                <label>Estado do Imóvel:</label>
-                <div class="radio-group">
-                    <label><input type="radio" name="propertyState" value="Novo" required> <span>Novo</span></label>
-                    <label><input type="radio" name="propertyState" value="Excelente"> <span>Excelente</span></label>
-                    <label><input type="radio" name="propertyState" value="Bom"> <span>Bom</span></label>
-                    <label><input type="radio" name="propertyState" value="Regular"> <span>Regular</span></label>
-                    <label><input type="radio" name="propertyState" value="Ruim"> <span>Ruim</span></label>
+                <!-- <div class="radio-group"> -->
+                    <div class="ConditionButtons">
+                    <label class="TextoEstadoImovel">Estado do Imóvel:</label>
+                    <button data-condition="novo" onclick="selectCondition(this)">NOVO</button>
+                    <button data-condition="excelente" onclick="selectCondition(this)">EXCELENTE</button>
+                    <button data-condition="bom" onclick="selectCondition(this)">BOM</button>
+                    <button data-condition="regular" onclick="selectCondition(this)">REGULAR</button>
+                    <button data-condition="ruim" onclick="selectCondition(this)">RUIM</button>
                 </div>
+                <!-- </div> -->
             </div>
         </div>
     </div>
@@ -1804,7 +1950,7 @@
             doc.save(fileName);;
 
         }
-        
+
         // Função para converter Data URL para Blob
         function dataURLToBlob(dataURL) {
             const byteString = atob(dataURL.split(',')[1]);
@@ -1882,7 +2028,7 @@
             }
         }
 
-// Event Listeners
+        // Event Listeners
         document.addEventListener('DOMContentLoaded', () => {
             // Inicialização dos elementos do DOM
             reportDateInput = document.getElementById('reportDate');
@@ -2063,6 +2209,18 @@
 
             if (closeMessageBoxButton) closeMessageBoxButton.addEventListener('click', closeMessageBox);
         });
+
+
+        function selectCondition(clickedButton) {
+            // Remove a classe 'active' de todos os botões
+            const allButtons = document.querySelectorAll('.ConditionButtons button');
+            allButtons.forEach(button => {
+                button.classList.remove('active');
+            });
+
+            // Adiciona a classe 'active' apenas ao botão clicado
+            clickedButton.classList.add('active');
+        }
     </script>
 </body>
 
