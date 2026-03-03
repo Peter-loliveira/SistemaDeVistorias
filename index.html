@@ -388,14 +388,15 @@
 
         /* NOVOS ESTILOS PARA CARDS DE FOTOS */
         .photo-section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 10px; /* DESCE OS BOTÕES */
-}
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+            /* DESCE OS BOTÕES */
+        }
 
         .photo-section-header h2 {
             margin: 0;
@@ -450,8 +451,10 @@
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             display: flex;
             flex-direction: column;
-            height: 350px;
-            /* ALTURA FIXA DO CARD */
+            height: 320px;
+            /* REDUZIDO de 350px para 320px */
+            max-height: 320px;
+            /* GARANTE altura máxima */
         }
 
         .photo-card:hover {
@@ -461,39 +464,45 @@
 
         .photo-card-image {
             width: 100%;
-            height: 200px;
-            /* ALTURA FIXA DA IMAGEM */
-            object-fit: cover;
-            /* Faz a imagem cobrir a área sem distorcer */
+            height: 180px;
+            max-height: 180px;
+            object-fit: scale-down;
+            /* REDUZ proporcionalmente se for maior, não amplia se for menor */
             object-position: center;
-            /* Centraliza a imagem */
             background-color: #f0f0f0;
             flex-shrink: 0;
-            /* Impede que a imagem encolha */
+            display: block;
+            padding: 5px;
         }
 
         .photo-card-content {
-            padding: 15px;
+            padding: 12px;
+            /* REDUZIDO de 15px para 12px */
             flex-grow: 1;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 8px;
+            /* REDUZIDO de 10px para 8px */
             overflow: hidden;
-            /* Evita overflow do conteúdo */
+            min-height: 0;
+            /* PERMITE que o conteúdo encolha */
         }
 
         .photo-card-textarea {
             width: 100%;
             flex-grow: 1;
-            /* Ocupa o espaço restante */
-            min-height: 60px;
-            padding: 10px;
+            min-height: 70px;
+            /* REDUZIDO de 60px para 50px */
+            max-height: 80px;
+            /* LIMITA altura máxima */
+            padding: 8px;
+            /* REDUZIDO de 10px para 8px */
             border: 1px solid var(--remax-medium-gray);
             border-radius: 6px;
             resize: none;
-            /* Remove resize para manter tamanho fixo */
             font-family: 'Roboto', sans-serif;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
+            /* REDUZIDO de 0.95rem */
             box-sizing: border-box;
         }
 
@@ -699,14 +708,15 @@
             }
 
             .photo-section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-    flex-wrap: wrap;
-    gap: 10px;
-    padding-top: 15px; /* ESPAÇO ACIMA DOS BOTÕES */
-}
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 20px;
+                flex-wrap: wrap;
+                gap: 10px;
+                padding-top: 15px;
+                /* ESPAÇO ACIMA DOS BOTÕES */
+            }
 
             .photo-section-header h2 {
                 text-align: center;
@@ -1891,30 +1901,34 @@
             addSignatures();
 
             const addFooter = () => {
-                const pageCount = doc.internal.getNumberOfPages();
-                const footerY = pageHeight - 12;
+    const pageCount = doc.internal.getNumberOfPages();
+    const footerY = pageHeight - 12;
 
-                for (let i = 1; i <= pageCount; i++) {
-                    doc.setPage(i);
-                    doc.setFontSize(9);
-                    doc.setTextColor(100);
+    for (let i = 1; i <= pageCount; i++) {
+        doc.setPage(i);
+        doc.setFontSize(8);
+        doc.setTextColor(100);
 
-                    const companyInfo = [
-                        'RE/MAX Litorânea',
-                        'Rua Direta de Jauá, Loja 4, Jauá, Camaçari, Bahia, CEP: 42828-576',
-                        'Telefone: (71) 3672-1664 | E-mail: litoranea@remax.com.br'
-                    ];
+        const companyInfo = [
+            'RE/MAX Litorânea',
+            'Rua Direta de Jauá, Loja 4, Jauá, Camaçari, Bahia, CEP: 42828-576',
+            'Telefone: (71) 3672-1664 | E-mail: litoranea@remax.com.br'
+        ];
 
-                    let leftY = footerY - 8;
-                    companyInfo.forEach((line, index) => {
-                        doc.setFont("helvetica", index === 0 ? "bold" : "normal");
-                        doc.text(line, margin, leftY + (index * 5), { align: 'left' });
-                    });
+        let leftY = footerY - 8;
+        companyInfo.forEach((line, index) => {
+            doc.setFont("helvetica", index === 0 ? "bold" : "normal");
+            doc.text(line, margin, leftY + (index * 5), { align: 'left' });
+        });
 
-                    doc.setFont("helvetica", "normal");
-                    doc.text(`Página ${i} de ${pageCount}`, pageWidth - margin, footerY, { align: 'right' });
-                }
-            };
+        // TEXTO NOVO: Laudo de Vistoria com nomes
+        doc.setFont("helvetica", "bold");
+        const locadorName = landlordInput ? (landlordInput.value || 'Locador') : 'Locador';
+        const locatarioName = tenantInput ? (tenantInput.value || 'Locatario') : 'Locatario';
+        const footerText = `Laudo de Vistoria: ${locadorName} / ${locatarioName} - página ${i} de ${pageCount}`;
+        doc.text(footerText, pageWidth - margin, footerY, { align: 'right' });
+    }
+};
 
             addFooter();
 
