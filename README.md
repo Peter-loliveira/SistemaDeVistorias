@@ -76,3 +76,36 @@ O sistema permite adicionar fotos de duas formas:
 ---
 
 ## 📁 Estrutura de Arquivos
+sistema-vistoria/
+│
+├── index.html          # Arquivo principal do sistema
+├── assets/
+│   └── Logo.png        # Logo da empresa no cabeçalho
+├── JSON/
+│   ├── estados.json    # Lista de estados brasileiros
+│   └── municipios.json # Lista de municípios por estado
+└── README.md           # Este arquivo
+
+
+---
+
+## ⚠️ Requisitos Importantes
+
+### Navegador
+- Use navegadores atualizados (Chrome, Firefox, Edge, Safari)
+- É necessário permitir acesso à câmera para captura de fotos
+
+### Arquivos JSON
+Os arquivos `estados.json` e `municipios.json` devem estar na pasta `JSON/` com a seguinte estrutura:
+
+**estados.json:**
+```json
+[
+  {"id": 29, "name": "Bahia", "abbr": "BA"},
+  ...
+]
+
+[
+  {"id": 1, "state_id": 29, "name": "Camaçari"},
+  ...
+]
