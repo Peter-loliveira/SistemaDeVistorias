@@ -1923,8 +1923,8 @@
 
         // TEXTO NOVO: Laudo de Vistoria com nomes
         doc.setFont("helvetica", "bold");
-        const locadorName = landlordInput ? (landlordInput.value || 'Locador') : 'Locador';
-        const locatarioName = tenantInput ? (tenantInput.value || 'Locatario') : 'Locatario';
+        const locadorName = landlordInput ? (landlordInput.value.split(' ')[0] || 'Locador') : 'Locador';
+        const locatarioName = tenantInput ? (tenantInput.value.split(' ')[0] || 'Locatario') : 'Locatario';
         const footerText = `Laudo de Vistoria: ${locadorName} / ${locatarioName} - página ${i} de ${pageCount}`;
         doc.text(footerText, pageWidth - margin, footerY, { align: 'right' });
     }
