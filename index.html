@@ -918,7 +918,6 @@
             <img src="assets/Logo.png" alt="RE/MAX Litorânea - Vistoria de Imóveis" class="header-logo">
         </div>
         <form id="inspectionForm">
-            <!-- Tipo de Vistoria -->
             <div class="info-block">
                 <div class="form-section">
                     <h2>Tipo de Vistoria</h2>
@@ -940,7 +939,6 @@
                 </div>
             </div>
 
-            <!-- Informações do Laudo -->
             <div class="info-block">
                 <div class="form-section">
                     <h2>Informações do Laudo</h2>
@@ -970,7 +968,6 @@
                 </div>
             </div>
 
-            <!-- Informações do Corretor -->
             <div class="info-block">
                 <div class="form-section">
                     <h2>Informações do Corretor</h2>
@@ -991,7 +988,6 @@
                 </div>
             </div>
 
-            <!-- Informações do Imóvel -->
             <div class="info-block">
                 <div class="form-section">
                     <h2>Informações do Imóvel</h2>
@@ -1049,25 +1045,21 @@
                 </div>
             </div>
 
-            <!-- Itens da Vistoria - NOVO LAYOUT COM CARDS -->
             <div class="info-block">
                 <div class="form-section">
                     <div class="photo-section-header">
                         <h2>Itens da Vistoria</h2>
                         <div class="photo-actions">
                             <button type="button" class="photo-btn" id="openCameraInspection">
-                                <span class="material-icons">camera_alt</span>
-                                Câmera
+                                <span class="material-icons">camera_alt</span> Câmera
                             </button>
                             <button type="button" class="photo-btn" id="triggerSelectPhotoInspection">
-                                <span class="material-icons">collections</span>
-                                Galeria
+                                <span class="material-icons">collections</span> Galeria
                             </button>
                         </div>
                     </div>
                     <input type="file" id="selectPhotoInspection" accept="image/*" style="display: none;">
 
-                    <!-- Container de Cards -->
                     <div class="cards-container" id="inspectionCardsContainer">
                         <div class="no-photos-message" id="noInspectionPhotos">
                             <span class="material-icons">add_photo_alternate</span>
@@ -1078,25 +1070,21 @@
                 </div>
             </div>
 
-            <!-- Danos Encontrados - NOVO LAYOUT COM CARDS -->
             <div class="info-block">
                 <div class="form-section">
                     <div class="photo-section-header">
                         <h2>Danos Encontrados</h2>
                         <div class="photo-actions">
                             <button type="button" class="photo-btn" id="openCameraDamage">
-                                <span class="material-icons">camera_alt</span>
-                                Câmera
+                                <span class="material-icons">camera_alt</span> Câmera
                             </button>
                             <button type="button" class="photo-btn" id="triggerSelectPhotoDamage">
-                                <span class="material-icons">collections</span>
-                                Galeria
+                                <span class="material-icons">collections</span> Galeria
                             </button>
                         </div>
                     </div>
                     <input type="file" id="selectPhotoDamage" accept="image/*" style="display: none;">
 
-                    <!-- Container de Cards -->
                     <div class="cards-container" id="damageCardsContainer">
                         <div class="no-photos-message" id="noDamagePhotos">
                             <span class="material-icons">add_photo_alternate</span>
@@ -1107,7 +1095,17 @@
                 </div>
             </div>
 
-            <!-- Exportar Laudo -->
+            <div class="info-block">
+                <div class="form-section">
+                    <h2>Informações Adicionais</h2>
+                    <div class="form-group">
+                        <label for="additionalInfo">Observações Gerais:</label>
+                        <textarea id="additionalInfo" name="additionalInfo"
+                            placeholder="Insira aqui informações ou observações complementares do imóvel..."></textarea>
+                    </div>
+                </div>
+            </div>
+
             <div class="info-block">
                 <div class="form-section">
                     <h2>Exportar Laudo</h2>
@@ -1124,7 +1122,6 @@
         </form>
     </div>
 
-    <!-- Modal da Câmera -->
     <div id="cameraModal" class="camera-modal">
         <div class="camera-modal-content">
             <span class="camera-modal-close" id="cameraModalClose">&times;</span>
@@ -1143,7 +1140,6 @@
         </div>
     </div>
 
-    <!-- Message Box -->
     <div id="messageBox" style="
         display: none;
         position: fixed;
@@ -1834,6 +1830,31 @@
             }
             yPos = addTableToPDF(doc, damageItems, "Danos Encontrados", yPos);
 
+            // --- TRECHO CORRIGIDO: OBSERVAÇÕES COM RECALCULO DE POSIÇÃO ---
+            const additionalInfo = document.getElementById('additionalInfo')?.value;
+
+            if (additionalInfo && additionalInfo.trim() !== "") {
+                doc.setFont("helvetica", "bold");
+                doc.setFontSize(11);
+
+                // Pega a posição logo após a tabela anterior
+                let yPos = (doc.lastAutoTable ? doc.lastAutoTable.finalY : 50) + 12;
+
+                // Se estiver muito no fim da página, pula para a próxima
+                if (yPos > 270) { doc.addPage(); yPos = 20; }
+
+                doc.text("Observações:", margin, yPos);
+
+                doc.setFont("helvetica", "normal");
+                doc.setFontSize(10);
+
+                const splitInfo = doc.splitTextToSize(additionalInfo, pageWidth - (margin * 2));
+                doc.text(splitInfo, margin, yPos + 7);
+                doc.lastAutoTable = { finalY: yPos + 7 + (splitInfo.length * 5) };
+            }
+            // ---------------------------------------------------------
+
+            // 1. FORMATAÇÃO DA DATA (Mantida conforme sua lógica)
             let formattedReportDate = '';
             if (reportDateValue) {
                 const dateParts = reportDateValue.split('-');
@@ -1847,29 +1868,55 @@
                 formattedReportDate = `${day} de ${monthNames[month]} de ${year}`;
             }
 
+            // 2. CÁLCULO DA POSIÇÃO DINÂMICA (A correção principal)
+            // Em vez de usar um yPos fixo que pode vir das observações,
+            // garantimos que ele pegue o final do último conteúdo inserido.
+            yPos = (doc.lastAutoTable ? doc.lastAutoTable.finalY : yPos) + 15;
+
+            // 3. LIMITE DE SEGURANÇA (Garante que não saia da folha)
+            if (yPos > 270) {
+                doc.addPage();
+                yPos = 25;
+            }
+
+            // 4. IMPRESSÃO DO TEXTO (Cidade e Data)
             doc.setFontSize(10);
             doc.setFont("helvetica", "bold");
             const municipioWidth = doc.getTextWidth(municipio);
             doc.text(municipio, margin, yPos);
+
             doc.setFont("helvetica", "normal");
             doc.text(", ", margin + municipioWidth, yPos);
+
             doc.setFont("helvetica", "bold");
             const dateWidth = doc.getTextWidth(formattedReportDate);
             doc.text(formattedReportDate, margin + municipioWidth + doc.getTextWidth(", "), yPos);
+
             doc.setFont("helvetica", "normal");
-            doc.text(",", margin + municipioWidth + doc.getTextWidth(", ") + dateWidth, yPos);
-            yPos += 15;
+            doc.text(".", margin + municipioWidth + doc.getTextWidth(", ") + dateWidth, yPos);
+
+            // 5. ATUALIZA O YPOS PARA AS ASSINATURAS
+            // Adiciona um espaço maior para as assinaturas virem logo abaixo
+            yPos += 20;
+            doc.lastAutoTable = { finalY: yPos };
+
+
+            // ----------------------------------------------------
 
             const addSignatures = () => {
-                const footerSpace = 45;
-                const signatureBlockHeight = 50;
-                const lastPageY = doc.autoTable.previous ? doc.autoTable.previous.finalY : yPos;
+                // 1. DEFINIÇÃO DE ESPAÇO
+                const signatureBlockHeight = 60; // Altura total estimada do bloco de assinaturas
+                const footerSpace = 20;
 
-                if (lastPageY + signatureBlockHeight + footerSpace > pageHeight) {
+                // 2. CÁLCULO DINÂMICO DE POSIÇÃO
+                // Importante: yPos aqui já deve ter sido atualizado pelo código da Cidade e Data
+                // Se a assinatura for ultrapassar o limite da página, criamos uma nova.
+                if (yPos + signatureBlockHeight + footerSpace > pageHeight) {
                     doc.addPage();
                     yPos = margin + 20;
                 } else {
-                    yPos = lastPageY + 20;
+                    // Dá um recuo extra de 15 unidades após a Cidade/Data
+                    yPos += 15;
                 }
 
                 let sigY = yPos;
@@ -1883,52 +1930,63 @@
                 const totalWidth = (signatureLineLength * 2) + spacingBetweenSignatures;
                 const startX = (pageWidth - totalWidth) / 2;
 
+                // --- ASSINATURA: LOCADOR ---
                 doc.setDrawColor(0, 0, 0);
                 doc.line(startX, sigY + 10, startX + signatureLineLength, sigY + 10);
                 doc.text(landlord || "LOCADOR", startX + signatureLineLength / 2, sigY + 10 + textOffset, { align: "center" });
 
+                // --- ASSINATURA: LOCATÁRIO ---
                 const tenantX = startX + signatureLineLength + spacingBetweenSignatures;
-                doc.setDrawColor(0, 0, 0);
                 doc.line(tenantX, sigY + 10, tenantX + signatureLineLength, sigY + 10);
                 doc.text(tenant || "LOCATÁRIO", tenantX + signatureLineLength / 2, sigY + 10 + textOffset, { align: "center" });
 
-                sigY += 30;
-                doc.setDrawColor(0, 0, 0);
+                // --- ASSINATURA: CORRETOR (Abaixo das outras duas) ---
+                sigY += 30; // Desce para a linha do corretor
+
+                // Verifica se o corretor cabe na mesma página
+                if (sigY + 20 + footerSpace > pageHeight) {
+                    doc.addPage();
+                    sigY = margin + 20;
+                }
+
                 doc.line(pageWidth / 2 - signatureLineLength / 2, sigY + 20, pageWidth / 2 + signatureLineLength / 2, sigY + 20);
                 doc.text(brokerName || "CORRETOR", pageWidth / 2, sigY + 20 + textOffset, { align: "center" });
+
+                // Atualiza o yPos final para caso existam fotos ou anexos depois
+                yPos = sigY + 30;
             };
 
             addSignatures();
 
             const addFooter = () => {
-    const pageCount = doc.internal.getNumberOfPages();
-    const footerY = pageHeight - 12;
+                const pageCount = doc.internal.getNumberOfPages();
+                const footerY = pageHeight - 12;
 
-    for (let i = 1; i <= pageCount; i++) {
-        doc.setPage(i);
-        doc.setFontSize(8);
-        doc.setTextColor(100);
+                for (let i = 1; i <= pageCount; i++) {
+                    doc.setPage(i);
+                    doc.setFontSize(8);
+                    doc.setTextColor(100);
 
-        const companyInfo = [
-            'RE/MAX Litorânea',
-            'Rua Direta de Jauá, Loja 4, Jauá, Camaçari, Bahia, CEP: 42828-576',
-            'Telefone: (71) 3672-1664 | E-mail: litoranea@remax.com.br'
-        ];
+                    const companyInfo = [
+                        'RE/MAX Litorânea',
+                        'Rua Direta de Jauá, Loja 4, Jauá, Camaçari, Bahia, CEP: 42828-576',
+                        'Telefone: (71) 3672-1664 | E-mail: litoranea@remax.com.br'
+                    ];
 
-        let leftY = footerY - 8;
-        companyInfo.forEach((line, index) => {
-            doc.setFont("helvetica", index === 0 ? "bold" : "normal");
-            doc.text(line, margin, leftY + (index * 5), { align: 'left' });
-        });
+                    let leftY = footerY - 8;
+                    companyInfo.forEach((line, index) => {
+                        doc.setFont("helvetica", index === 0 ? "bold" : "normal");
+                        doc.text(line, margin, leftY + (index * 5), { align: 'left' });
+                    });
 
-        // TEXTO NOVO: Laudo de Vistoria com nomes
-        doc.setFont("helvetica", "bold");
-        const locadorName = landlordInput ? (landlordInput.value.split(' ')[0] || 'Locador') : 'Locador';
-        const locatarioName = tenantInput ? (tenantInput.value.split(' ')[0] || 'Locatario') : 'Locatario';
-        const footerText = `Laudo de Vistoria: ${locadorName} / ${locatarioName} - página ${i} de ${pageCount}`;
-        doc.text(footerText, pageWidth - margin, footerY, { align: 'right' });
-    }
-};
+                    // TEXTO NOVO: Laudo de Vistoria com nomes
+                    doc.setFont("helvetica", "bold");
+                    const locadorName = landlordInput ? (landlordInput.value.split(' ')[0] || 'Locador') : 'Locador';
+                    const locatarioName = tenantInput ? (tenantInput.value.split(' ')[0] || 'Locatario') : 'Locatario';
+                    const footerText = `Laudo de Vistoria: ${locadorName} / ${locatarioName} - página ${i} de ${pageCount}`;
+                    doc.text(footerText, pageWidth - margin, footerY, { align: 'right' });
+                }
+            };
 
             addFooter();
 
