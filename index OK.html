@@ -395,6 +395,7 @@
             flex-wrap: wrap;
             gap: 10px;
             margin-top: 10px;
+            /* DESCE OS BOTÕES */
         }
 
         .photo-section-header h2 {
@@ -451,7 +452,9 @@
             display: flex;
             flex-direction: column;
             height: 320px;
+            /* REDUZIDO de 350px para 320px */
             max-height: 320px;
+            /* GARANTE altura máxima */
         }
 
         .photo-card:hover {
@@ -464,6 +467,7 @@
             height: 180px;
             max-height: 180px;
             object-fit: scale-down;
+            /* REDUZ proporcionalmente se for maior, não amplia se for menor */
             object-position: center;
             background-color: #f0f0f0;
             flex-shrink: 0;
@@ -473,27 +477,35 @@
 
         .photo-card-content {
             padding: 12px;
+            /* REDUZIDO de 15px para 12px */
             flex-grow: 1;
             display: flex;
             flex-direction: column;
             gap: 8px;
+            /* REDUZIDO de 10px para 8px */
             overflow: hidden;
             min-height: 0;
+            /* PERMITE que o conteúdo encolha */
         }
 
         .photo-card-textarea {
             width: 100%;
             flex-grow: 1;
             min-height: 70px;
+            /* REDUZIDO de 60px para 50px */
             max-height: 80px;
+            /* LIMITA altura máxima */
             padding: 8px;
+            /* REDUZIDO de 10px para 8px */
             border: 1px solid var(--remax-medium-gray);
             border-radius: 6px;
             resize: none;
             font-family: 'Roboto', sans-serif;
             font-size: 0.9rem;
+            /* REDUZIDO de 0.95rem */
             box-sizing: border-box;
         }
+
 
         .photo-card-textarea:focus {
             border-color: var(--remax-blue);
@@ -501,63 +513,30 @@
             box-shadow: 0 0 3px rgba(0, 61, 165, 0.3);
         }
 
-        /* Container de Ações do Card (Girar + Excluir) */
-        .photo-card-actions {
-            display: flex;
-            justify-content: flex-end;
-            align-items: center;
-            gap: 6px;
-            margin-top: auto;
-            align-self: flex-end;
-        }
-
-        .photo-card-rotate {
-            background-color: transparent;
-            color: var(--remax-blue);
-            border: none;
-            padding: 8px;
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-            flex-shrink: 0;
-            width: 40px;
-            height: 40px;
-        }
-
-        .photo-card-rotate:hover {
-            background-color: rgba(0, 61, 165, 0.1);
-            transform: scale(1.1);
-        }
-
-        .photo-card-rotate:active {
-            transform: scale(0.95);
-        }
-
-        .photo-card-rotate .material-icons {
-            font-size: 24px;
-        }
-
         .photo-card-delete {
+            align-self: flex-end;
             background-color: transparent;
+            /* Fundo transparente */
             color: var(--remax-red);
+            /* Ícone vermelho */
             border: none;
             padding: 8px;
             border-radius: 50%;
+            /* Circular */
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             transition: background-color 0.3s ease, transform 0.2s ease;
             flex-shrink: 0;
+            margin-top: auto;
             width: 40px;
             height: 40px;
         }
 
         .photo-card-delete:hover {
             background-color: rgba(230, 14, 22, 0.1);
+            /* Fundo vermelho bem sutil */
             transform: scale(1.1);
         }
 
@@ -567,6 +546,7 @@
 
         .photo-card-delete .material-icons {
             font-size: 24px;
+            /* Ícone maior */
         }
 
         /* Mensagem quando não há fotos */
@@ -735,6 +715,7 @@
                 flex-wrap: wrap;
                 gap: 10px;
                 padding-top: 15px;
+                /* ESPAÇO ACIMA DOS BOTÕES */
             }
 
             .photo-section-header h2 {
@@ -1371,28 +1352,6 @@
             }
         }
 
-        // Função para girar a foto 90 graus no sentido horário
-        function rotatePhotoItem(item, type) {
-            if (!item.photo) return;
-            const img = new Image();
-            img.onload = function () {
-                const canvas = document.createElement('canvas');
-                canvas.width = img.height;
-                canvas.height = img.width;
-                const ctx = canvas.getContext('2d');
-                ctx.translate(canvas.width / 2, canvas.height / 2);
-                ctx.rotate(Math.PI / 2);
-                ctx.drawImage(img, -img.width / 2, -img.height / 2);
-                item.photo = canvas.toDataURL('image/png');
-                if (type === 'inspection') {
-                    renderInspectionItems();
-                } else {
-                    renderDamageItems();
-                }
-            };
-            img.src = item.photo;
-        }
-
         // NOVO: Função para criar card de foto
         function createPhotoCard(item, type, index) {
             const card = document.createElement('div');
@@ -1416,23 +1375,8 @@
                 item.description = e.target.value;
             });
 
-            // Container para os botões de ação (Girar e Deletar)
-            const actionsContainer = document.createElement('div');
-            actionsContainer.className = 'photo-card-actions';
-
-            const rotateBtn = document.createElement('button');
-            rotateBtn.type = 'button';
-            rotateBtn.className = 'photo-card-rotate';
-            rotateBtn.title = 'Girar foto (sentido horário)';
-            rotateBtn.innerHTML = '<span class="material-icons">rotate_right</span>';
-            rotateBtn.onclick = () => {
-                rotatePhotoItem(item, type);
-            };
-
             const deleteBtn = document.createElement('button');
-            deleteBtn.type = 'button';
             deleteBtn.className = 'photo-card-delete';
-            deleteBtn.title = 'Excluir foto';
             deleteBtn.innerHTML = '<span class="material-icons">delete</span>';
             deleteBtn.onclick = () => {
                 if (type === 'inspection') {
@@ -1442,11 +1386,8 @@
                 }
             };
 
-            actionsContainer.appendChild(rotateBtn);
-            actionsContainer.appendChild(deleteBtn);
-
             content.appendChild(textarea);
-            content.appendChild(actionsContainer);
+            content.appendChild(deleteBtn);
             card.appendChild(img);
             card.appendChild(content);
 
@@ -1911,8 +1852,9 @@
                 doc.text(splitInfo, margin, yPos + 7);
                 doc.lastAutoTable = { finalY: yPos + 7 + (splitInfo.length * 5) };
             }
+            // ---------------------------------------------------------
 
-            // 1. FORMATAÇÃO DA DATA
+            // 1. FORMATAÇÃO DA DATA (Mantida conforme sua lógica)
             let formattedReportDate = '';
             if (reportDateValue) {
                 const dateParts = reportDateValue.split('-');
@@ -1926,10 +1868,12 @@
                 formattedReportDate = `${day} de ${monthNames[month]} de ${year}`;
             }
 
-            // 2. CÁLCULO DA POSIÇÃO DINÂMICA
+            // 2. CÁLCULO DA POSIÇÃO DINÂMICA (A correção principal)
+            // Em vez de usar um yPos fixo que pode vir das observações,
+            // garantimos que ele pegue o final do último conteúdo inserido.
             yPos = (doc.lastAutoTable ? doc.lastAutoTable.finalY : yPos) + 15;
 
-            // 3. LIMITE DE SEGURANÇA
+            // 3. LIMITE DE SEGURANÇA (Garante que não saia da folha)
             if (yPos > 270) {
                 doc.addPage();
                 yPos = 25;
@@ -1952,17 +1896,26 @@
             doc.text(".", margin + municipioWidth + doc.getTextWidth(", ") + dateWidth, yPos);
 
             // 5. ATUALIZA O YPOS PARA AS ASSINATURAS
+            // Adiciona um espaço maior para as assinaturas virem logo abaixo
             yPos += 20;
             doc.lastAutoTable = { finalY: yPos };
 
+
+            // ----------------------------------------------------
+
             const addSignatures = () => {
-                const signatureBlockHeight = 60;
+                // 1. DEFINIÇÃO DE ESPAÇO
+                const signatureBlockHeight = 60; // Altura total estimada do bloco de assinaturas
                 const footerSpace = 20;
 
+                // 2. CÁLCULO DINÂMICO DE POSIÇÃO
+                // Importante: yPos aqui já deve ter sido atualizado pelo código da Cidade e Data
+                // Se a assinatura for ultrapassar o limite da página, criamos uma nova.
                 if (yPos + signatureBlockHeight + footerSpace > pageHeight) {
                     doc.addPage();
                     yPos = margin + 20;
                 } else {
+                    // Dá um recuo extra de 15 unidades após a Cidade/Data
                     yPos += 15;
                 }
 
@@ -1987,9 +1940,10 @@
                 doc.line(tenantX, sigY + 10, tenantX + signatureLineLength, sigY + 10);
                 doc.text(tenant || "LOCATÁRIO", tenantX + signatureLineLength / 2, sigY + 10 + textOffset, { align: "center" });
 
-                // --- ASSINATURA: CORRETOR ---
-                sigY += 30;
+                // --- ASSINATURA: CORRETOR (Abaixo das outras duas) ---
+                sigY += 30; // Desce para a linha do corretor
 
+                // Verifica se o corretor cabe na mesma página
                 if (sigY + 20 + footerSpace > pageHeight) {
                     doc.addPage();
                     sigY = margin + 20;
@@ -1998,6 +1952,7 @@
                 doc.line(pageWidth / 2 - signatureLineLength / 2, sigY + 20, pageWidth / 2 + signatureLineLength / 2, sigY + 20);
                 doc.text(brokerName || "CORRETOR", pageWidth / 2, sigY + 20 + textOffset, { align: "center" });
 
+                // Atualiza o yPos final para caso existam fotos ou anexos depois
                 yPos = sigY + 30;
             };
 
@@ -2024,6 +1979,7 @@
                         doc.text(line, margin, leftY + (index * 5), { align: 'left' });
                     });
 
+                    // TEXTO NOVO: Laudo de Vistoria com nomes
                     doc.setFont("helvetica", "bold");
                     const locadorName = landlordInput ? (landlordInput.value.split(' ')[0] || 'Locador') : 'Locador';
                     const locatarioName = tenantInput ? (tenantInput.value.split(' ')[0] || 'Locatario') : 'Locatario';
@@ -2191,7 +2147,7 @@
                     if (value.length > 9) {
                         value = value.replace(/^(\d{3})(\d{3})(\d{3})(\d{2})$/, '$1.$2.$3-$4');
                     } else if (value.length > 6) {
-                        value = value.replace(/^(\d{3})(\d{3})(\d{3})$/, '$1.$2');
+                        value = value.replace(/^(\d{3})(\d{3})(\d{3})$/, '$1.$2.$3');
                     } else if (value.length > 3) {
                         value = value.replace(/^(\d{3})(\d{3})$/, '$1.$2');
                     }
