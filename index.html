@@ -1077,7 +1077,7 @@
                             </button>
                         </div>
                     </div>
-                    <input type="file" id="selectPhotoInspection" accept="image/*" style="display: none;">
+                    <input type="file" id="selectPhotoInspection" accept="image/*" multiple style="display: none;">
 
                     <div class="cards-container" id="inspectionCardsContainer">
                         <div class="no-photos-message" id="noInspectionPhotos">
@@ -1102,7 +1102,7 @@
                             </button>
                         </div>
                     </div>
-                    <input type="file" id="selectPhotoDamage" accept="image/*" style="display: none;">
+                    <input type="file" id="selectPhotoDamage" accept="image/*" multiple style="display: none;">
 
                     <div class="cards-container" id="damageCardsContainer">
                         <div class="no-photos-message" id="noDamagePhotos">
@@ -1525,21 +1525,38 @@
             renderDamageItems();
         }
 
-        // Função para lidar com a seleção de arquivo de foto
-        function handleFileSelect(event, type) {
-            const file = event.target.files[0];
-            if (file) {
+        // Função para ler um arquivo como Data URL, retornando uma Promise
+        function readFileAsDataURL(file) {
+            return new Promise((resolve, reject) => {
                 const reader = new FileReader();
-                reader.onload = function (e) {
-                    if (type === 'inspection') {
-                        addInspectionItem(e.target.result);
-                    } else if (type === 'damage') {
-                        addDamageItem(e.target.result);
-                    }
-                };
+                reader.onload = (e) => resolve(e.target.result);
+                reader.onerror = reject;
                 reader.readAsDataURL(file);
+            });
+        }
+
+        // Função para lidar com a seleção de arquivo(s) de foto
+        // Aceita múltiplas fotos selecionadas de uma vez, criando um CAR (card) para cada uma
+        function handleFileSelect(event, type) {
+            const files = Array.from(event.target.files || []);
+
+            if (files.length > 0) {
+                (async () => {
+                    for (const file of files) {
+                        try {
+                            const dataUrl = await readFileAsDataURL(file);
+                            if (type === 'inspection') {
+                                addInspectionItem(dataUrl);
+                            } else if (type === 'damage') {
+                                addDamageItem(dataUrl);
+                            }
+                        } catch (error) {
+                            console.error('Erro ao ler arquivo de imagem:', error);
+                        }
+                    }
+                })();
             }
-            // Limpar input para permitir selecionar o mesmo arquivo novamente
+            // Limpar input para permitir selecionar os mesmos arquivos novamente
             event.target.value = '';
         }
 
@@ -1549,11 +1566,28 @@
                 if (item.photo && item.photo !== '') {
                     return new Promise((resolve) => {
                         const img = new Image();
-                        img.src = item.photo;
                         img.onload = () => {
                             item.loadedImage = img;
                             item.naturalWidth = img.naturalWidth;
                             item.naturalHeight = img.naturalHeight;
+
+                            // Normaliza a imagem "desenhando" no canvas na orientação em que
+                            // ela é exibida no card (o navegador já corrige a orientação EXIF
+                            // ao carregar a <img>). Isso evita que o jsPDF utilize os bytes
+                            // originais do arquivo (que às vezes preservam a orientação bruta
+                            // da câmera) e acabe inserindo a foto rotacionada/esticada na tabela.
+                            try {
+                                const canvas = document.createElement('canvas');
+                                canvas.width = img.naturalWidth;
+                                canvas.height = img.naturalHeight;
+                                const ctx = canvas.getContext('2d');
+                                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                                item.pdfImageSrc = canvas.toDataURL('image/png');
+                            } catch (canvasError) {
+                                console.warn(`Não foi possível normalizar a orientação da imagem: ${item.description}`, canvasError);
+                                item.pdfImageSrc = item.photo;
+                            }
+
                             resolve();
                         };
                         img.onerror = () => {
@@ -1561,8 +1595,10 @@
                             item.loadedImage = null;
                             item.naturalWidth = 0;
                             item.naturalHeight = 0;
+                            item.pdfImageSrc = null;
                             resolve();
                         };
+                        img.src = item.photo;
                     });
                 }
                 return Promise.resolve();
@@ -1636,11 +1672,24 @@
             function renderTextWithBold(doc, textParts, startX, startY, maxWidth) {
                 const lineHeight = 6;
                 const fontSize = 10;
+                // Limite inferior seguro da página (evita que o texto seja desenhado
+                // abaixo da área visível quando o parágrafo é longo, como acontece
+                // quando o endereço do imóvel é extenso)
+                const bottomLimit = pageHeight - 20;
                 doc.setFontSize(fontSize);
 
                 let currentY = startY;
                 let currentLineWords = [];
                 let currentLineWidth = 0;
+
+                // Verifica se a próxima linha ultrapassa o limite da página e,
+                // se necessário, adiciona uma nova página antes de desenhar
+                const checkPageBreak = () => {
+                    if (currentY > bottomLimit) {
+                        doc.addPage();
+                        currentY = margin + 10;
+                    }
+                };
 
                 for (let i = 0; i < textParts.length; i++) {
                     const part = textParts[i];
@@ -1653,6 +1702,7 @@
                         const wordWidth = doc.getTextWidth(wordWithSpace);
 
                         if (currentLineWidth + wordWidth > maxWidth && currentLineWords.length > 0) {
+                            checkPageBreak();
                             renderJustifiedLine(doc, currentLineWords, startX, currentY, maxWidth, currentLineWidth - doc.getTextWidth(' '));
                             currentY += lineHeight;
                             currentLineWords = [];
@@ -1669,6 +1719,7 @@
                 }
 
                 if (currentLineWords.length > 0) {
+                    checkPageBreak();
                     let x = startX;
                     for (const word of currentLineWords) {
                         doc.setFont("helvetica", word.bold ? "bold" : "normal");
@@ -1861,7 +1912,7 @@
                                 const x = data.cell.x + (data.cell.width - finalImageWidthPoints) / 2;
                                 const y = data.cell.y + (data.cell.height - finalImageHeightPoints) / 2;
 
-                                doc.addImage(img.src, 'PNG', x, y, finalImageWidthPoints, finalImageHeightPoints);
+                                doc.addImage(item.pdfImageSrc || img.src, 'PNG', x, y, finalImageWidthPoints, finalImageHeightPoints);
                             }
                             data.cell.text = [];
                         }
